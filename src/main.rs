@@ -1,9 +1,11 @@
 use serde::ser::SerializeMap;
 use serde::{Deserialize, Serialize, Serializer};
+use serde_json::Deserializer;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::{self, Display};
 use std::fs::File;
 use std::hash::Hash;
+use std::io::BufReader;
 use std::os::unix::process::CommandExt;
 use std::path::Path;
 use std::process::{Child, Command};
@@ -88,11 +90,52 @@ fn parse_direction(direction: String, from: Position) -> Result<Position, String
 }
 
 fn compute_path_to_enemy(
-    start: Position,
+    from_pos: Position,
     floor_tiles: &HashMap<Position, FloorTile>,
-    enemy_color: TeamColor,
-) -> VecDeque<Position> {
-    todo!()
+    enemy_location: Position,
+) -> Result<VecDeque<Position>, String> {
+    let mut explored: HashSet<Position> = HashSet::new();
+    let mut frontier: Vec<VecDeque<Position>> = Vec::new();
+    frontier.push(VecDeque::from_iter([from_pos]));
+    while !frontier.is_empty() {
+        match frontier.pop() {
+            Some(top) => match *top.back().expect("") == enemy_location {
+                true => return Ok(top),
+                false => {
+                    for nbr in [
+                        Position {
+                            x: top[0].x,
+                            y: top[0].y + 1,
+                        },
+                        Position {
+                            x: top[0].x + 1,
+                            y: top[0].y,
+                        },
+                        Position {
+                            x: top[0].x,
+                            y: top[0].y - 1,
+                        },
+                        Position {
+                            x: top[0].x - 1,
+                            y: top[0].y,
+                        },
+                    ] {
+                        match (!explored.contains(&nbr)) && floor_tiles[&nbr] == FloorTile::Path {
+                            true => {
+                                explored.insert(nbr);
+                                let mut new = top.clone();
+                                new.push_back(nbr);
+                                frontier.push(new);
+                            }
+                            false => continue,
+                        }
+                    }
+                }
+            },
+            None => break,
+        }
+    }
+    return Err("Unable to find path to enemy".to_string());
 }
 
 ////////// GAME DATA STRUCTURES //////////
@@ -101,6 +144,14 @@ fn compute_path_to_enemy(
 enum TeamColor {
     Red,
     Blue,
+}
+
+fn parse_team_color(string: String) -> Option<TeamColor> {
+    match string.as_str() {
+        "r" => Some(TeamColor::Red),
+        "b" => Some(TeamColor::Blue),
+        _ => None,
+    }
 }
 
 #[derive(PartialEq, Eq, Hash, Serialize, Clone, Copy)] // TODO: convert enums to/from string via macro. (crate strum handles to string)
@@ -246,6 +297,17 @@ impl Mercenary {
             path_to_enemy,
         }
     }
+    fn get_desired_position(&self) -> Position {
+        match self.path_to_enemy.len() {
+            0 => panic!("Shouldn't be here"),
+            1 => panic!("Shouldn't be here"),
+            2 => self.position,
+            _ => match self.path_to_enemy.front() {
+                Some(pos) => *pos,
+                None => panic!("Contradiction"),
+            },
+        }
+    }
 }
 
 #[derive(Serialize, Clone)]
@@ -253,7 +315,6 @@ struct Enemy {
     uid: u64,
     position: Position,
     hp: u32,
-    target: TeamColor,
     path_to_target: VecDeque<Position>,
 }
 
@@ -263,7 +324,6 @@ impl Enemy {
             uid: generate_uid(),
             position,
             hp: ENEMY_INITIAL_HP,
-            target,
             path_to_target,
         }
     }
@@ -299,7 +359,6 @@ struct PlayerState {
     builder_count: u32,
     money: u32,
     mercenaries: HashMap<EntityKey, Mercenary>,
-    mercenary_path: HashMap<Position, String>,
     towers: HashMap<EntityKey, Tower>,
     base: Option<PlayerBase>,
 }
@@ -312,7 +371,6 @@ impl PlayerState {
             builder_count: 1,
             money: INITIAL_MONEY,
             mercenaries: HashMap::new(),
-            mercenary_path: HashMap::new(),
             towers: HashMap::new(),
             base: None,
         }
@@ -323,6 +381,21 @@ impl PlayerState {
 struct EntityKey {
     uid: u64,
     entity_type: EntityType,
+}
+#[derive(Deserialize)]
+struct SpawnerFromMapfile {
+    x: i32,
+    y: i32,
+    target: String,
+    switch_target: bool,
+}
+
+#[derive(Deserialize)]
+struct DataFromMapfile {
+    floor_tiles: Vec<String>,
+    red_base: Position,
+    blue_base: Position,
+    spawners: Vec<SpawnerFromMapfile>,
 }
 
 #[derive(Serialize)]
@@ -338,7 +411,7 @@ struct GameState {
 }
 
 impl GameState {
-    fn new(map_file_path: String) -> GameState {
+    fn new(map_file_path_str: &String) -> GameState {
         let mut new_game_state = GameState {
             turns_progressed: 0,
             victory: None,
@@ -349,31 +422,338 @@ impl GameState {
             enemies: HashMap::new(),
             enemy_spawners: HashMap::new(),
         };
-        // TODO: load map file stuff
-        todo!()
+        match File::open(map_file_path_str) {
+            Ok(file) => {
+                let mut de = Deserializer::from_reader(BufReader::new(file));
+                match DataFromMapfile::deserialize(&mut de) {
+                    Ok(data) => {
+                        for (y_i, line) in data.floor_tiles.iter().enumerate() {
+                            for (x_i, chr) in line.chars().enumerate() {
+                                let at_pos = match chr {
+                                    'r' => Some(FloorTile::RedTerritory),
+                                    'b' => Some(FloorTile::BlueTerritory),
+                                    'O' => Some(FloorTile::Path),
+                                    _ => None,
+                                };
+                                match at_pos {
+                                    Some(tile) => match new_game_state.floor_tiles.insert(
+                                        Position {
+                                            x: x_i as i32,
+                                            y: y_i as i32,
+                                        },
+                                        tile,
+                                    ) {
+                                        None => (),
+                                        Some(_) => eprintln!(
+                                            "Error: During game map initialization: there was already a tile at position ({},{}). This line should not be reached.",
+                                            x_i, y_i
+                                        ),
+                                    },
+                                    None => (),
+                                }
+                            }
+                        }
+                        new_game_state.player_state_blue.base =
+                            Some(PlayerBase::new(data.blue_base, TeamColor::Blue));
+                        new_game_state.player_state_red.base =
+                            Some(PlayerBase::new(data.red_base, TeamColor::Red));
+                        for from_mapfile in data.spawners {
+                            new_game_state.add_enemy_spawner(from_mapfile);
+                        }
+                    }
+                    Err(err) => panic!("Unable to deserialize map data: {}", err.to_string()),
+                }
+            }
+            Err(err) => panic!(
+                "Failed to open map file {}: {}",
+                map_file_path_str,
+                err.to_string()
+            ),
+        };
+        new_game_state
     }
 
     // Use the following functions to maintain correct positions in entity_position
 
-    fn add_tower(&mut self, tower_type: String, position: Position, team_color: TeamColor) -> () {}
+    fn add_tower(&mut self, tower_type: String, position: Position, team_color: TeamColor) -> () {
+        let player_state = match team_color {
+            TeamColor::Red => &mut self.player_state_red,
+            TeamColor::Blue => &mut self.player_state_blue,
+        };
+        match Tower::new(position, team_color, tower_type) {
+            Ok(tower) => {
+                let key = EntityKey {
+                    uid: tower.uid,
+                    entity_type: EntityType::Tower,
+                };
+                match self.entity_position.insert(tower.position, key) {
+                    None => (),
+                    Some(_) => panic!(
+                        "Replacing an entity at position ({},{}), this line should not be reached",
+                        tower.position.x, tower.position.y
+                    ),
+                }
+                match player_state.towers.insert(key, tower) {
+                    Some(_) => panic!(
+                        "Replacing a tower with uid {}, this line should not be reached",
+                        key.uid
+                    ),
+                    None => (),
+                }
+            }
+            Err(e_str) => {
+                panic!(
+                    "Failed to create tower! Something is probably wrong with validation! Error was:\n{}",
+                    e_str
+                );
+            }
+        }
+    }
 
-    fn remove_tower(&mut self, key: EntityKey) -> () {}
+    fn remove_tower(&mut self, key: EntityKey) -> () {
+        match (
+            self.player_state_blue.towers.remove(&key),
+            self.player_state_red.towers.remove(&key),
+        ) {
+            (None, None) => panic!(
+                "Tried to remove tower with uid {}, but it does not exist",
+                key.uid
+            ),
+            (Some(_), Some(_)) => {
+                panic!("Tower with uid {} belongs to both teams", key.uid);
+            }
+            (Some(b), None) => match self.entity_position.remove(&b.position) {
+                Some(_) => (), // If you're really paranoid you can check this result and panic!
+                None => panic!(
+                    "Tower with uid {} exists, but is not in the entity_position map",
+                    key.uid
+                ),
+            },
+            (None, Some(r)) => match self.entity_position.remove(&r.position) {
+                Some(_) => (), // If you're really paranoid you can check this result and panic!
+                None => panic!(
+                    "Tower with uid {} exists, but is not in the entity_position map",
+                    key.uid
+                ),
+            },
+        }
+    }
 
-    fn add_enemy_spawner(&mut self, position: Position) -> () {}
+    fn add_enemy_spawner(&mut self, from_map: SpawnerFromMapfile) -> () {
+        match parse_team_color(from_map.target) {
+            Some(tc) => {
+                let new_spanwer = EnemySpawner::new(
+                    Position {
+                        x: from_map.x,
+                        y: from_map.y,
+                    },
+                    tc,
+                    from_map.switch_target,
+                );
+                let key = EntityKey {
+                    uid: new_spanwer.uid,
+                    entity_type: EntityType::EnemySpawner,
+                };
+                match self.entity_position.insert(new_spanwer.position, key) {
+                    None => (),
+                    Some(_) => panic!(
+                        "Replacing an entity at position ({},{}), this line should not be reached",
+                        new_spanwer.position.x, new_spanwer.position.y
+                    ),
+                }
+                match self.enemy_spawners.insert(key, new_spanwer) {
+                    None => (),
+                    Some(_) => panic!("Duplicate enemy spawner"),
+                }
+            }
+            None => panic!(
+                "Spawner in map file targets nonexistent team. Target should be \"r\" or \"b\"."
+            ),
+        }
+    }
 
-    fn remove_enemy_spawner(&mut self, key: EntityKey) -> () {}
+    // fn remove_enemy_spawner() // don't ever need to remove spawners
 
-    fn add_mercenary(&mut self, team_color: TeamColor, position: Position) -> () {}
+    fn add_mercenary(&mut self, team_color: TeamColor, position: Position) -> () {
+        let other_player_state = match team_color {
+            TeamColor::Red => &mut self.player_state_blue,
+            TeamColor::Blue => &mut self.player_state_red,
+        };
+        match &other_player_state.base {
+            Some(base) => match compute_path_to_enemy(position, &self.floor_tiles, base.position) {
+                Ok(path_to_enemy) => {
+                    let merc = Mercenary::new(position, team_color, path_to_enemy);
+                    let key = EntityKey {
+                        uid: merc.uid,
+                        entity_type: EntityType::Mercenary,
+                    };
+                    match self.entity_position.insert(merc.position, key) {
+                        None => (),
+                        Some(_) => panic!(
+                            "Replacing an entity at position ({},{}), this line should not be reached",
+                            merc.position.x, merc.position.y
+                        ),
+                    }
+                    let player_state = match team_color {
+                        TeamColor::Red => &mut self.player_state_red,
+                        TeamColor::Blue => &mut self.player_state_blue,
+                    };
+                    match player_state.mercenaries.insert(key, merc) {
+                        Some(_) => panic!(
+                            "Replacing a mercenary with uid {}, this line should not be reached",
+                            key.uid
+                        ),
+                        None => (),
+                    }
+                }
+                Err(e_str) => panic!(
+                    "Mercenary couldn't compute path to enemy. Reason: {}",
+                    e_str
+                ),
+            },
+            None => panic!(
+                "Mercenary can't compute path to enemy base, because the enemy's base does not exist"
+            ),
+        }
+    }
 
-    fn move_mercenary(&mut self, mercenary: Mercenary, new_pos: Position) -> () {}
+    fn move_mercenary(&mut self, mercenary: &mut Mercenary) -> () {
+        let desired = mercenary.get_desired_position();
+        if desired != mercenary.position {
+            let key = EntityKey {
+                uid: mercenary.uid,
+                entity_type: EntityType::Mercenary,
+            };
+            match self.entity_position.remove(&mercenary.position) {
+                Some(_) => (), // could verify here if paranoid, then panic!
+                None => panic!("entity_position map is desynced"),
+            }
+            match self.entity_position.insert(desired, key) {
+                None => (),
+                Some(_) => panic!("Replacing an entity in the entity_position map"),
+            }
+            mercenary.position = desired;
+        }
+    }
 
-    fn remove_mercenary(&mut self, key: EntityKey) -> () {}
+    fn remove_mercenary(&mut self, key: EntityKey) -> () {
+        match (
+            self.player_state_blue.mercenaries.remove(&key),
+            self.player_state_red.mercenaries.remove(&key),
+        ) {
+            (None, None) => eprintln!(
+                "Tried to remove mercenary with uid {}, but it does not exist",
+                key.uid
+            ),
+            (Some(b), Some(r)) => {
+                eprintln!("Mercenary with uid {} belongs to both teams", key.uid);
+                match b.position == r.position {
+                    true => match self.entity_position.remove(&r.position) {
+                        Some(_) => (), // If you're really paranoid you can check this result and panic!
+                        None => eprintln!(
+                            "Mercenary with uid {} exists, but is not in the entity_position map",
+                            key.uid
+                        ),
+                    },
+                    false => panic!(
+                        "Mercenary with uid {} is desynced between both teams!",
+                        key.uid
+                    ),
+                }
+            }
+            (Some(b), None) => match self.entity_position.remove(&b.position) {
+                Some(_) => (), // If you're really paranoid you can check this result and panic!
+                None => eprintln!(
+                    "Mercenary with uid {} exists, but is not in the entity_position map",
+                    key.uid
+                ),
+            },
+            (None, Some(r)) => match self.entity_position.remove(&r.position) {
+                Some(_) => (), // If you're really paranoid you can check this result and panic!
+                None => eprintln!(
+                    "Mercenary with uid {} exists, but is not in the entity_position map",
+                    key.uid
+                ),
+            },
+        }
+    }
 
-    fn add_enemy(&mut self, position: Position) -> () {}
+    fn add_enemy(&mut self, position: Position, target_team: TeamColor) -> () {
+        let target_player_state = match target_team {
+            TeamColor::Red => &mut self.player_state_red,
+            TeamColor::Blue => &mut self.player_state_blue,
+        };
+        match &target_player_state.base {
+            Some(base) => match compute_path_to_enemy(position, &self.floor_tiles, base.position) {
+                Ok(path_to_enemy) => {
+                    let enemy = Enemy::new(position, target_team, path_to_enemy);
+                    let key = EntityKey {
+                        uid: enemy.uid,
+                        entity_type: EntityType::Enemy,
+                    };
+                    match self.entity_position.insert(enemy.position, key) {
+                        None => (),
+                        Some(_) => panic!(
+                            "Replacing an entity at position ({},{}), this line should not be reached",
+                            enemy.position.x, enemy.position.y
+                        ),
+                    }
+                    match self.enemies.insert(key, enemy) {
+                        Some(_) => panic!(
+                            "Replacing a enemy with uid {}, this line should not be reached",
+                            key.uid
+                        ),
+                        None => (),
+                    }
+                }
+                Err(e_str) => panic!(
+                    "Enemy couldn't compute path to player base. Reason: {}",
+                    e_str
+                ),
+            },
+            None => panic!(
+                "Enemy couldn't compute path to player base, because the the base does not exist"
+            ),
+        }
+    }
 
-    fn move_enemy(&mut self, enemy: Enemy, new_pos: Position) -> () {}
+    fn move_enemy(&mut self, enemy: &mut Enemy) -> () {
+        match enemy.path_to_target.pop_front() {
+            Some(new_pos) => {
+                let old_pos = enemy.position;
+                enemy.position = new_pos;
+                let key = EntityKey {
+                    uid: enemy.uid,
+                    entity_type: EntityType::Mercenary,
+                };
+                match self.entity_position.remove(&old_pos) {
+                    Some(_) => (), // could verify here and eprintln! due to desync
+                    None => panic!("entity_position map is desynced"),
+                }
+                match self.entity_position.insert(new_pos, key) {
+                    None => (),
+                    Some(_) => panic!("Replacing an entity in the entity_position map"),
+                }
+            }
+            None => eprintln!(
+                "Attempted to move enemy despite its path being empty. This line should never be reached."
+            ),
+        }
+    }
 
-    fn remove_enemy(&mut self, key: EntityKey) -> () {}
+    fn remove_enemy(&mut self, key: EntityKey) -> () {
+        match self.enemies.remove(&key) {
+            Some(enemy) => match self.entity_position.remove(&enemy.position) {
+                Some(_) => (),
+                None => {
+                    panic!(
+                        "Removed enemy, but enemy wasn't in the entity position map as expected. Desync!"
+                    )
+                }
+            },
+            None => panic!("Tried to remove enemy, but enemy doesn't exist"),
+        }
+    }
 }
 
 ////////// PLAYER ACTIONS + VALIDATION //////////
@@ -576,25 +956,54 @@ fn try_queue_mercenary(
 ////////// WORLD UPDATE //////////
 
 fn move_mercenaries(game_state: &mut GameState) -> () {
-    let red_desired_positions: HashSet<Position> = HashSet::new();
-    for red_merc in game_state.player_state_red.mercenaries.values() {
-        match game_state
-            .player_state_red
-            .mercenary_path
-            .get(&red_merc.position)
-        {
-            Some(direction) => match direction {
-                _ => eprintln!(
-                    "THIS LINE SHOULD NEVER BE REACHED. MERCENARY PATH HAS INVALID DIRECTION"
-                ),
+    let mut conflicts: HashMap<Position,Vec<&Mercenary>> = HashMap::new();
+    for merc in game_state.player_state_red.mercenaries.values() {
+        let desire = &merc.get_desired_position();
+        match conflicts.get_mut(desire) {
+            Some(other) => other.push(merc),
+            None => {
+                let mut new = Vec::new();
+                new.push(merc);
+                conflicts.insert(merc.position, new);
             },
-            None => eprintln!("THIS LINE SHOULD NEVER BE REACHED. MERCENARY GOT LOST!"),
         }
+    }
+    for merc in game_state.player_state_blue.mercenaries.values() {
+        let desire = &merc.get_desired_position();
+        match conflicts.get_mut(desire) {
+            Some(other) => other.push(merc),
+            None => {
+                let mut new = Vec::new();
+                new.push(merc);
+                conflicts.insert(merc.position, new);
+            },
+        }
+    }
+    for conflict in conflicts {
+        
     }
 }
 
 fn pop_mercenaries(game_state: &mut GameState) -> () {
-    todo!()
+    match &mut game_state.player_state_blue.base {
+        Some(base) => match base.mercenaries_queued.pop_front() {
+            Some(new_pos) => {
+                game_state.add_mercenary(TeamColor::Blue, new_pos);
+            }
+            None => (),
+        },
+        None => panic!("Blue player base is uninitialized while spawning new mercenaries"),
+    }
+
+    match &mut game_state.player_state_blue.base {
+        Some(base) => match base.mercenaries_queued.pop_front() {
+            Some(new_pos) => {
+                game_state.add_mercenary(TeamColor::Red, new_pos);
+            }
+            None => (),
+        },
+        None => panic!("Red player base is uninitialized while spawning new mercenaries"),
+    }
 }
 
 fn move_enemies(game_state: &mut GameState) -> () {
