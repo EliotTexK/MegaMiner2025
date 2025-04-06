@@ -34,6 +34,7 @@ const PLAYER_BASE_INITIAL_HP: u32 = 200;
 
 ////////// UTILITY //////////
 
+//
 pub fn serialize_hashmap<K, V, S>(map: &HashMap<K, V>, serializer: S) -> Result<S::Ok, S::Error>
 where
     K: Display,
@@ -789,38 +790,82 @@ fn try_buy_builder(game_state: &mut GameState, team_color: TeamColor) -> Result<
     }
 }
 
+// struct which gets deserialized from the agent, which represents a builder's action
 #[derive(Deserialize)]
 struct BuilderAction {
+    // "build", "recycle_tower", "nothing"
     action_type: String,
+
+    // mandatory
     target_x: Option<i32>,
+
+    // mandatory
     target_y: Option<i32>,
+
+    // Which type of tower: "crossbow", "minigun", etc.
+    // see Tower::new() for how this will be parsed
     tower_type: Option<String>,
 }
 
+// Try to perform a builder action based on what the agent's output,
+// Return an error if it was invalid, otherwise perform the action
 fn try_perform_builder_action(
+    // we need to modify the game state if the input is valid
     game_state: &mut GameState,
+
+    // we need the input itself
     builder_action: BuilderAction,
+
+    // we need to know which player's input
     team_color: TeamColor,
 ) -> Result<(), String> {
+    // get the player state object for the team which is performing the bulider action
     let player_state = match team_color {
         TeamColor::Red => &mut game_state.player_state_red,
         TeamColor::Blue => &mut game_state.player_state_blue,
     };
+
+    // which action are we doing?
     match builder_action.action_type.as_str() {
+
+        // Building a tower
         "build" => match (builder_action.target_x, builder_action.target_y) {
+            // if we put the target x and y positions into a tuple like (x,y), we have 4 options:
+
+            // both target positions provided: is there a floor tile at the target position?
             (Some(x), Some(y)) => match game_state.floor_tiles.get(&Position { x, y }) {
+
+                // Yes, there is a floor tile: do the team color and floor tile type match
                 Some(tile) => match (tile, team_color) {
+
+                    // Yes, the team color and floor tile type match
                     (FloorTile::RedTerritory, TeamColor::Red)
-                    | (FloorTile::BlueTerritory, TeamColor::Blue) => match game_state
+                    | (FloorTile::BlueTerritory, TeamColor::Blue) =>
+                    
+                    // Is there already an entity at that position?
+                    match game_state
                         .entity_position
                         .get(&Position { x, y })
                     {
+                        // No entity already at the target position: did the agent specify a tower type to build?
                         None => match builder_action.tower_type {
+
+                            // Yes, the agent specified a tower type.
                             Some(tow_type) => {
+
+                                // Attempt to create a tower with the specified tower type
                                 match Tower::new(Position { x, y }, team_color, tow_type.clone()) {
+
+                                    // Tower was successfully created (but not placed on the map yet)
                                     Ok(new_tower) => {
+
+                                        // Does the player have enough money to place that tower?
                                         match player_state.money >= new_tower.stats.cost {
+
+                                            // Yes, there is enough money to place the tower
                                             true => Ok({
+                                                
+                                                // Complete the purchase and place the new tower
                                                 player_state.money -= new_tower.stats.cost;
                                                 game_state.add_tower(
                                                     tow_type,
@@ -828,6 +873,8 @@ fn try_perform_builder_action(
                                                     team_color,
                                                 );
                                             }),
+
+                                            // Not enough money to place the tower
                                             false => Err(format!(
                                                 "You're too poor to build the \"{}\" tower, which costs ${}. You only have ${}",
                                                 new_tower.stats.tower_type,
@@ -836,83 +883,133 @@ fn try_perform_builder_action(
                                             )),
                                         }
                                     }
+
+                                    // An error occurred when trying to create the tower
                                     Err(e_str) => Err(e_str),
                                 }
                             }
+
+                            // No tower type was specified
                             None => Err(format!(
                                 "Builder action_type was \"build\", but no tower type was specified"
                             )),
                         },
+
+                        // There is an entity in the way at the target position
                         Some(_) => Err(format!(
                             "There was already something at the target position ({},{})",
                             x, y
                         )),
                     },
 
+                    // No, the team color and tile type don't match
                     _ => Err(format!(
                         "Builder attempted to build outside its team's territory"
                     )),
                 },
+
+                // there is no floor tile at the target position (out of bounds):
                 None => Err(format!(
                     "Builder attempted to build somewhere out-of-bounds"
                 )),
             },
+
+            // no target positions provided
             (None, None) => Err(format!(
                 "Builder action_type was \"build\", but no target position was specified"
             )),
+
+            // only y position provided
             (None, Some(_)) => Err(format!(
                 "Builder action_type was \"build\", but no target x position was specified"
             )),
+
+            // only x position provided
             (Some(_), None) => Err(format!(
                 "Builder action_type was \"build\", but no target y position was specified"
             )),
         },
+
+        // Destroying the tower, recieve some money in return
         "recycle_tower" => match (builder_action.target_x, builder_action.target_y) {
+            // if we put the target x and y positions into a tuple like (x,y), we have 4 options:
+
+            // both target positions provided: is there a floor tile at the target position?
             (Some(x), Some(y)) => match game_state.floor_tiles.get(&Position { x, y }) {
+
+                // Yes, there is a floor tile: do the team color and floor tile type match?
                 Some(tile) => match (tile, team_color) {
+
+                    // Yes, the team color and floor tile type match
                     (FloorTile::RedTerritory, TeamColor::Red)
                     | (FloorTile::BlueTerritory, TeamColor::Blue) => {
+
+                        // Is there an entity at the target position?
                         match game_state.entity_position.get(&Position { x, y }).copied() {
+
+                            // There's an entity at the target position. Is it a tower?
                             Some(entity_key) => match entity_key.entity_type {
+
+                                // It's an EntityKey pointing to a tower. Is the key valid?
                                 EntityType::Tower => match player_state.towers.get(&entity_key) {
+
+                                    // It's pointing to a valid tower: Recycle the tower, and give back half it's cost
                                     Some(tower) => Ok({
                                         player_state.money += tower.stats.cost / 2;
                                         game_state.remove_tower(entity_key);
                                     }),
+
+                                    // Invalid key: There's a desync between the entity and the tower
                                     None => Err(format!(
                                         "Dangling reference to tower with UID {} in entity lookup",
                                         entity_key.uid
                                     )),
                                 },
+
+                                // The entity is not a tower, can't recycle it
                                 _ => Err(format!(
                                     "There is no tower to recycle at position ({},{})",
                                     x, y
                                 )),
                             },
+
+                            // There is nothing there to recycle
                             None => Err(format!(
                                 "There is nothing to recycle at position ({},{})",
                                 x, y
                             )),
                         }
                     }
+
+                    // No, the team color and tile type don't match
                     _ => Err(format!(
                         "Builder attempted to recycle a tower outside its team's territory"
                     )),
                 },
+
+                // there is no floor tile at the target position (out of bounds):
                 None => Err(format!(
                     "Builder attempted to recycle a tower somewhere out-of-bounds"
                 )),
             },
+
+            // no target position was provided
             (None, None) => Err(format!(
                 "Builder action_type was \"recycle_tower\", but no target position was specified"
             )),
+
+            // only y position provided
             (None, Some(_)) => Err(format!(
                 "Builder action_type was \"recycle_tower\", but no target x position was specified"
             )),
+
+            // only x position provided
             (Some(_), None) => Err(format!(
                 "Builder action_type was \"recycle_tower\", but no target y position was specified"
             )),
         },
+
+        // Builder chooses not to do anything
         "nothing" => Ok(()),
         invalid => Err(format!("Builder action_type \"{invalid}\" is invalid",)),
     }
@@ -956,7 +1053,7 @@ fn try_queue_mercenary(
 ////////// WORLD UPDATE //////////
 
 fn move_mercenaries(game_state: &mut GameState) -> () {
-    let mut conflicts: HashMap<Position,Vec<&Mercenary>> = HashMap::new();
+    let mut conflicts: HashMap<Position, Vec<&Mercenary>> = HashMap::new();
     for merc in game_state.player_state_red.mercenaries.values() {
         let desire = &merc.get_desired_position();
         match conflicts.get_mut(desire) {
@@ -965,7 +1062,7 @@ fn move_mercenaries(game_state: &mut GameState) -> () {
                 let mut new = Vec::new();
                 new.push(merc);
                 conflicts.insert(merc.position, new);
-            },
+            }
         }
     }
     for merc in game_state.player_state_blue.mercenaries.values() {
@@ -976,12 +1073,10 @@ fn move_mercenaries(game_state: &mut GameState) -> () {
                 let mut new = Vec::new();
                 new.push(merc);
                 conflicts.insert(merc.position, new);
-            },
+            }
         }
     }
-    for conflict in conflicts {
-        
-    }
+    for conflict in conflicts {}
 }
 
 fn pop_mercenaries(game_state: &mut GameState) -> () {
