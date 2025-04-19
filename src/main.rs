@@ -767,6 +767,7 @@ fn try_set_team_name(
     todo!()
 }
 
+// Call this function
 fn try_buy_builder(game_state: &mut GameState, team_color: TeamColor) -> Result<(), String> {
     let player_state = match team_color {
         TeamColor::Red => &mut game_state.player_state_red,
