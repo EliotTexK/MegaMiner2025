@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvolmheciprl8"]
+
+[ext_resource type="Script" uid="uid://0p37fef6vxet" path="res://game_manager.gd" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://csts2io3jxnsy" path="res://ui.tscn" id="2_e2o6t"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_e2o6t")
+
+[node name="Tiles" type="Node2D" parent="."]
+position = Vector2(64, 64)
+
+[node name="UI" parent="." instance=ExtResource("2_e2o6t")]
+
+[connection signal="build" from="UI" to="." method="_on_ui_build"]
+[connection signal="start_game" from="UI" to="." method="_on_ui_start_game"]
