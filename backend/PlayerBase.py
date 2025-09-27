@@ -14,6 +14,3 @@ class PlayerBase(Entity):
             self.team = team_color
         else:
             raise Exception("Player base team_color must be 'r' or 'b'") # TF2 reference?
-    
-    def __update__(self, game_state: GameState):
-        pass # doesn't do anything actively
