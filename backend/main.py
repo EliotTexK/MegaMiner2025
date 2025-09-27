@@ -23,4 +23,7 @@ if __name__ == "__main__":
     except subprocess.CalledProcessError as e:
         print(f"Command failed with return code {e.returncode}")
     
-    #print(game.save_game_State_to_json())
+    if can_start:
+        game.run()
+
+    
