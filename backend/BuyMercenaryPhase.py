@@ -39,35 +39,35 @@ def buy_mercenary_phase(game_state: GameState, ai_action: AIAction) -> None:
             
             else: raise Exception("Invalid direction specified!")
 
-    if ai_action.action_l.buy_mercenary:
-        pbl = game_state.player_base_l
+    if ai_action.action_b.buy_mercenary:
+        pbl = game_state.player_base_b
 
-        if game_state.money_l < 20:
+        if game_state.money_b < 20:
             raise Exception("Not enough money!")
         else:
 
-            if ai_action.action_l.direction == "up" \
+            if ai_action.action_b.direction == "up" \
             and pbl.mercenary_queued_up == False \
             and game_state.tile_grid[pbl.x][pbl.y - 1] == "path":
                 pbl.mercenary_queued_up = True
-                game_state.money_l -= 20
+                game_state.money_b -= 20
             
-            elif ai_action.action_l.direction == "down" \
+            elif ai_action.action_b.direction == "down" \
             and pbl.mercenary_queued_down == False \
             and game_state.tile_grid[pbl.x][pbl.y + 1] == "path":
                 pbl.mercenary_queued_down = True
-                game_state.money_l -= 20
+                game_state.money_b -= 20
             
-            elif ai_action.action_l.direction == "left" \
+            elif ai_action.action_b.direction == "left" \
             and pbl.mercenary_queued_left == False \
             and game_state.tile_grid[pbl.x - 1][pbl.y] == "path":
                 pbl.mercenary_queued_left = True
-                game_state.money_l -= 20
+                game_state.money_b -= 20
             
-            elif ai_action.action_l.direction == "right" \
+            elif ai_action.action_b.direction == "right" \
             and pbl.mercenary_queued_right == False \
             and game_state.tile_grid[pbl.x + 1][pbl.y] == "path":
                 pbl.mercenary_queued_right = True
-                game_state.money_l -= 20
+                game_state.money_b -= 20
             
             else: raise Exception("Invalid direction specified!")
