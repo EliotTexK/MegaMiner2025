@@ -33,7 +33,7 @@ In this Phase, Each player may choose to do one of the following:
 
 If a player chooses to build a tower, they must also choose an (X,Y) position to build it at, and a tower to build.
 
-If the Tower Build Action is valid, it is performed: a tower is built at the specified position, and the price of the tower type is subtracted from the gold of the player who built it.
+If the Tower Build Action is valid, it is performed: a tower is built at the specified position, and the price of the tower type is subtracted from the money of the player who built it.
 
 If the Tower Build Action is not valid, it is not performed, and the player does NOT get a second chance to build or destroy this turn.
 
@@ -65,14 +65,14 @@ A choice of tower position is valid if and only if:
 --Phase 2: Buy Mercenaries--
 
 Each player has the choice to buy a Mercenary.
-Mercenaries cost 20 gold.
+Mercenaries cost 20 money.
 The player who buys a mercenary must select a direction ( NSEW )
-If the mercenary purchase is valid, a Mercenary will be queued in the selected direction, and 20 gold will be subtracted from the player's gold.
+If the mercenary purchase is valid, a Mercenary will be queued in the selected direction, and 20 money will be subtracted from the player's money.
 
 --Valid Mercenary Purchase--
 
 1. There is a path tile in the selected direction
-2. The player has 20 or more gold
+2. The player has 20 or more money
 3. There is not already a queued mercenary in that direction
 
 --Phase 3: World Update--
@@ -146,7 +146,7 @@ Tower ranges are always in units of manhattan distance
 
 --Tower Action--
 
-Houses add 12 gold to their player's Gold.
+Houses add 12 money to their player's money.
 
 The Crossbow and Cannon towers attack the closest Demon/Enemy Mercenary to their Base that's in their range.
 
@@ -255,9 +255,9 @@ A player base is Destroyed if it has zero or less HP.
 
 If one player's base is Destroyed and the other is not, the player with the surviving base wins.
 
-If both players' bases are Destroyed, break the tie based on who has the most Gold.
+If both players' bases are Destroyed, break the tie based on who has the most Money.
 
-Then, if both players have the same amount of Gold, break the tie based on who has built the most towers.
+Then, if both players have the same amount of Money, break the tie based on who has built the most towers.
 
 Then, if both players have built the same number of towers, break the tie based on the sum of prices of those towers.
 
