@@ -1,9 +1,7 @@
-from GameObjects import *
 
 # BALANCE: tweaking these numbers will make or break game balance
 
 INITIAL_MONEY: int = 20
-HOUSE_MONEY_PRODUCED: int = 12
 DEMON_INITIAL_HP: int = 70
 DEMON_ATTACK_POWER: int = 10 # TODO: increase this over time?
 MERCENARY_INITIAL_HP: int = 70
@@ -16,15 +14,19 @@ PLAYER_BASE_INITIAL_HP = 200
 HOUSE_MAX_COOLDOWN: int = 10
 HOUSE_PRICE: int = 10
 HOUSE_RANGE: int = 0
+HOUSE_MONEY_PRODUCED: int = 12
 
 CANNON_MAX_COOLDOWN: int = 5
 CANNON_PRICE: int = 10
 CANNON_RANGE: int = 3
+CANNON_DAMAGE: int = 3
 
 MINIGUN_MAX_COOLDOWN: int = 5
 MINIGUN_PRICE: int = 25
 MINIGUN_RANGE: int = 3
+MINIGUN_DAMAGE: int = 2
 
 CROSSBOW_MAX_COOLDOWN: int = 3
 CROSSBOW_PRICE: int = 8
 CROSSBOW_RANGE: int = 4
+CROSSBOW_DAMAGE: int = 1
