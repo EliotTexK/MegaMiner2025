@@ -4,6 +4,8 @@ from GameState import GameState
 from Mercenary import Mercenary
 from Demon import Demon
 from PlayerBase import PlayerBase
+from Entity import Entity
+import Constants
 
 def update_mercenaries(game_state: GameState):
     # Determine all merc states
@@ -13,14 +15,11 @@ def update_mercenaries(game_state: GameState):
     set_all_merc_states(game_state, game_state.mercs, moving, fighting, waiting)
 
     # Move all mercs in moving state
-    for merc in moving:
-        move_merc_single(merc)
+    move_all_mercs(game_state, moving)
 
     # Apply combat effects for all mercs in fighting state
     for merc in fighting:
-        do_merc_combat_single(merc)
-
-    pass
+        do_merc_combat_single(game_state, merc)
 
 # Side effect: All merc objects will have their state set appropiately
 # Side effect: moving, fighting and waiting lists will be populated
@@ -34,25 +33,53 @@ def set_all_merc_states(game_state: GameState, mercs: List[Mercenary],
         blocking_entity1 = game_state.entity_grid[next_tile1[0], next_tile1[1]]
         blocking_entity2 = game_state.entity_grid[next_tile2[0], next_tile2[1]]
 
-        # fighting if rival merc or demon or player base is within 2 spaces
-        for ent in [blocking_entity1, blocking_entity2]:
-            if (type(ent) == type(Demon) or 
-                type(ent) == type(PlayerBase) or 
-                (type(ent) == type(Mercenary) and ent.team != merc.team)):
-                merc.state = 'fighting'
-                # set all mercs behind us to waiting
-                merc.set_behind_waiting(game_state)
-            # if not waiting or fighting, then moving
-            elif merc.state != 'waiting':
-                merc.state = 'moving'
+        # fighting if rival merc or demon or player base is within 1 space
+        if (type(blocking_entity1) == type(Demon) or 
+            type(blocking_entity1) == type(PlayerBase) or
+            (type(blocking_entity1) == type(Mercenary) and blocking_entity1.team != merc.team)):
+            merc.state = 'fighting'
+            # set all mercs behind us to waiting
+            merc.set_behind_waiting(game_state)
+        # fighting if enemy is within 2 spaces and merc within 1 space is not ally
+        elif (type(blocking_entity1) == None and
+            type(blocking_entity2) == type(Demon) or 
+            type(blocking_entity2) == type(PlayerBase) or
+            (type(blocking_entity2) == type(Mercenary) and blocking_entity2.team != merc.team)):
+            merc.state = 'fighting'
+            # set all mercs behind us to waiting
+            merc.set_behind_waiting(game_state)
+        # if not waiting or fighting, then moving
+        elif merc.state != 'waiting':
+            merc.state = 'moving'
         
         # add to correct list
         if merc.state == 'fighting': fighting.append(merc)
         if merc.state == 'waiting': waiting.append(merc)
         if merc.state == 'moving': moving.append(merc)
 
-def move_merc_single(merc: Mercenary):
-    pass
+def move_all_mercs(game_state: GameState, mercs: List[Mercenary]):
+    # remove moving mercs
+    for merc in mercs:
+        game_state.entity_grid[merc.x][merc.y] = None
 
-def do_merc_combat_single(merc: Mercenary):
-    pass
+    # set new position
+    for merc in mercs:
+        new_pos = merc.get_adjacent_path_tile(game_state, 1)
+        merc.x = new_pos[0]
+        merc.y = new_pos[1]
+
+    # add moving mercs back
+    for merc in mercs:
+        game_state.entity_grid[merc.x][merc.y] = merc
+
+def do_merc_combat_single(game_state: GameState, merc: Mercenary):
+    next_tile1 = merc.get_adjacent_path_tile(game_state, 1)
+    next_tile2 = merc.get_adjacent_path_tile(game_state, 2)
+    target1: Entity = game_state.entity_grid[next_tile1[0], next_tile1[1]]
+    target2: Entity = game_state.entity_grid[next_tile2[0], next_tile2[1]]
+    
+    # if tile 1 space in front is empty, we are contesting space with enemy 2 spaces in front 
+    if (target1 != None):
+        target1.health -= Constants.MERCENARY_ATTACK_POWER
+    else:
+        target2.health -= Constants.MERCENARY_ATTACK_POWER
