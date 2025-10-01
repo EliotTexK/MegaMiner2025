@@ -1,5 +1,6 @@
 # Phase 3 | Updates everything, making things move/attack and determining win/lose
 
+from typing import List
 from GameState import GameState
 from UpdateMercenaries import update_mercenaries
 from UpdateDemons import update_demons
@@ -9,16 +10,25 @@ from House import House
 from Cannon import Cannon
 from Minigun import Minigun
 import Constants
+from Entity import Entity
 
 def world_update_phase(game_state: GameState):
     update_mercenaries(game_state)
+    mortal_wound_check(game_state, game_state.mercs + game_state.demons)
     check_wincon(game_state)
 
     update_demons(game_state)
+    mortal_wound_check(game_state, game_state.mercs)
     check_wincon(game_state)
     
     spawn_mercenaries(game_state)
     spawn_demons(game_state)
+
+def mortal_wound_check(game_state: GameState, entities: List[Entity]):
+    for ent in entities:
+        if ent.health <= 0:
+            game_state.entity_grid[ent.x][ent.y] = None
+
 
 def check_wincon(game_state: GameState):
     # Determines which player wins the game, if there is an current winner
