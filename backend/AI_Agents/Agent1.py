@@ -9,4 +9,4 @@ if len(sys.argv) > 1:
 action = "build" 
 coordsX = "10"
 coordsY = "10"
-print(action, coordsX, coordsY)
+print(action, coordsX, coordsY, "crossbow")

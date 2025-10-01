@@ -8,7 +8,9 @@ import json
 #import copy
 from GameState import GameState
 from AIAction import AIAction
-from BuildPhase import build_tower_phase ## This is dumb, move it into game once finished
+from BuildPhase import build_tower_phase ## This is crazy lol python weird - Dorian
+from BuyMercenaryPhase import buy_mercenary_phase
+from WorldUpdatePhase import world_update_phase
 import subprocess
 
 class Game:
@@ -18,7 +20,7 @@ class Game:
         # Path to the Agent2.py file
         self.agent_path_2 : str = agent_path_2
 
-        self.game_state : GameState = GameState("r",1,1)
+        self.game_state : GameState = GameState("r",1,1) 
 
     ## Kind of useless??? 
     def reset(self):
@@ -49,21 +51,37 @@ class Game:
             ## an example on how to parse though actions and change the game state
             action_r : AIAction = self.decode_action(AI_1_action)
             action_b : AIAction = self.decode_action(AI_2_action)
-            ## ----Update game state with towers, and queues---- ##
 
             ##Call buy phase
             build_tower_phase(self.game_state, action_r, action_b)
 
             ##Get actions again for merc buy phase
 
+             ## First player turn
+            try:
+                ## This is an example of how we're sending the data to the ai's and how we're recieving them
+                ## We're using subprocess to start the ai files, we're using check output to save the output (the print functions)
+                AI_1_action = (subprocess.check_output(["python", self.AI_Path_1, self.save_game_State_to_json()])).decode('utf-8')
+            except subprocess.CalledProcessError as e:
+                print(f"Command failed with return code {e.returncode}")
+            
+            ## Second player turn
+            try:
+                AI_2_action = (subprocess.check_output(["python", self.AI_Path_2, self.save_game_State_to_json()])).decode('utf-8')
+            except subprocess.CalledProcessError as e:
+                print(f"Command failed with return code {e.returncode}")
+
+            action_r = self.decode_action(AI_1_action)
+            action_b = self.decode_action(AI_2_action)
 
             ## call merc buy phase
-            
+            buy_mercenary_phase(self.game_state, action_r, action_b)
             ## ----Update game state with towers, and queues---- ##
 
+            world_update_phase(self.game_state)
 
             ## ----Update the turn---- ##
-            self.game_state.turns_progressed
+            self.game_state.turns_progressed += 1
 
             
         
@@ -71,7 +89,7 @@ class Game:
     ##---------------HELPERS-----------------##
 
     def save_game_State_to_json(self) -> str:
-        data = json.dumps(self.game_state.map_tiles)
+        data = json.dumps(self.game_state.tile_grid)
         return data
 
     def load_game_state_from_json(self):
