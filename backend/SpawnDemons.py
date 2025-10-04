@@ -5,14 +5,14 @@ from GameState import GameState
 def spawn_demons(game_state: GameState):
     for demon_spawner in game_state.demon_spawners:
         spawner : DemonSpawner = demon_spawner
+        targ_space = game_state.entity_grid[spawner.x][spawner.y]
         
         if spawner.reload_time_left > 0:
             spawner.reload_time_left -= 1
-        else:
-            nx = spawner.x + spawner.spawn_directionX
-            ny = spawner.y + spawner.spawn_directionY
-            game_state.entity_grid[nx][ny] = Demon(nx, ny, spawner.target_team)
-            game_state.demons.append(game_state.entity_grid[nx][ny])
+        # Wait to spawn until space is clear
+        elif targ_space == None:
+            targ_space = Demon(spawner.x, spawner.y, spawner.target_team)
+            game_state.demons.append(targ_space)
 
             spawner.reload_time_left = spawner.reload_time_max
         
