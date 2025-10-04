@@ -142,6 +142,8 @@ class Game:
 
 
         data : dict = {
+            "Victory" : self.game_state.victory,
+            "TurnsProgressed" : self.game_state.turns_progressed,
             "TileGrid" : self.game_state.tile_grid,
             "EntityGrid" : string_entity_grid,
             "Towers" : string_towers,
@@ -154,7 +156,7 @@ class Game:
 
         return json_string
 
-    def json_to_game_state(self):
+    def json_to_game_state(self, json_string):
         pass
 
     def load_ai_paths(self, path_one : str, path_two : str):

@@ -48,7 +48,7 @@ class GameState:
     ##Uses RGB values to construct a map, full red is red terratoy, full blue is blue terrarort, full green is path, black is void
     ##using r, b, and # == path, _ = void
     def make_tile_grid_from_image(self):
-        map_image_path = "backend/maps/map.png"
+        map_image_path = "C:/MegaMiner/MegaMiner2025/backend/maps/map.png"
         image = Image.open(map_image_path)
         pix_arry = np.asarray(image)
         tile_grid = []

@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://0p37fef6vxet" path="res://game_manager.gd" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://csts2io3jxnsy" path="res://ui.tscn" id="2_e2o6t"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" node_paths=PackedStringArray("UI")]
 script = ExtResource("1_e2o6t")
+UI = NodePath("UI")
 
 [node name="Tiles" type="Node2D" parent="."]
 position = Vector2(64, 64)

@@ -5,16 +5,23 @@ const ALT_GRASS = preload("res://Assets/Base_Skin/alt_grass.png")
 const ALT_PATH = preload("res://Assets/Base_Skin/alt_path.png")
 const GRASS = preload("res://Assets/Base_Skin/grass.png")
 const PATH = preload("res://Assets/Base_Skin/path.png")
+const BLUE_RECRUIT = preload("res://Assets/Base_Skin/blue_recruit.png")
+const RED_RECRUIT = preload("res://Assets/Base_Skin/red_recruit.png")
 
-var previous_game_state : String = ""
-var current_game_state : String = ""
+@export var UI : GameUI
+
+var previous_game_state : Dictionary 
+var current_game_state : Dictionary
 
 var player1_ai : bool
 var player2_ai : bool
 
 var alt : bool = false
-
 var initial : bool  = true
+var backend_running : bool = false
+
+var turn_interva_max : float = 2.0 
+var turn_interval : float = 0
 
 @onready var tiles = $Tiles
 @onready var entities: Node2D = $Entities
@@ -25,28 +32,33 @@ func _on_ui_start_game(is_ai1, is_ai2):
 	player2_ai = is_ai2
 	
 	var output = []
-	OS.execute("python", [GlobalPaths.backendPath, "-v"], output)
+	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v", "initial"], output, true)
 	
-	for i in output:
-		print(i)
-	#_draw_game_from_gamestate(output[0])
+	if exit_code == 0:
+		print("Python Script executted successfully!")
+	else:
+		print("Error handling script!: ", exit_code)
+	#for i in output:
+		#print(i)
 	
+	_draw_game_from_gamestate(output[0])
+	backend_running = true
 
 ## Updates world visuals
 func _draw_game_from_gamestate(game_state : String):
-	## We're currently using a dummy game_state for testing purposes
-	var jsonfile = FileAccess.open("res://Data/intial.json", FileAccess.READ)
 	var game_state_json = JSON.parse_string(game_state)
+	current_game_state = game_state_json
 	
 	if initial:
 		_draw_grid(game_state_json["TileGrid"])
-		
 		initial = false
+	_delete_mercs()
 	
-	#_draw_entities(game_state_json)
+	_draw_mercenaries(game_state_json["Mercenaries"])
+	
+	_update_ui(game_state_json)
 
-func _update_grid_grom_gamestate():
-	pass
+
 
 func _draw_grid(tile_grid : Array):
 	var previous_y = 0
@@ -81,36 +93,55 @@ func _draw_grid(tile_grid : Array):
 	
 	tiles.position.x = (get_viewport_rect().size.x - (tile_grid.size() * 32)) / 2
 	tiles.position.y = (get_viewport_rect().size.y - (tile_grid[0].size() * 32)) / 2
+	entities.position = tiles.position
+
+func _delete_mercs():
+	for i in entities.get_children():
+		i.queue_free()
 
 ## Draws the mercanaries, enemies, spawner, buildings
-func _draw_entities(game_state_json : Array):
+func _draw_mercenaries(mercs : Array):
 	
-	pass
-	
+	for merc in mercs:
+		var pos = Vector2(merc["Mercenary"]["x"] * 32, merc["Mercenary"]["y"] * 32)
+		var sprite = Sprite2D.new()
+		if merc["Mercenary"]["Team"] == "b":
+			sprite.texture = BLUE_RECRUIT
+			sprite.flip_h = true
+		else:
+			sprite.texture = RED_RECRUIT
+		
+		sprite.position = pos
+		entities.add_child(sprite)
+
 
 ## Make this when the game backend is done
 func _process(delta):
 	
-	#if placeholder:
-		### First Grab current gamestate from backend, save it to output
-		##var output = []
-		##OS.execute("python.exe", ["MegaMiner_BackEnd/main.py",10, "Hi"], output)
-		##
-		#### Second, execute the python files with the gamestate as a parametter, then save the output actions
-		##var agentOutput1 = []
-		##var agentOutput2 = []
-		##OS.execute("python.exe", [GlobalPaths.AI_agent1_file_path], agentOutput1)
-		##OS.execute("python.exe", [GlobalPaths.AI_agent2_file_path], agentOutput2)
-		#
-		### Send the output actions to the backend, save the new gamestate
-		##OS.execute("whatever.exe", ["function_arguments"], output) ##The backend isn't finished
-		#
-		### draw the new gamestate
-		#_draw_game_from_gamestate("place_holder")
+	if backend_running:
+		turn_interval -= 1.0 * delta
+		if turn_interval <= 0:
+			AI_game_turn()
+			turn_interval = turn_interva_max
 		
-		pass
 
+
+func AI_game_turn():
+	var output = []
+	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v"], output, true)
+	if exit_code == 0:
+		pass
+		#print("Python Script executted successfully!")
+	else:
+		print("Error handling script!: ", exit_code)
+	
+	previous_game_state = current_game_state
+	
+	_draw_game_from_gamestate(output[0])
 
 func _on_ui_build(red_side: bool, x: int, y: int) -> void:
 	var output = []
 	OS.execute("python", [GlobalPaths.backendPath, x, y, output])
+
+func _update_ui(gamestate):
+	UI._update_turns_progressed(gamestate["TurnsProgressed"])

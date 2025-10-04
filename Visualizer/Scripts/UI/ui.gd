@@ -1,3 +1,4 @@
+class_name GameUI
 extends CanvasLayer
 
 @export var player_select_one : PlayerSelect
@@ -72,3 +73,6 @@ func _on_build_pressed() -> void:
 
 func _on_backend_finder_file_selected(path: String) -> void:
 	GlobalPaths.backendPath = path
+
+func _update_turns_progressed(new_value):
+	$"Game UI/Panel/Turns Progressed".text = "Turns Progressed\n" + str(int(new_value))
