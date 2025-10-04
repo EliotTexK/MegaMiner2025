@@ -14,6 +14,10 @@ import Constants
 from Entity import Entity
 
 def world_update_phase(game_state: GameState):
+    # remove dead entities from respective lists
+    game_state.mercs = [m for m in game_state.mercs if m.state != "dead"]
+    game_state.demons = [d for d in game_state.demons if d.state != "dead"]
+
     update_mercenaries(game_state)
     mortal_wound_check(game_state, game_state.mercs + game_state.demons)
     check_wincon(game_state)
@@ -33,6 +37,7 @@ def mortal_wound_check(game_state: GameState, entities: List[Entity]):
     for ent in entities:
         if ent.health <= 0:
             game_state.entity_grid[ent.x][ent.y] = None
+            ent.state = "dead"
 
 
 def check_wincon(game_state: GameState):
