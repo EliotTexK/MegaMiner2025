@@ -16,13 +16,13 @@ def update_towers(game_state: GameState):
         if isinstance(tower, House):
             tower.update(game_state) ##House really only needs money_r and money_b, but we can only change those values if we give it the whole game_state
 
-        elif isinstance(tower, Tower): ## I would hope that the towers list only have towers in it
+        elif isinstance(tower, Tower): # I would hope that the towers list only have towers in it
             tower.update(game_state.entity_grid)
         
         # current_cooldown = tower.current_cooldown
         # current_team = tower.team_color
 
-        # ## House Tower activation
+        # # House Tower activation
         # if isinstance(tower, House):
         #     if current_cooldown > 0:
         #         current_cooldown -= 1
@@ -33,7 +33,7 @@ def update_towers(game_state: GameState):
         #             game_state.money_b += Constants.HOUSE_MONEY_PRODUCED
         #         tower.current_cooldown = Constants.HOUSE_MAX_COOLDOWN
 
-        # ## Cannon Tower activation
+        # # Cannon Tower activation
         # elif isinstance(tower, Cannon):
         #     if current_cooldown > 0:
         #         current_cooldown -= 1
@@ -45,7 +45,7 @@ def update_towers(game_state: GameState):
         #             highest_priority.health -= Constants.CANNON_DAMAGE
         #             tower.current_cooldown = Constants.CANNON_MAX_COOLDOWN
 
-        # ## Crossbow Tower activation
+        # # Crossbow Tower activation
         # elif isinstance(tower, Crossbow):
         #     if current_cooldown > 0:
         #         current_cooldown -= 1
@@ -57,7 +57,7 @@ def update_towers(game_state: GameState):
         #             highest_priority.health -= Constants.CROSSBOW_DAMAGE
         #             tower.current_cooldown = Constants.CROSSBOW_MAX_COOLDOWN
         
-        # ## Minigun Tower activation
+        # # Minigun Tower activation
         # elif isinstance(tower, Minigun):
         #     if current_cooldown > 0:
         #         current_cooldown -= 1

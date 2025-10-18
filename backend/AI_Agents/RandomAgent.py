@@ -1,17 +1,18 @@
 import sys
 import json
 
-import random ## Not necessary to function
+import random # Not necessary to function
 
-## Code required to get the gamestate, 
-## it takes the filepath and opens the file
-## then it saves it into a gamestate dict that you can use
+# Code required to get the gamestate, 
+# it takes the filepath and opens the file
+# then it saves it into a gamestate dict that you can use
 if len(sys.argv) > 1:
     with open(sys.argv[1], 'r') as inp:
         game_state : dict = json.load(inp)
 
 action = "build" 
-# what_to_build = ['crossbow', 'house', 'cannon', 'minigun', "n/a"] ##n/a isn't a valid command, whenever you do something invalid it doesn't do anything
+# n/a isn't a valid command, whenever you do something invalid it doesn't do anything
+# what_to_build = ['crossbow', 'house', 'cannon', 'minigun', "n/a"]
 what_to_build = ['crossbow', "n/a"]
 tilegrid = game_state["TileGrid"]
 

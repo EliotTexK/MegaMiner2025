@@ -21,9 +21,9 @@ func _ready():
 	is_AI = true
 	_set_mode(true)
 
-## Sets whether or not a Human or an AI will be playing
+# Sets whether or not a Human or an AI will be playing
 func _set_mode(AI : bool):
-	if AI && !is_AI: ## If AI presses, and it currently isn't AI, change visuals
+	if AI && !is_AI: # If AI presses, and it currently isn't AI, change visuals
 		ai_icon.visible = true
 		human_icon.visible = false
 		
@@ -34,7 +34,7 @@ func _set_mode(AI : bool):
 		
 		file_picker.show()
 		is_AI = true
-	elif !AI && is_AI: ## If Human presses, and it currently Human AI, change visuals
+	elif !AI && is_AI: # If Human presses, and it currently Human AI, change visuals
 		ai_icon.visible = false
 		human_icon.visible = true
 		

@@ -42,30 +42,30 @@ def mortal_wound_check(game_state: GameState, entities: List[Entity]):
 
 def check_wincon(game_state: GameState):
     # Determines which player wins the game, if there is an current winner
-    team_b_hp = game_state.player_base_b.hp
-    team_r_hp = game_state.player_base_r.hp
+    team_b_health = game_state.player_base_b.health
+    team_r_health = game_state.player_base_r.health
 
     team_b_money = game_state.money_b
     team_r_money = game_state.money_r
 
     towers = game_state.towers
 
-    ## If one player's base is Destroyed and the other is not, the player with the surviving base wins.
-    if team_b_hp <= 0 or team_r_hp <= 0:
-        if team_b_hp == 0:
+    # If one player's base is Destroyed and the other is not, the player with the surviving base wins.
+    if team_b_health <= 0 or team_r_health <= 0:
+        if team_b_health == 0:
             return "Team R is the winner!"
-        elif team_r_hp == 0:
+        elif team_r_health == 0:
             return "Team B is the winner!"
         
-    ## If both players' bases are Destroyed, break the tie based on who has the most Money.
-    elif team_b_hp <= 0 and team_r_hp <= 0:
+    # If both players' bases are Destroyed, break the tie based on who has the most Money.
+    elif team_b_health <= 0 and team_r_health <= 0:
         if team_b_money != team_r_money:
             if team_b_money > team_r_money:
                 return "Team B is the winner!"
             elif team_r_money > team_b_money:
                 return "Team R is the winner!"
         else:
-            ## Then, if both players have the same amount of Money, break the tie based on who has built the most towers.
+            # Then, if both players have the same amount of Money, break the tie based on who has built the most towers.
             # Empty lists that will store each tower the teams have
             r_towers = []
             b_towers = []
@@ -83,7 +83,7 @@ def check_wincon(game_state: GameState):
                 else:
                     return "Team B is the winner!"
             else:
-                ## Then, if both players have built the same number of towers, break the tie based on the sum of prices of those towers.
+                # Then, if both players have built the same number of towers, break the tie based on the sum of prices of those towers.
                 # Equals the total price of the total amount of towers per team
                 r_total_cost = 0
                 b_total_cost = 0
@@ -106,7 +106,7 @@ def check_wincon(game_state: GameState):
                             r_total_cost += Constants.MINIGUN_PRICE
                         else:
                             b_total_cost += Constants.MINIGUN_PRICE
-                    else:   ## Crossbow
+                    else:   # Crossbow
                         if current_team == 'r':
                             r_total_cost += Constants.CROSSBOW_PRICE
                         else:
@@ -135,18 +135,18 @@ def check_wincon(game_state: GameState):
                         else:
                             return "Team B is the winner!"
                     else:
-                        ##Then, if both have the same number of Mercenaries, break the tie based on the sum of HP of mercenaries.
-                        r_mercs_hp = 0
-                        b_mercs_hp = 0
+                        ##Then, if both have the same number of Mercenaries, break the tie based on the sum of health of mercenaries.
+                        r_mercs_health = 0
+                        b_mercs_health = 0
 
                         for merc in game_state.mercs:
                             if merc.team_color == 'r':
-                                r_mercs_hp += merc.hp
+                                r_mercs_health += merc.health
                             else:
-                                b_mercs_hp += merc.hp
+                                b_mercs_health += merc.health
                         
-                        if r_mercs_hp != b_mercs_hp:
-                            if r_mercs_hp > b_mercs_hp:
+                        if r_mercs_health != b_mercs_health:
+                            if r_mercs_health > b_mercs_health:
                                 return "Team R is the winner!"
                             else:
                                 return "Team B is the winner!"

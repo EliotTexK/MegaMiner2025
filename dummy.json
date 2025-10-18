@@ -13,7 +13,7 @@
                     "x": 5,
                     "y": 2
                 },
-                "hp": 18,
+                "health": 18,
                 "team_color": "r",
                 "path_to_enemy": [
                     {
@@ -36,7 +36,7 @@
                     "x": 6,
                     "y": 2
                 },
-                "hp": 50,
+                "health": 50,
                 "team_color": "r",
                 "path_to_enemy": [
                     {
@@ -67,7 +67,7 @@
                     "cost": 5,
                     "range": 2,
                     "reload_turns": 4,
-                    "initial_hp": 100
+                    "initial_health": 100
                 },
                 "reload_turns_left": 0,
                 "team_color": "r"
@@ -79,7 +79,7 @@
                 "x": 5,
                 "y": 5
             },
-            "hp": 180,
+            "health": 180,
             "mercenaries_queued": [],
             "team_color": "r"
         }
@@ -96,7 +96,7 @@
                     "x": 12,
                     "y": 2
                 },
-                "hp": 30,
+                "health": 30,
                 "team_color": "b",
                 "path_to_enemy": [
                     {
@@ -119,7 +119,7 @@
                     "x": 10,
                     "y": 2
                 },
-                "hp": 50,
+                "health": 50,
                 "team_color": "b",
                 "path_to_enemy": [
                     {
@@ -150,7 +150,7 @@
                     "cost": 2,
                     "range": 2,
                     "reload_turns": 2,
-                    "initial_hp": 100
+                    "initial_health": 100
                 },
                 "reload_turns_left": 1,
                 "team_color": "b"
@@ -167,7 +167,7 @@
                     "cost": 3,
                     "range": 0,
                     "reload_turns": 6,
-                    "initial_hp": 100
+                    "initial_health": 100
                 },
                 "reload_turns_left": 0,
                 "team_color": "b"
@@ -184,7 +184,7 @@
                     "cost": 4,
                     "range": 2,
                     "reload_turns": 1,
-                    "initial_hp": 100
+                    "initial_health": 100
                 },
                 "reload_turns_left": 0,
                 "team_color": "b"
@@ -196,7 +196,7 @@
                 "x": 28,
                 "y": 5
             },
-            "hp": 160,
+            "health": 160,
             "mercenaries_queued": [
                 {
                     "x": 27,
@@ -517,7 +517,7 @@
                 "x": 17,
                 "y": 8
             },
-            "hp": 30,
+            "health": 30,
             "path_to_target": [
                 {
                     "x": 18,

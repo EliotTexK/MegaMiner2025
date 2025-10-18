@@ -15,7 +15,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
     x = ai_action_r.x # x that is selected to be built at
     y = ai_action_r.y # y that is selected to be built at
 
-    ## Check if the buy action was called, then check if the tile is valid (within same territory), then check if nothing else is on the tower
+    # Check if the buy action was called, then check if the tile is valid (within same territory), then check if nothing else is on the tower
     if ai_action_r.buy_tower_action and game_state.tile_grid[x][y] == "r" and game_state.entity_grid[x][y] is None:
 
         # Need to further define the Tower and Tower subclasses to fully
@@ -70,11 +70,11 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     cross.buildt(game_state.tile_grid)
 
 
-    ## --- BLUE TEAM TOWERS --- ##
+    # --- BLUE TEAM TOWERS --- ##
     x = ai_action_b.x # x that is selected to be built at
     y = ai_action_b.y
 
-     ## Check if the buy action was called, then check if the tile is valid (within same territory), then check if nothing else is on the tower
+     # Check if the buy action was called, then check if the tile is valid (within same territory), then check if nothing else is on the tower
     if ai_action_b.buy_tower_action and game_state.tile_grid[x][y] == "b" and not game_state.entity_grid[x][y] is None:
 
         # Need to further define the Tower and Tower subclasses to fully

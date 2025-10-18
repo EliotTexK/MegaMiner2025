@@ -18,24 +18,24 @@ class Tower(Entity):
         else:
             raise Exception("Tower team_color must be 'r' or 'b'") # TF2 reference?
     
-    ## Called when a tower gets added to the grid
+    # Called when a tower gets added to the grid
     def buildt(self, map_array):
         self.path = self.find_all_paths_in_range(map_array)
         # print(self.path)
     
-    ## Called everytime the world updates
+    # Called everytime the world updates
     def update(self, entity_array):
         if self.current_cooldown > 0:
             self.current_cooldown -= 1
         else:
             self.tower_activation(entity_array)
     
-    ## Called whenever the cooldown is up
+    # Called whenever the cooldown is up
     def tower_activation(self, entity_array):
         for path in self.path:
-            whats_on_path = entity_array[path[0]][path[1]] ## I don't want to type out the entity array thing more than once lol
+            whats_on_path = entity_array[path[0]][path[1]] # I don't want to type out the entity array thing more than once lol
 
-            if isinstance(whats_on_path, Mercenary) or isinstance(whats_on_path, Demon): ## if the ent
+            if isinstance(whats_on_path, Mercenary) or isinstance(whats_on_path, Demon): # if the ent
                 if whats_on_path.team != self.team:
                     whats_on_path.health -= self.attack_power
                     # print(whats_on_path.health)
@@ -52,8 +52,8 @@ class Tower(Entity):
                 if (xi >= 0 and xi < len(map_array)) and (yi >= 0  and yi < len(map_array[0])): ##If point is within map bounds
 
                     if math.sqrt((xi - self.x) * (xi - self.x) + (yi - self.y) * (yi - self.y)) <= self.tower_range: ##This is the circle equation, I like my tower range to be circles 
-                        if map_array[xi][yi] == 'Path': ## We're using the tile grid since we don't need to know the entities to know where a path is
+                        if map_array[xi][yi] == 'Path': # We're using the tile grid since we don't need to know the entities to know where a path is
                             paths.append((xi,yi))
 
-        ## It is currently sorted by top-left to bottom-right, change it later based on closet first, weakest second
+        # It is currently sorted by top-left to bottom-right, change it later based on closet first, weakest second
         return paths

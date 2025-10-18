@@ -100,9 +100,9 @@ When two rival Mercenaries both want to move into the same space, they can't mov
 
 2. Move all Moving Mercenaries.
 
-3. For each Fighting Mercenary, subtract 7 HP from its opponent ( Demon, enemy Mercenary, or enemy Player Base )
+3. For each Fighting Mercenary, subtract 7 health from its opponent ( Demon, enemy Mercenary, or enemy Player Base )
 
-Zero or less HP means that a Mercenary/Demon has suffered Mortal Wounds. However, Mercenaries are fanatical, so this will not stop them from hitting their opponent this turn.
+Zero or less health means that a Mercenary/Demon has suffered Mortal Wounds. However, Mercenaries are fanatical, so this will not stop them from hitting their opponent this turn.
 
 4. Remove all Demons with Mortal Wounds from the game.
 
@@ -118,7 +118,7 @@ Demons generally follow the same rules for Fighting/Waiting/Moving as Mercenarie
 
 2. Move all Moving Demons.
 
-3. For each Fighting Demon, subtract 7 HP from its opponent ( Mercenary, or Player Base )
+3. For each Fighting Demon, subtract 7 health from its opponent ( Mercenary, or Player Base )
 
 4. Remove all Mercenaries with Mortal Wounds from the game.
 
@@ -251,7 +251,7 @@ Range: 4
 
 Winning/Losing is only determined when it is checked.
 
-A player base is Destroyed if it has zero or less HP.
+A player base is Destroyed if it has zero or less health.
 
 If one player's base is Destroyed and the other is not, the player with the surviving base wins.
 
@@ -263,7 +263,7 @@ Then, if both players have built the same number of towers, break the tie based 
 
 Then, if both sums are equal, break the tie based on the number of Mercenaries each player has.
 
-Then, if both have the same number of Mercenaries, break the tie based on the sum of HP of mercenaries.
+Then, if both have the same number of Mercenaries, break the tie based on the sum of health of mercenaries.
 
 Finally, break the tie with a fair coin flip. TODO: maybe not, maybe just split points
 ( Do this IRL with a real coin, it's more fun that way )

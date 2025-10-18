@@ -10,7 +10,7 @@ signal Back
 func _on_back_pressed():
 	Back.emit()
 
-func _on_go_pressed(): ## I love hard coding!
+func _on_go_pressed(): # I love hard coding!
 	var player1_ready : bool = player_select_one.line_edit.text != "" ##If the text is "" then you either havent picked a file or haven't selected a team name
 	var player2_ready : bool = player_select_two.line_edit.text != ""
 	
@@ -20,7 +20,7 @@ func _on_go_pressed(): ## I love hard coding!
 		
 
 	else:
-		## Check to see if either side has a problem and print both
+		# Check to see if either side has a problem and print both
 		if !player1_ready:
 			if player_select_one.is_AI:
 				printerr("Player 1 doesn't have AI file selected!")

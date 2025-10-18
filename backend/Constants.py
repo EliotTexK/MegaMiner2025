@@ -2,13 +2,13 @@
 # BALANCE: tweaking these numbers will make or break game balance
 
 INITIAL_MONEY: int = 20
-DEMON_INITIAL_HP: int = 70
+DEMON_INITIAL_health: int = 70
 DEMON_ATTACK_POWER: int = 10 # TODO: increase this over time?
-MERCENARY_INITIAL_HP: int = 10
+MERCENARY_INITIAL_health: int = 10
 MERCENARY_ATTACK_POWER: int = 10
 MERCENARY_PRICE: int = 20
 DEMON_SPAWNER_RELOAD_TURNS: int = 5
-PLAYER_BASE_INITIAL_HP = 200
+PLAYER_BASE_INITIAL_health = 200
 
 # Tower stats
 HOUSE_MAX_COOLDOWN: int = 10

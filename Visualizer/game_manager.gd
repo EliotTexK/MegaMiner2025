@@ -36,13 +36,22 @@ var path_to_game_state
 @onready var misc_entities: Node2D = $"Misc Entities"
 
 
-## Sets up the game visuals
+# Sets up the game visuals
 func _on_ui_start_game(is_ai1, is_ai2):
 	player1_ai = is_ai1
 	player2_ai = is_ai2
 	
 	var output = []
-	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v", "-i", GlobalPaths.AI_agent1_file_path, GlobalPaths.AI_agent2_file_path], output, true)
+	var exit_code = OS.execute( 				\
+		"python", 								\
+		[ 										\
+			GlobalPaths.backendPath, 			\
+			"-v", "-i", 						\
+			GlobalPaths.AI_agent1_file_path, 	\
+			GlobalPaths.AI_agent2_file_path 	\
+		], 										\
+		output, true 							\
+	)
 	
 	if exit_code == 0:
 		pass
@@ -66,7 +75,8 @@ func _on_ui_start_game(is_ai1, is_ai2):
 	_draw_game_from_gamestate(content)
 	backend_running = true
 
-## Updates world visuals
+
+# Updates world visuals
 func _draw_game_from_gamestate(game_state : String):
 	var game_state_json = JSON.parse_string(game_state)
 	current_game_state = game_state_json
@@ -80,7 +90,6 @@ func _draw_game_from_gamestate(game_state : String):
 	_draw_towers(game_state_json["Towers"])
 	_draw_demons(game_state_json["Demons"])
 	_update_ui(game_state_json)
-
 
 
 func _draw_grid(tile_grid : Array):
@@ -125,7 +134,7 @@ func _draw_grid(tile_grid : Array):
 	#for i in mercenaries.get_children():
 		#i.queue_free()
 
-## Draws the mercanaries
+# Draws the mercanaries
 func _draw_mercenaries(mercs : Array):
 	print(mercs)
 	var count = 0
@@ -192,7 +201,7 @@ func _draw_demons(dem_array : Array):
 				tween.tween_property(child, "position", Vector2(dem["x"] * 32, dem["y"] * 32), 1.0)
 		count += 1
 
-## Make this when the game backend is done
+# Make this when the game backend is done
 func _process(delta):
 	
 	if backend_running:
@@ -201,7 +210,6 @@ func _process(delta):
 			AI_game_turn()
 			turn_interval = turn_interva_max
 		
-
 
 func AI_game_turn():
 	var output = []
@@ -230,9 +238,11 @@ func AI_game_turn():
 	#print(output[0])
 	_draw_game_from_gamestate(content)
 
+
 func _on_ui_build(red_side: bool, x: int, y: int) -> void:
 	var output = []
 	OS.execute("python", [GlobalPaths.backendPath, x, y, output])
+
 
 func _update_ui(gamestate):
 	UI._update_turns_progressed(gamestate["TurnsProgressed"])

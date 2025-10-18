@@ -6,16 +6,16 @@ from pathlib import Path
 
 game = Game()
 
-current_file_path = Path(__file__).parent.resolve() ##Gets the parent directory
-dataPath = str(current_file_path) + "/data/backenddata.pkl" ## Makes sure the data path is relative to main.py
+current_file_path = Path(__file__).parent.resolve() # Gets the parent directory
+dataPath = str(current_file_path) + "/data/backenddata.pkl" # Makes sure the data path is relative to main.py
 
 if __name__ == "__main__":
 
-    ##Using arg parse to parse argument data
+    # Using arg parse to parse argument data
     parser = argparse.ArgumentParser(description='A simple program that processes files.',
                                     epilog='Example usage: python main.py "PathToAI" "PathToAI"')
 
-    ## Adding arguments
+    # Adding arguments
     parser.add_argument('ai_file_one', default="",help='The path to the input file.')
     parser.add_argument('ai_file_two', default="",help='The path to the input file.')
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
             with open(dataPath, 'rb') as inp:
                 game.game_state = pickle.load(inp)
 
-            game.run_turn() ## runs a turn with supplied game_state
+            game.run_turn() # runs a turn with supplied game_state
 
             print(game.game_json_file_path)
             

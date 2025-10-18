@@ -3,7 +3,7 @@ from GameState import GameState
 import Utils
 class Mercenary:
     def __init__(self, x: int, y: int, team_color: str, state: str) -> None:
-        self.health = Constants.MERCENARY_INITIAL_HP
+        self.health = Constants.MERCENARY_INITIAL_health
         self.x = x
         self.y = y
         self.state = state

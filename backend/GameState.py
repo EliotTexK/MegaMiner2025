@@ -5,7 +5,7 @@ from PlayerBase import PlayerBase
 # import numpy as np
 
 class GameState:
-    ## Does game state need team_color?
+    # Does game state need team_color?
     def __init__(self, team_color: str, map_width: int, map_height: int) -> None:
         self.turns_progressed = 900
         self.victory = None
@@ -19,7 +19,7 @@ class GameState:
         self.map_width = map_width
         self.map_height = map_height
         
-        self.tile_grid = [ ## Default Map
+        self.tile_grid = [ # Default Map
             ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'],
             ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
             ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
@@ -88,7 +88,7 @@ class GameState:
     #             elif pix_arry[y][x][0] == 0 and pix_arry[y][x][1] == 255 and pix_arry[y][x][2] == 0:
     #                 row.append('Path')
     #             elif pix_arry[y][x][0] == 0 and pix_arry[y][x][1] == 0 and pix_arry[y][x][2] == 255:
-    #                 row.append('b') ## I see that we're using path in compute_merc(), so Ill make it path on the grid
+    #                 row.append('b') # I see that we're using path in compute_merc(), so Ill make it path on the grid
     #             elif pix_arry[y][x][0] == 0 and pix_arry[y][x][1] == 0 and pix_arry[y][x][2] == 0:
     #                 row.append('_')
     #             elif pix_arry[y][x][0] == 255 and pix_arry[y][x][1] == 255 and pix_arry[y][x][2] == 0:
@@ -125,9 +125,9 @@ class GameState:
                 
                 # Record the next tile
                 # print("Neighbor Chosen ", current_tile)
-                if current_tile != None: ## The last path will always be None, so we write this to exlude it
+                if current_tile != None: # The last path will always be None, so we write this to exlude it
                     computed_path.append(current_tile)
 
-            return computed_path ## Forgot this line
+            return computed_path # Forgot this line
         else:
             return None

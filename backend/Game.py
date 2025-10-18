@@ -29,7 +29,7 @@ class Game:
 
         # self.game_json_file_path = Path(self.game_json_file_path).resolve()
 
-    ## Kind of useless??? 
+    # Kind of useless??? 
     def reset(self):
         pass
 
@@ -45,11 +45,11 @@ class Game:
         with open(self.game_json_file_path, 'w') as outp:
                 outp.write(self.game_state_to_json())
 
-        ## ----Getting AI Actions Example---- ##
-        ## This is an example of how we're sending the data to the ai's and how we're recieving them
-        ## We're using subprocess to start the ai files, and getting thier outputs (the print functions)
+        # ----Getting AI Actions Example---- ##
+        # This is an example of how we're sending the data to the ai's and how we're recieving them
+        # We're using subprocess to start the ai files, and getting thier outputs (the print functions)
 
-        ## First player turn
+        # First player turn
         try:
             process = subprocess.run(["python", self.AI_Path_1, self.game_json_file_path], shell=True,capture_output=True)
         except subprocess.CalledProcessError as e:
@@ -58,7 +58,7 @@ class Game:
         # print(process.stdout.decode('utf-8'))
         action_r : AIAction = self.decode_action(process.stdout.decode('utf-8'))
         # print(action_r)
-        ## Second player turn
+        # Second player turn
         try:
             process = subprocess.run(["python", self.AI_Path_2, self.game_json_file_path], shell=True,capture_output=True)
         except subprocess.CalledProcessError as e:
@@ -89,13 +89,13 @@ class Game:
         
         action_b = self.decode_action(process.stdout.decode('utf-8'))
 
-        ## call merc buy phase
+        # call merc buy phase
         buy_mercenary_phase(self.game_state, action_r, action_b)
-        ## ----Update game state with towers, and queues---- ##
+        # ----Update game state with towers, and queues---- ##
 
         world_update_phase(self.game_state)
 
-        ## ----Update the turn---- ##
+        # ----Update the turn---- ##
 
         self.game_state.turns_progressed += 1
         
@@ -106,24 +106,23 @@ class Game:
 
     ##---------------HELPERS-----------------##
 
-    ## Converts the game state to a json string that'll be usable by the AI's (and the visualizer later...)
+    # Converts the game state to a json string that'll be usable by the AI's (and the visualizer later...)
     def game_state_to_json(self) -> str:
-
 
         string_player_base_r : dict = {
             "Team" : self.game_state.player_base_r.team,
-            "Health" : self.game_state.player_base_r.hp,
+            "Health" : self.game_state.player_base_r.health,
             "x" : self.game_state.player_base_r.x,
             "y" : self.game_state.player_base_r.y
         }
 
         string_player_base_b : dict = {
             "Team" : self.game_state.player_base_b.team,
-            "Health" : self.game_state.player_base_b.hp,
+            "Health" : self.game_state.player_base_b.health,
             "x" : self.game_state.player_base_b.x,
             "y" : self.game_state.player_base_b.y
         }
-        ## Changing the entity grid to a bunch of strings
+        # Changing the entity grid to a bunch of strings
         string_entity_grid = []
         for x in range(len(self.game_state.entity_grid)):
             row = []
@@ -142,7 +141,7 @@ class Game:
                     row.append("Crossbow")
             string_entity_grid.append(row)
 
-        ## Converting mercenarys to dicts in merc list
+        # Converting mercenarys to dicts in merc list
         string_mercenary = []
         for merca in self.game_state.mercs:
             if isinstance(merca, Mercenary):
@@ -151,7 +150,7 @@ class Game:
                         "Team" : merca.team,
                         "x" : merca.x,
                         "y" : merca.y,
-                        "hp" : merca.health,
+                        "health" : merca.health,
                         "state" : merca.state
                     }
                 }
@@ -185,7 +184,7 @@ class Game:
                     "Team" : dem.target_team,
                     "x" : dem.x,
                     "y" : dem.y,
-                    "hp" : dem.health,
+                    "health" : dem.health,
                     "state" : dem.state
                 }
                 string_demons.append(dem_dict)
@@ -217,12 +216,12 @@ class Game:
         self.AI_Path_1 = path_one
         self.AI_Path_2 = path_two
     
-    ## Decodes whatever the ai file will sent into actually usable information,
-    ## This is most likely to change later
+    # Decodes whatever the ai file will sent into actually usable information,
+    # This is most likely to change later
     def decode_action(self, action : str) -> AIAction:
         
         action_string  : str = action.split(" ")
-        ai_action : AIAction = AIAction(0,0) ## Base case, this action doesn't do anything
+        ai_action : AIAction = AIAction(0,0) # Base case, this action doesn't do anything
     
         match action_string[0].strip().lower():
             case "build":
@@ -230,7 +229,7 @@ class Game:
             case "destroy":                                                                                     
                 ai_action = AIAction(int(action_string[1]), int(action_string[2]), action_string[3], destory=True,) 
             case "queue":
-                ai_action = AIAction(0, 0, queue_direction=action_string[3], queue=True,) ## Queuing wouldn't need an x or y, ai would just add a direction as the params
+                ai_action = AIAction(0, 0, queue_direction=action_string[3], queue=True,) # Queuing wouldn't need an x or y, ai would just add a direction as the params
         
         return ai_action
                 

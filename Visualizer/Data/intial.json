@@ -582,7 +582,7 @@
 				"Team": "b",
 				"x": 15,
 				"y": 4,
-				"hp": 70,
+				"health": 70,
 				"state": "blah blah why is this in the constructor"
 			}
 		}

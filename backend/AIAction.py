@@ -6,7 +6,7 @@ class AIAction():
         self.queue_merc_action = queue
         self.x = x
         self.y = y
-        self.tower_to_build = tower_to_build.strip() ## strip get's rid of any excess spaces
+        self.tower_to_build = tower_to_build.strip() # strip get's rid of any excess spaces
         self.queue_direction = queue_direction.strip()
     
     def __str__(self):

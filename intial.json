@@ -588,7 +588,7 @@
                 "Team": "b",
                 "x": 9,
                 "y": 2,
-                "hp": 70,
+                "health": 70,
                 "state": "moving"
             }
         },
@@ -597,7 +597,7 @@
                 "Team": "b",
                 "x": 10,
                 "y": 2,
-                "hp": 70,
+                "health": 70,
                 "state": "moving"
             }
         },
@@ -606,7 +606,7 @@
                 "Team": "b",
                 "x": 11,
                 "y": 2,
-                "hp": 70,
+                "health": 70,
                 "state": "moving"
             }
         }
