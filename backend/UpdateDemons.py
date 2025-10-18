@@ -14,16 +14,16 @@ def update_demons(game_state: GameState):
     moving: List[Demon] = []
     fighting: List[Demon] = []
     waiting: List[Demon] = []
-    set_all_demon_states(game_state, game_state.mercs, moving, fighting, waiting)
+    set_all_demon_states(game_state, game_state.demons, moving, fighting, waiting)
 
-    # Move all mercs in moving state
+    # Move all demons in moving state
     move_all_demons(game_state, moving)
 
-    # Apply combat effects for all mercs in fighting state
-    for merc in fighting:
-        do_demon_combat_single(game_state, merc)
+    # Apply combat effects for all demons in fighting state
+    for demon in fighting:
+        do_demon_combat_single(game_state, demon)
 
-# Side effect: All merc objects will have their state set appropiately
+# Side effect: All demon objects will have their state set appropiately
 # Side effect: moving, fighting and waiting lists will be populated
 def set_all_demon_states(game_state: GameState, demons: List[Demon], 
                         moving: List[Demon],
