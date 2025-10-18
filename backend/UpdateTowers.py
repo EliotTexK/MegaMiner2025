@@ -16,7 +16,7 @@ def update_towers(game_state: GameState):
         if isinstance(tower, House):
             tower.update(game_state) ##House really only needs money_r and money_b, but we can only change those values if we give it the whole game_state
 
-        if isinstance(tower, Tower): ## I would hope that the towers list only have towers in it
+        elif isinstance(tower, Tower): ## I would hope that the towers list only have towers in it
             tower.update(game_state.entity_grid)
         
         # current_cooldown = tower.current_cooldown

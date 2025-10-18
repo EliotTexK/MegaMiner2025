@@ -167,4 +167,7 @@ offset_right = 262.563
 offset_bottom = 31.0
 alignment = 1
 
+[connection signal="PlayGame" from="Main Menu" to="." method="_on_main_menu_play_game"]
+[connection signal="Back" from="Human AI select" to="." method="_on_human_ai_select_back"]
+[connection signal="Go" from="Human AI select" to="." method="_on_human_ai_select_go"]
 [connection signal="pressed" from="Game UI/RightSideStates/Human Control/Build" to="." method="_on_build_pressed"]

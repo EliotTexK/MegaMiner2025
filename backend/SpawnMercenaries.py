@@ -7,16 +7,16 @@ def spawn_mercenaries(game_state: GameState):
     by = game_state.player_base_r.y
 
     if game_state.player_base_r.mercenary_queued_up > 0 and game_state.entity_grid[bx][by - 2]:
-        game_state.entity_grid[bx][by - 2] = Mercenary(bx, by, "r")
+        game_state.entity_grid[bx][by - 2] = Mercenary(bx, by, "r", "blah")
 
     if game_state.player_base_r.mercenary_queued_down > 0 and game_state.entity_grid[bx][by + 2]:
-        game_state.entity_grid[bx][by + 2] = Mercenary(bx, by, "r")
+        game_state.entity_grid[bx][by + 2] = Mercenary(bx, by, "r", "blee")
 
     if game_state.player_base_r.mercenary_queued_left > 0 and game_state.entity_grid[bx - 2][by]:
-        game_state.entity_grid[bx - 2][by] = Mercenary(bx - 2, by, "r")
+        game_state.entity_grid[bx - 2][by] = Mercenary(bx - 2, by, "r", "blue")
 
     if game_state.player_base_r.mercenary_queued_right > 0 and game_state.entity_grid[bx + 2][by]:
-        game_state.entity_grid[bx + 2][by] = Mercenary(bx + 2, by, "r")
+        game_state.entity_grid[bx + 2][by] = Mercenary(bx + 2, by, "r", "balanced")
 
     bx = game_state.player_base_b.x
     by = game_state.player_base_b.y
@@ -29,13 +29,13 @@ def spawn_mercenaries(game_state: GameState):
         
 
     if game_state.player_base_b.mercenary_queued_down > 0 and game_state.entity_grid[bx][by + 2]:
-        game_state.entity_grid[bx][by + 2] = Mercenary(bx, by, "b")
+        game_state.entity_grid[bx][by + 2] = Mercenary(bx, by, "b", "hello")
 
     if game_state.player_base_b.mercenary_queued_left > 0 and game_state.entity_grid[bx - 2][by]:
-        game_state.entity_grid[bx - 2][by] = Mercenary(bx, by, "b")
+        game_state.entity_grid[bx - 2][by] = Mercenary(bx, by, "b", "hello")
 
     if game_state.player_base_b.mercenary_queued_right > 0 and game_state.entity_grid[bx + 2][by]:
-        game_state.entity_grid[bx + 2][by] = Mercenary(bx, by, "b")
+        game_state.entity_grid[bx + 2][by] = Mercenary(bx, by, "b", "hey guys")
 
 
     

@@ -1,11 +1,13 @@
 import Constants
 from Tower import Tower
+from GameState import GameState
 
 class House(Tower):
-    def __init__(self, x: int, y: int, team_color: str) -> None:
-        super().__init__(self, x, y, team_color, Constants.MINIGUN_MAX_COOLDOWN, Constants.MINIGUN_RANGE, Constants.MINIGUN_DAMAGE, Constants.MINIGUN_PRICE)
+    def __init__(self, x: int, y: int, team_color: str):
+        super().__init__(x, y, team_color, Constants.HOUSE_MAX_COOLDOWN, Constants.HOUSE_RANGE, Constants.MINIGUN_DAMAGE, Constants.HOUSE_PRICE)
 
         self.money_gain = Constants.HOUSE_MONEY_PRODUCED
+        self.angle = 0
     
     def update(self, game_state):
         if self.current_cooldown > 0:
@@ -13,7 +15,7 @@ class House(Tower):
         else:
             self.tower_activation(game_state)
     
-    def tower_activation(self, game_state):
+    def tower_activation(self, game_state : GameState):
         if self.team == "r":
             game_state.money_r += self.money_gain
         elif self.team == "b":

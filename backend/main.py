@@ -1,74 +1,76 @@
-import sys
-import pickle
 from Game import Game
+import os
+import pickle
+import argparse
 from pathlib import Path
 
 game = Game()
-can_start : bool = False
 
-## Tries to find two ai files if there is no arguments supplied
-def find_files_by_pattern(pattern, search_path):
-    search_path_obj = Path(search_path)
-    matched_files = list(search_path_obj.rglob(pattern))
-    return matched_files
+current_file_path = Path(__file__).parent.resolve() ##Gets the parent directory
+dataPath = str(current_file_path) + "/data/backenddata.pkl" ## Makes sure the data path is relative to main.py
 
-default_search_dir = 'backend/AI_Agents'
-file_pattern = "*.py"
+if __name__ == "__main__":
 
-ai_file_1_path = ""
-ai_file_2_path = ""
+    ##Using arg parse to parse argument data
+    parser = argparse.ArgumentParser(description='A simple program that processes files.',
+                                    epilog='Example usage: python main.py "PathToAI" "PathToAI"')
 
-## First check if there are no arguments supplied with the program
-if len(sys.argv) <= 1: ## for python code the path to the file is an argument supplied, so there will always be 1 system arg
-    files_found = find_files_by_pattern(file_pattern, default_search_dir)
-    #print(files_found)
-    if len(files_found) >= 2 :
-        print(f"Found and using files '{files_found[0]}' and '{files_found[1]}'")
-        game.load_ai_paths(files_found[0], files_found[1])
-        can_start = True
-    else:
-        print("Not enough AI Files supplied!")
-else:  ## code was called with two  or more arguments supplied, this could be either the two AI_files used, or it could be the visualizer callig for a turn
+    ## Adding arguments
+    parser.add_argument('ai_file_one', default="",help='The path to the input file.')
+    parser.add_argument('ai_file_two', default="",help='The path to the input file.')
 
-    if sys.argv[1] == "-v": ## visulizer called it
-        if len(sys.argv) > 2 and sys.argv[2] == "initial":
-            print(game.game_state_to_json()) ##Gives visualizer the initial game_state
-            with open('backend/game_state.pkl', 'wb') as outp:
+    parser.add_argument('-v','--vizulizer', action='store_true',
+                        help='Called by the Vizulizer, if called the program will do one game turn instead of 1000')
+    parser.add_argument('-i', '--initial',action='store_true', help='Called by the vizuliser to determine whether or not it\'s the first turn')
+    args = parser.parse_args()
+
+    ##Uses relative paths
+    game.load_ai_paths(args.ai_file_one, args.ai_file_two)
+    
+
+    if args.vizulizer:
+
+        if args.initial:
+
+            game.make_blank_game()
+            print(game.game_json_file_path) ##Gives next state to viz
+
+            with open(dataPath, 'wb') as outp:
                 pickle.dump(game.game_state, outp, pickle.HIGHEST_PROTOCOL)
-
-        else: ## Will be suppplied by the two AI files chosen in the vizualizer
-
-            files_found = find_files_by_pattern(file_pattern, default_search_dir)
-            game.load_ai_paths(files_found[0], files_found[1])
-
-            with open('backend/game_state.pkl', 'rb') as inp:
+        else:
+            with open(dataPath, 'rb') as inp:
                 game.game_state = pickle.load(inp)
 
             game.run_turn() ## runs a turn with supplied game_state
-            print(game.game_state_to_json()) ##Gives next state to viz
 
-            with open('backend/game_state.pkl', 'wb') as outp:
-                pickle.dump(game.game_state, outp, pickle.HIGHEST_PROTOCOL)
-    else: ## Normally supplied with AI files
-        counter = 0
-        found_AI_1 = False
-        for argu in sys.argv:
-            if counter == 0:
-                counter += 1
-                continue
+            print(game.game_json_file_path)
             
-            if argu.endswith(".py"):
-                if found_AI_1 and ai_file_2_path == "":
-                    ai_file_2_path = argu
-                else:
-                    ai_file_1_path = argu
-        
+            with open(dataPath, 'wb') as outp:
+                pickle.dump(game.game_state, outp, pickle.HIGHEST_PROTOCOL)
 
+    else:        
+        ##Game playing with two AI's provided
 
-if can_start:
-    while game.game_state.turns_progressed <= 1000:
-        game.run_turn()
-    print("Finished")
+        dot = 1
+        while game.game_state.turns_progressed < 1000 and game.game_state.victory == None:
+            dot += 1
+            if dot > 3: dot = 1
+            if os.name == 'nt':
+                _ = os.system('cls')
+            # For macOS and Linux
+            else:
+                _ = os.system('clear')
+
+            match dot:
+                case 1:
+                    print("Running Game.   ", "Turns Progressed: ", game.game_state.turns_progressed)
+                case 2:
+                    print("Running Game..  ", "Turns Progressed: ", game.game_state.turns_progressed)
+                case 3:
+                    print("Running Game... ", "Turns Progressed: ", game.game_state.turns_progressed)
+                
+            game.run_turn()
+        print("Finished")
 
 
     

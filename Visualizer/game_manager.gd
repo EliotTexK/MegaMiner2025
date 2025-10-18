@@ -5,13 +5,13 @@ const ALT_GRASS = preload("res://Assets/Base_Skin/alt_grass.png")
 const ALT_PATH = preload("res://Assets/Base_Skin/alt_path.png")
 const GRASS = preload("res://Assets/Base_Skin/grass.png")
 const PATH = preload("res://Assets/Base_Skin/path.png")
-const BLUE_RECRUIT = preload("res://Assets/Base_Skin/blue_recruit.png")
-const RED_RECRUIT = preload("res://Assets/Base_Skin/red_recruit.png")
 
-const ENEMY = preload("res://Assets/Base_Skin/enemy.png")
 
-const BASE = preload("res://Assets/Base_Skin/base.png")
-const CROSSBOW = preload("res://Assets/Base_Skin/crossbow.png")
+const BLUE_RECRUIT = preload("res://Assets/Topdown skin/blue recruit.png")
+const RED_RECRUIT = preload("res://Assets/Topdown skin/red recruit.png")
+const ENEMY = preload("res://Assets/Topdown skin/enemy.png")
+const BASE = preload("res://Assets/Topdown skin/base.png")
+const CROSSBOW = preload("res://Assets/Topdown skin/crossbow.png")
 
 @export var UI : GameUI
 
@@ -27,6 +27,7 @@ var backend_running : bool = false
 
 var turn_interva_max : float = 2.0 
 var turn_interval : float = 0
+var path_to_game_state
 
 @onready var tiles = $Tiles
 @onready var mercenaries: Node2D = $Mercenaries
@@ -41,23 +42,35 @@ func _on_ui_start_game(is_ai1, is_ai2):
 	player2_ai = is_ai2
 	
 	var output = []
-	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v", "initial"], output, true)
+	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v", "-i", GlobalPaths.AI_agent1_file_path, GlobalPaths.AI_agent2_file_path], output, true)
 	
 	if exit_code == 0:
+		pass
 		print("Python Script executted successfully!")
 	else:
 		print("Error handling script!: ", exit_code)
-	#for i in output:
-		#print(i)
 	
-	_draw_game_from_gamestate(output[0])
+	var content
+	var path_to_game_state : String = GameSettings.convert_string_to_readable(output[0]).strip_edges(false, true)
+	
+	if FileAccess.file_exists(path_to_game_state):
+		var file = FileAccess.open(path_to_game_state, FileAccess.READ)
+		if file:
+			content = file.get_as_text()
+			file.close()
+		else:
+			printerr("Couldn't Open File! ", FileAccess.get_open_error())
+	else:
+		printerr("File doesn't exist!")
+
+	_draw_game_from_gamestate(content)
 	backend_running = true
 
 ## Updates world visuals
 func _draw_game_from_gamestate(game_state : String):
 	var game_state_json = JSON.parse_string(game_state)
 	current_game_state = game_state_json
-	
+	print(current_game_state)
 	if initial:
 		_draw_grid(game_state_json["TileGrid"])
 		initial = false
@@ -154,7 +167,7 @@ func _draw_towers(data_towers : Array):
 			"Crossbow":
 				type.texture = CROSSBOW
 		base.add_child(type)
-		type.rotation = tower["AimAngle"]
+		type.rotation_degrees = tower["AimAngle"]
 
 func _draw_demons(dem_array : Array):
 	var count = 0
@@ -168,15 +181,16 @@ func _draw_demons(dem_array : Array):
 			sprite.texture = ENEMY
 			
 			sprite.position = pos
-			mercenaries.add_child(sprite)
+			demons.add_child(sprite)
 		else:
-			var child : Sprite2D = mercenaries.get_child(count)
+			var child : Sprite2D = demons.get_child(count)
 			var tween = get_tree().create_tween()
 			if dem["state"] == "dead":
 				child.queue_free()
 				count -= 1
 			else:
 				tween.tween_property(child, "position", Vector2(dem["x"] * 32, dem["y"] * 32), 1.0)
+		count += 1
 
 ## Make this when the game backend is done
 func _process(delta):
@@ -191,7 +205,7 @@ func _process(delta):
 
 func AI_game_turn():
 	var output = []
-	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v"], output, true)
+	var exit_code = OS.execute("python", [GlobalPaths.backendPath, "-v", GlobalPaths.AI_agent1_file_path, GlobalPaths.AI_agent2_file_path], output, true)
 	if exit_code == 0:
 		pass
 		#print("Python Script executted successfully!")
@@ -199,8 +213,22 @@ func AI_game_turn():
 		print("Error handling script!: ", exit_code)
 	
 	previous_game_state = current_game_state
+	
+	var content
+	var path_to_game_state : String = GameSettings.convert_string_to_readable(output[0]).strip_edges(false, true)
+	
+	if FileAccess.file_exists(path_to_game_state):
+		var file = FileAccess.open(path_to_game_state, FileAccess.READ)
+		if file:
+			content = file.get_as_text()
+			file.close()
+		else:
+			printerr("Couldn't Open File! ", FileAccess.get_open_error())
+	else:
+		printerr("File doesn't exist!")
+	
 	#print(output[0])
-	_draw_game_from_gamestate(output[0])
+	_draw_game_from_gamestate(content)
 
 func _on_ui_build(red_side: bool, x: int, y: int) -> void:
 	var output = []

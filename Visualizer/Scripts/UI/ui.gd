@@ -1,8 +1,7 @@
 class_name GameUI
 extends CanvasLayer
 
-@export var player_select_one : PlayerSelect
-@export var player_select_two : PlayerSelect
+
 
 @onready var main_menu : Control = $"Main Menu"
 
@@ -21,56 +20,28 @@ func _ready():
 	human_ai_select.visible = false
 	game_ui.visible = false
 
-func _on_play_game_pressed():
-	main_menu.visible = false
-	human_ai_select.visible = true
-
-
-func _on_watch_replay_pressed():
-	pass # Replace with function body.
-
-
-func _on_quit_pressed():
-	get_tree().quit()
-
-
-func _on_back_pressed():
-	main_menu.visible = true
-	human_ai_select.visible = false
-
-func _on_go_pressed(): ## I love hard coding!
-	var player1_ready : bool = player_select_one.line_edit.text != "" ##If the text is "" then you either havent picked a file or haven't selected a team name
-	var player2_ready : bool = player_select_two.line_edit.text != ""
-	
-	game_ui.visible = true
-	
-	if player1_ready && player2_ready:
-		start_game.emit(player_select_one.is_AI, player_select_two.is_AI)
-		main_menu.hide()
-		human_ai_select.hide()
-		if !player_select_one.is_AI:
-			$"Game UI/RightSideStates/Human Control".visible = true
-
-	else:
-		## Check to see if either side has a problem and print both
-		if !player1_ready:
-			if player_select_one.is_AI:
-				printerr("Player 1 doesn't have AI file selected!")
-			else:
-				printerr("Player 1 doesn't have team name selected!")
-			
-			if player_select_two.is_AI:
-				printerr("Player 2 doesn't have AI file selected!")
-			else:
-				printerr("Player 2 doesn't have team name selected!")
-	
-	
-
 
 func _on_build_pressed() -> void:
 	build.emit(true, $"Game UI/RightSideStates/Human Control/Label/SpinBox".value, $"Game UI/RightSideStates/Human Control/Label/SpinBox2".value)
 
-
-
 func _update_turns_progressed(new_value):
 	$"Game UI/Panel/Turns Progressed".text = "Turns Progressed\n" + str(int(new_value))
+
+
+func _on_main_menu_play_game() -> void:
+	human_ai_select.visible = true
+	main_menu.visible = false
+
+
+func _on_human_ai_select_go(ready: Variant, ready2: Variant) -> void:
+	start_game.emit(ready, ready2)
+	main_menu.hide()
+	human_ai_select.hide()
+	game_ui.show()
+	if !ready:
+		$"Game UI/RightSideStates/Human Control".visible = true
+
+
+func _on_human_ai_select_back() -> void:
+	main_menu.visible = true
+	human_ai_select.visible = false

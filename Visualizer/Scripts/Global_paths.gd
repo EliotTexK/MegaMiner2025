@@ -1,9 +1,9 @@
 extends Node
 
-var backendPath : String = "C:/Users/kenji/OneDrive/Desktop/GitHub Projects/MegaMiner2025/backend/main.py"
+var backendPath : String = "../backend/main.py"
 
-var AI_agent1_file_path : String = ""
-var AI_agent2_file_path : String = ""
+var AI_agent1_file_path : String = "../backend/AI_Agents/RandomAgent.py"
+var AI_agent2_file_path : String = "../backend/AI_Agents/RandomAgent.py"
 
 var player_one_selecting : bool = false
 

@@ -1,0 +1,719 @@
+{
+    "Victory": null,
+    "TurnsProgressed": 920,
+    "CurrentPhase": "mercs buy",
+    "Red Player": {
+        "Team": "r",
+        "Health": 200,
+        "x": 5,
+        "y": 5
+    },
+    "Blue Player": {
+        "Team": "b",
+        "Health": 200,
+        "x": 17,
+        "y": 5
+    },
+    "TileGrid": [
+        [
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "Path",
+            "Path",
+            "r",
+            "base",
+            "r",
+            "Path",
+            "Path",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r",
+            "r",
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r"
+        ],
+        [
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r",
+            "Path",
+            "r",
+            "r"
+        ],
+        [
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_"
+        ],
+        [
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_"
+        ],
+        [
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_"
+        ],
+        [
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_"
+        ],
+        [
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_",
+            "Path",
+            "_",
+            "_"
+        ],
+        [
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "Path",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "Path",
+            "Path",
+            "b",
+            "base",
+            "b",
+            "Path",
+            "Path",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b"
+        ],
+        [
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b",
+            "b"
+        ]
+    ],
+    "EntityGrid": [
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            "Crossbow",
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            "Mercenary",
+            null,
+            "base",
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            "base",
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    ],
+    "Towers": [
+        {
+            "Type": "Crossbow",
+            "Team": "r",
+            "x": 3,
+            "y": 4,
+            "AimAngle": -33.69007957234072
+        }
+    ],
+    "Mercenaries": [
+        {
+            "Mercenary": {
+                "Team": "b",
+                "x": 5,
+                "y": 3,
+                "hp": 9,
+                "state": "moving"
+            }
+        },
+        {
+            "Mercenary": {
+                "Team": "b",
+                "x": 5,
+                "y": 3,
+                "hp": 9,
+                "state": "moving"
+            }
+        },
+        {
+            "Mercenary": {
+                "Team": "b",
+                "x": 5,
+                "y": 3,
+                "hp": 10,
+                "state": "moving"
+            }
+        },
+        {
+            "Mercenary": {
+                "Team": "b",
+                "x": 5,
+                "y": 3,
+                "hp": 10,
+                "state": "moving"
+            }
+        },
+        {
+            "Mercenary": {
+                "Team": "b",
+                "x": 5,
+                "y": 3,
+                "hp": 9,
+                "state": "moving"
+            }
+        }
+    ],
+    "Demons": [
+        {
+            "Team": "b",
+            "x": 9,
+            "y": 5,
+            "hp": 70,
+            "state": "idle"
+        },
+        {
+            "Team": "r",
+            "x": 11,
+            "y": 5,
+            "hp": 70,
+            "state": "idle"
+        },
+        {
+            "Team": "b",
+            "x": 9,
+            "y": 5,
+            "hp": 70,
+            "state": "idle"
+        },
+        {
+            "Team": "r",
+            "x": 11,
+            "y": 5,
+            "hp": 70,
+            "state": "idle"
+        },
+        {
+            "Team": "b",
+            "x": 9,
+            "y": 5,
+            "hp": 70,
+            "state": "idle"
+        },
+        {
+            "Team": "r",
+            "x": 11,
+            "y": 5,
+            "hp": 70,
+            "state": "idle"
+        }
+    ]
+}

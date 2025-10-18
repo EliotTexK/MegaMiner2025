@@ -7,8 +7,9 @@ from PlayerBase import PlayerBase
 class GameState:
     ## Does game state need team_color?
     def __init__(self, team_color: str, map_width: int, map_height: int) -> None:
-        self.turns_progressed = 950
+        self.turns_progressed = 900
         self.victory = None
+        self.current_phase = ""
         self.team_name_r = None
         self.team_name_b = None
         self.money_r = Constants.INITIAL_MONEY
@@ -19,6 +20,7 @@ class GameState:
         self.map_height = map_height
         
         self.tile_grid = [ ## Default Map
+            ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'],
             ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
             ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
             ['r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r'], 
@@ -52,9 +54,9 @@ class GameState:
             self.entity_grid.append(row)
         
         # TODO: this should come from parameters to this constructor function
-        self.player_base_r : PlayerBase = PlayerBase(4,5,"r") # call PlayerBase() to define more, PlayerBase.py still needs updated
-        self.player_base_b : PlayerBase = PlayerBase(16,5,"b") # call PlayerBase() to define more, PlayerBase.py still needs updated
-        self.entity_grid[4][5] = "base"
+        self.player_base_r : PlayerBase = PlayerBase(5,5,"r") # call PlayerBase() to define more, PlayerBase.py still needs updated
+        self.player_base_b : PlayerBase = PlayerBase(17,5,"b") # call PlayerBase() to define more, PlayerBase.py still needs updated
+        self.entity_grid[5][5] = "base"
         self.entity_grid[16][5] = "base"
         # self.entity_grid[9][5] = "spawner"
         # self.entity_grid[11][5] = "spawner"

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://ce78d0fluy0rq"]
+[gd_scene load_steps=3 format=3 uid="uid://ce78d0fluy0rq"]
 
 [ext_resource type="Theme" uid="uid://b2cu144l1almb" path="res://Button_Theem.tres" id="1_06t4h"]
+[ext_resource type="Script" uid="uid://beyo8py2phky5" path="res://main_menu.gd" id="1_7vrkn"]
 
 [node name="Main Menu" type="Control"]
 layout_mode = 3
@@ -9,6 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_7vrkn")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -43,6 +45,7 @@ theme = ExtResource("1_06t4h")
 text = "Quit"
 
 [node name="Panel" type="Panel" parent="."]
+visible = false
 layout_mode = 0
 offset_right = 384.0
 offset_bottom = 256.0
@@ -123,3 +126,6 @@ ok_button_text = "Open"
 file_mode = 0
 access = 2
 use_native_dialog = true
+
+[connection signal="pressed" from="HBoxContainer/Play Game" to="." method="_on_play_game_pressed"]
+[connection signal="pressed" from="HBoxContainer/Quit" to="." method="_on_quit_pressed"]

@@ -1,0 +1,33 @@
+extends Control
+
+signal Go(ready, ready2)
+signal Back
+
+@export var player_select_one : PlayerSelect
+@export var player_select_two : PlayerSelect
+
+
+func _on_back_pressed():
+	Back.emit()
+
+func _on_go_pressed(): ## I love hard coding!
+	var player1_ready : bool = player_select_one.line_edit.text != "" ##If the text is "" then you either havent picked a file or haven't selected a team name
+	var player2_ready : bool = player_select_two.line_edit.text != ""
+	
+	
+	if player1_ready && player2_ready:
+		Go.emit(player_select_one.is_AI, player_select_two.is_AI)
+		
+
+	else:
+		## Check to see if either side has a problem and print both
+		if !player1_ready:
+			if player_select_one.is_AI:
+				printerr("Player 1 doesn't have AI file selected!")
+			else:
+				printerr("Player 1 doesn't have team name selected!")
+			
+			if player_select_two.is_AI:
+				printerr("Player 2 doesn't have AI file selected!")
+			else:
+				printerr("Player 2 doesn't have team name selected!")
