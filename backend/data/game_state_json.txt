@@ -1,6 +1,6 @@
 {
     "Victory": null,
-    "TurnsProgressed": 909,
+    "TurnsProgressed": 906,
     "CurrentPhase": "mercs buy",
     "Red Player": {
         "Team": "r",
@@ -357,7 +357,7 @@
         ],
         [
             null,
-            null,
+            "Crossbow",
             null,
             null,
             null,
@@ -417,6 +417,20 @@
             null,
             null,
             null,
+            null,
+            null
+        ],
+        [
+            null,
+            null,
+            null,
+            null,
+            "Crossbow",
+            null,
+            null,
+            null,
+            null,
+            null,
             null
         ],
         [
@@ -486,18 +500,6 @@
         ],
         [
             null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        ],
-        [
             null,
             null,
             null,
@@ -539,7 +541,7 @@
             null,
             null,
             null,
-            null,
+            "Mercenary",
             null,
             null,
             null,
@@ -614,22 +616,47 @@
             null
         ]
     ],
-    "Towers": [],
-    "Mercenaries": [],
+    "Towers": [
+        {
+            "Type": "Crossbow",
+            "Team": "r",
+            "x": 8,
+            "y": 4,
+            "AimAngle": 0.0
+        },
+        {
+            "Type": "Crossbow",
+            "Team": "r",
+            "x": 3,
+            "y": 1,
+            "AimAngle": 0.0
+        }
+    ],
+    "Mercenaries": [
+        {
+            "Mercenary": {
+                "Team": "b",
+                "x": 17,
+                "y": 3,
+                "health": 10,
+                "state": "blah blah why is this in the constructor"
+            }
+        }
+    ],
     "Demons": [
         {
             "Team": "b",
-            "x": 7,
+            "x": 9,
             "y": 5,
             "health": 70,
-            "state": "moving"
+            "state": "idle"
         },
         {
             "Team": "r",
-            "x": 14,
+            "x": 11,
             "y": 5,
             "health": 70,
-            "state": "moving"
+            "state": "idle"
         }
     ]
 }
