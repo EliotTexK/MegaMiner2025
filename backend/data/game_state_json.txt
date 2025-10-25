@@ -1,7 +1,7 @@
 {
     "Victory": null,
-    "TurnsProgressed": 906,
-    "CurrentPhase": "mercs buy",
+    "TurnsProgressed": 900,
+    "CurrentPhase": "tower build",
     "Red Player": {
         "Team": "r",
         "Health": 200,
@@ -357,7 +357,7 @@
         ],
         [
             null,
-            "Crossbow",
+            null,
             null,
             null,
             null,
@@ -425,7 +425,7 @@
             null,
             null,
             null,
-            "Crossbow",
+            null,
             null,
             null,
             null,
@@ -541,7 +541,7 @@
             null,
             null,
             null,
-            "Mercenary",
+            null,
             null,
             null,
             null,
@@ -616,47 +616,7 @@
             null
         ]
     ],
-    "Towers": [
-        {
-            "Type": "Crossbow",
-            "Team": "r",
-            "x": 8,
-            "y": 4,
-            "AimAngle": 0.0
-        },
-        {
-            "Type": "Crossbow",
-            "Team": "r",
-            "x": 3,
-            "y": 1,
-            "AimAngle": 0.0
-        }
-    ],
-    "Mercenaries": [
-        {
-            "Mercenary": {
-                "Team": "b",
-                "x": 17,
-                "y": 3,
-                "health": 10,
-                "state": "blah blah why is this in the constructor"
-            }
-        }
-    ],
-    "Demons": [
-        {
-            "Team": "b",
-            "x": 9,
-            "y": 5,
-            "health": 70,
-            "state": "idle"
-        },
-        {
-            "Team": "r",
-            "x": 11,
-            "y": 5,
-            "health": 70,
-            "state": "idle"
-        }
-    ]
+    "Towers": [],
+    "Mercenaries": [],
+    "Demons": []
 }
