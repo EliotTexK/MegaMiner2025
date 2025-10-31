@@ -1,6 +1,15 @@
 
 class AIAction():
-    def __init__(self, x : int, y : int, tower_to_build : str = '', buy : bool = False, destory : bool = False, queue : bool = False, queue_direction : str = ''):
+    def __init__(
+        self,
+        x : int,
+        y : int,
+        tower_to_build : str = '',
+        buy : bool = False,
+        destory : bool = False,
+        queue : bool = False,
+        queue_direction : str = ''
+    ):
         self.buy_tower_action = buy
         self.destroy_tower_action = destory
         self.queue_merc_action = queue

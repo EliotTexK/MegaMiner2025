@@ -29,10 +29,6 @@ class Game:
 
         # self.game_json_file_path = Path(self.game_json_file_path).resolve()
 
-    # Kind of useless??? 
-    def reset(self):
-        pass
-
     def run_turn(self, game_state = None):
         if game_state != None:
             self.game_state = game_state
@@ -51,7 +47,7 @@ class Game:
 
         # First player turn
         try:
-            process = subprocess.run(["python", self.AI_Path_1, self.game_json_file_path], shell=True,capture_output=True)
+            process = subprocess.run(["python", self.agent_path_1, self.game_json_file_path], shell=True,capture_output=True)
         except subprocess.CalledProcessError as e:
             print(f"Command failed with return code {e.returncode}")
         
@@ -60,7 +56,7 @@ class Game:
         # print(action_r)
         # Second player turn
         try:
-            process = subprocess.run(["python", self.AI_Path_2, self.game_json_file_path], shell=True,capture_output=True)
+            process = subprocess.run(["python", self.agent_path_2, self.game_json_file_path], shell=True,capture_output=True)
         except subprocess.CalledProcessError as e:
             print(f"Command failed with return code {e.returncode}")
         
@@ -68,7 +64,7 @@ class Game:
 
         build_tower_phase(self.game_state, action_r, action_b)
 
-        ##Get actions again for merc buy phase
+        # Get actions again for merc buy phase
 
         self.game_state.current_phase = "mercs buy"
 
