@@ -49,107 +49,109 @@ def check_wincon(game_state: GameState):
 
     towers = game_state.towers
 
-    # If one player's base is Destroyed and the other is not, the player with the surviving base wins.
+    # If one of the players has had their base destroyed
     if team_b_health <= 0 or team_r_health <= 0:
-        if team_b_health <= 0:
-            return 'r'
-        elif team_r_health <= 0:
-            return 'b'
+        # If one of the players has their base intact while the other is destroyed, they win
+        if not (team_b_health <= 0 and team_r_health <= 0):
+            if team_b_health <= 0:
+                return 'r'
+            elif team_r_health <= 0:
+                return 'b'
+    else:
+        # If no base has been destroyed, nobody has won yet
+        return None
         
     # If both players' bases are Destroyed, break the tie based on who has the most Money.
-    elif team_b_health <= 0 and team_r_health <= 0:
-        if team_b_money != team_r_money:
-            if team_b_money > team_r_money:
-                return 'b'
-            elif team_r_money > team_b_money:
-                return 'r'
-        else:
-            # Then, if both players have the same amount of Money, break the tie based on who has built the most towers.
-            # Empty lists that will store each tower the teams have
-            r_towers = []
-            b_towers = []
+    if team_b_money != team_r_money:
+        if team_b_money > team_r_money:
+            return 'b'
+        elif team_r_money > team_b_money:
+            return 'r'
+    else:
+        # Then, if both players have the same amount of Money, break the tie based on who has built the most towers.
+        # Empty lists that will store each tower the teams have
+        r_towers = []
+        b_towers = []
 
-            for tower in towers:
-                current_team = towers.team_color
-                if current_team == 'r':
-                    r_towers.append(tower)
-                else:
-                    b_towers.append(tower)
-            
-            if len(r_towers) != len(b_towers):
-                if len(r_towers) > len(b_towers):
+        for tower in towers:
+            current_team = towers.team_color
+            if current_team == 'r':
+                r_towers.append(tower)
+            else:
+                b_towers.append(tower)
+        
+        if len(r_towers) != len(b_towers):
+            if len(r_towers) > len(b_towers):
+                return 'r'
+            else:
+                return 'b'
+        else:
+            # Then, if both players have built the same number of towers, break the tie based on the sum of prices of those towers.
+            # Equals the total price of the total amount of towers per team
+            r_total_cost = 0
+            b_total_cost = 0
+
+            for tower in r_towers:
+                current_team = tower.team_color
+
+                if isinstance(tower, House):
+                    if current_team == 'r':
+                        r_total_cost += Constants.HOUSE_PRICE
+                    else:
+                        b_total_cost += Constants.HOUSE_PRICE
+                elif isinstance(tower, Cannon):
+                    if current_team == 'r':
+                        r_total_cost += Constants.CANNON_PRICE
+                    else:
+                        b_total_cost += Constants.CANNON_PRICE
+                elif isinstance(tower, Minigun):
+                    if current_team == 'r':
+                        r_total_cost += Constants.MINIGUN_PRICE
+                    else:
+                        b_total_cost += Constants.MINIGUN_PRICE
+                else:   # Crossbow
+                    if current_team == 'r':
+                        r_total_cost += Constants.CROSSBOW_PRICE
+                    else:
+                        b_total_cost += Constants.CROSSBOW_PRICE
+            if r_total_cost != b_total_cost:
+                if r_total_cost > b_total_cost:
                     return 'r'
                 else:
                     return 'b'
             else:
-                # Then, if both players have built the same number of towers, break the tie based on the sum of prices of those towers.
-                # Equals the total price of the total amount of towers per team
-                r_total_cost = 0
-                b_total_cost = 0
+                # Then, if both sums are equal, break the tie based on the number of Mercenaries each player has.
 
-                for tower in r_towers:
-                    current_team = tower.team_color
+                # Number of mercenaries per team
+                r_mercs = 0
+                b_mercs = 0
 
-                    if isinstance(tower, House):
-                        if current_team == 'r':
-                            r_total_cost += Constants.HOUSE_PRICE
-                        else:
-                            b_total_cost += Constants.HOUSE_PRICE
-                    elif isinstance(tower, Cannon):
-                        if current_team == 'r':
-                            r_total_cost += Constants.CANNON_PRICE
-                        else:
-                            b_total_cost += Constants.CANNON_PRICE
-                    elif isinstance(tower, Minigun):
-                        if current_team == 'r':
-                            r_total_cost += Constants.MINIGUN_PRICE
-                        else:
-                            b_total_cost += Constants.MINIGUN_PRICE
-                    else:   # Crossbow
-                        if current_team == 'r':
-                            r_total_cost += Constants.CROSSBOW_PRICE
-                        else:
-                            b_total_cost += Constants.CROSSBOW_PRICE
-                if r_total_cost != b_total_cost:
-                    if r_total_cost > b_total_cost:
+                for merc in game_state.mercs:
+                    if merc.team_color == 'r':
+                        r_mercs += 1
+                    else:
+                        b_mercs += 1
+                
+                if r_mercs != b_mercs:
+                    if r_mercs > b_mercs:
                         return 'r'
                     else:
                         return 'b'
                 else:
-                    # Then, if both sums are equal, break the tie based on the number of Mercenaries each player has.
-
-                    # Number of mercenaries per team
-                    r_mercs = 0
-                    b_mercs = 0
+                    # Then, if both have the same number of Mercenaries, break the tie based on the sum of health of mercenaries.
+                    r_mercs_health = 0
+                    b_mercs_health = 0
 
                     for merc in game_state.mercs:
                         if merc.team_color == 'r':
-                            r_mercs += 1
+                            r_mercs_health += merc.health
                         else:
-                            b_mercs += 1
+                            b_mercs_health += merc.health
                     
-                    if r_mercs != b_mercs:
-                        if r_mercs > b_mercs:
+                    if r_mercs_health != b_mercs_health:
+                        if r_mercs_health > b_mercs_health:
                             return 'r'
                         else:
                             return 'b'
                     else:
-                        # Then, if both have the same number of Mercenaries, break the tie based on the sum of health of mercenaries.
-                        r_mercs_health = 0
-                        b_mercs_health = 0
-
-                        for merc in game_state.mercs:
-                            if merc.team_color == 'r':
-                                r_mercs_health += merc.health
-                            else:
-                                b_mercs_health += merc.health
-                        
-                        if r_mercs_health != b_mercs_health:
-                            if r_mercs_health > b_mercs_health:
-                                return 'r'
-                            else:
-                                return 'b'
-                        else:
-                            return 'tie'
-    else:
-        return None # Nobody has won yet
+                        return 'tie'

@@ -46,13 +46,20 @@ class GameState:
             ))
 
         # Compute mercenary paths, from Red to Blue player bases
-        self.mercenary_path_left  = self.compute_mercenary_path((self.player_base_r.x-2, self.player_base_r.y))
-        self.mercenary_path_right = self.compute_mercenary_path((self.player_base_r.x+2, self.player_base_r.y))
-        self.mercenary_path_up    = self.compute_mercenary_path((self.player_base_r.x, self.player_base_r.y-2))
-        self.mercenary_path_down  = self.compute_mercenary_path((self.player_base_r.x, self.player_base_r.y+2))
+        self.mercenary_path_left  = self.compute_mercenary_path((self.player_base_r.x-1, self.player_base_r.y))
+        self.mercenary_path_right = self.compute_mercenary_path((self.player_base_r.x+1, self.player_base_r.y))
+        self.mercenary_path_up    = self.compute_mercenary_path((self.player_base_r.x, self.player_base_r.y-1))
+        self.mercenary_path_down  = self.compute_mercenary_path((self.player_base_r.x, self.player_base_r.y+1))
+
+
+    def is_out_of_bounds(self, x: int, y: int) -> bool:
+        return x < 0 or x >= len(self.floor_tiles[0]) or y < 0 or y >= len(self.floor_tiles)
 
     
     def compute_mercenary_path(self, start_point: tuple) -> list:
+        
+        if self.is_out_of_bounds(start_point[0],start_point[1]): return None
+
         if self.floor_tiles[start_point[1]][start_point[0]] == 'O':
             # Do bastard DFS algorithm: raise exception if there's any branch in the path
             computed_path = [start_point]
@@ -71,14 +78,15 @@ class GameState:
                     (current_tile[0], current_tile[1] + 1)
                 ]:
                     current_tile = None
-                    if neighbor not in traversed and self.floor_tiles[neighbor[1]][neighbor[0]] == 'O':
+                    if (neighbor not in traversed and
+                        not self.is_out_of_bounds(neighbor[0], neighbor[1]) and
+                        self.floor_tiles[neighbor[1]][neighbor[0]] == 'O'):
                         traversed.add(neighbor)
                         if current_tile == None: current_tile = neighbor
                         else: raise Exception('Branching detected in mercenary path')
                         break # <- The for loop always sets current tile to none, thus always ending the while loop. So we break once we find the neighbor
                 
                 # Record the next tile
-                # print("Neighbor Chosen ", current_tile)
                 if current_tile != None: # The last path will always be None, so we write this to exlude it
                     computed_path.append(current_tile)
 
