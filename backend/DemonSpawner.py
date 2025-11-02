@@ -1,5 +1,4 @@
 import Constants
-from GameState import GameState
 
 class DemonSpawner:
     def __init__(self, x: int, y: int, target_team: str) -> None:

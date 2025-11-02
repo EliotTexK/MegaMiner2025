@@ -31,12 +31,11 @@ def world_update_phase(game_state: GameState):
 
     update_towers(game_state)
 
-    
 
 def mortal_wound_check(game_state: GameState, entities: List[Entity]):
     for ent in entities:
         if ent.health <= 0:
-            game_state.entity_grid[ent.x][ent.y] = None
+            game_state.entity_grid[ent.y][ent.x] = None
             ent.state = "dead"
 
 

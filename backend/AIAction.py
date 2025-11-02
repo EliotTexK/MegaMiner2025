@@ -1,18 +1,17 @@
-
 class AIAction():
     def __init__(
         self,
         x : int,
         y : int,
         tower_to_build : str = '',
-        buy : bool = False,
-        destory : bool = False,
-        queue : bool = False,
+        buy_tower : bool = False,
+        destroy_tower : bool = False,
+        queue_mercenary : bool = False,
         queue_direction : str = ''
     ):
-        self.buy_tower_action = buy
-        self.destroy_tower_action = destory
-        self.queue_merc_action = queue
+        self.buy_tower_action = buy_tower
+        self.destroy_tower_action = destroy_tower
+        self.queue_merc_action = queue_mercenary
         self.x = x
         self.y = y
         self.tower_to_build = tower_to_build.strip() # strip get's rid of any excess spaces
@@ -31,22 +30,3 @@ class AIAction():
             support_string = self.queue_direction
 
         return f"AI Action: {action_string}, Coords: ({self.x},{self.y}), Supported Action: {support_string}"
-
-    def change_main_action(self, buy : bool = False, destory : bool = False, queue : bool = False):
-        if buy:
-            self.buy_tower_action = True
-            self.destroy_tower_action = False
-            self.queue_merc_action = False
-        elif destory:
-            self.destroy_tower_action = True
-            self.queue_merc_action = False
-            self.buy_tower_action = False
-        elif queue:
-            self.queue_merc_action = True
-            self.destroy_tower_action = False
-            self.buy_tower_action = False
-
-
-    def change_coords(self, x : int, y : int):
-        self.x = x
-        self.y = y

@@ -12,7 +12,10 @@
             "program": "${workspaceFolder}/backend/main.py",
             "console": "integratedTerminal",
             "args": [
+                "${workspaceFolder}/maps/test_map.json",
+                "-a1",
                 "${workspaceFolder}/backend/AI_Agents/RandomAgent.py",
+                "-a2",
                 "${workspaceFolder}/backend/AI_Agents/RandomAgent.py",
             ]
         }

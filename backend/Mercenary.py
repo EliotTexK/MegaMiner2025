@@ -17,9 +17,12 @@ class Mercenary:
     # TODO: Store current path and path index in merc object
     def get_current_path(self, game_state: GameState):
         current_path = []
-        possible_paths = [game_state.mercenary_path_down, 
-                    game_state.mercenary_path_left, game_state.mercenary_path_right,
-                    game_state.mercenary_path_up]
+        possible_paths = [
+            game_state.mercenary_path_down, 
+            game_state.mercenary_path_left,
+            game_state.mercenary_path_right,
+            game_state.mercenary_path_up
+        ]
         # Assumes no overlapping paths. If merc is on any path tile in path, we are on that path
         for path in possible_paths:
             if path == None: #<- in case there aren't 4 paths, it will skip iterating over a none value (which cases an error)
@@ -39,11 +42,11 @@ class Mercenary:
         # if we are at the end of path, return last tile 
         # otherwise, return next tiles
         delta *= 1 if self.team == 'r' else -1
-        return path[Utils.clamp(path_pos + delta, 0, len(path))]
+        return path[Utils.clamp(path_pos + delta, 0, len(path)-1)]
     
     def set_behind_waiting(self, game_state: GameState):
         behind_pos = self.get_adjacent_path_tile(game_state, -1)
-        behind_entity = game_state.entity_grid[behind_pos[0]][behind_pos[1]]
+        behind_entity = game_state.entity_grid[behind_pos[1]][behind_pos[0]]
         # base case: we are in the first tile in our path, do not recurse
         if self.x == behind_pos[0] and self.y == behind_pos[1]:
             return

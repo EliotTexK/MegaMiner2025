@@ -16,7 +16,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
     y = ai_action_r.y # y that is selected to be built at
 
     # Check if the buy action was called, then check if the tile is valid (within same territory), then check if nothing else is on the tower
-    if ai_action_r.buy_tower_action and game_state.tile_grid[x][y] == "r" and game_state.entity_grid[x][y] is None:
+    if ai_action_r.buy_tower_action and game_state.tile_grid[y][x] == "r" and game_state.entity_grid[y][x] is None:
 
         # Need to further define the Tower and Tower subclasses to fully
         # set up the rest of this phase, mainly for detection of which
@@ -30,7 +30,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(house)
-                    game_state.entity_grid[x][y] = house # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] = house # Update the grid to represent the newly built tower at the correct position
                     game_state.money_r -= house.value
                     house.buildt(game_state.tile_grid)
 
@@ -42,7 +42,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(cannon)
-                    game_state.entity_grid[x][y] = cannon # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] = cannon # Update the grid to represent the newly built tower at the correct position
                     game_state.money_r -= cannon.value
                     cannon.buildt(game_state.tile_grid)
 
@@ -54,7 +54,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(mini)
-                    game_state.entity_grid[x][y] = mini # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] = mini # Update the grid to represent the newly built tower at the correct position
                     game_state.money_r -= mini.value
                     mini.buildt(game_state.tile_grid)
             case "crossbow":
@@ -65,7 +65,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(cross)
-                    game_state.entity_grid[x][y] = cross # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] = cross # Update the grid to represent the newly built tower at the correct position
                     game_state.money_r -= cross.value
                     cross.buildt(game_state.tile_grid)
 
@@ -75,7 +75,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
     y = ai_action_b.y
 
      # Check if the buy action was called, then check if the tile is valid (within same territory), then check if nothing else is on the tower
-    if ai_action_b.buy_tower_action and game_state.tile_grid[x][y] == "b" and not game_state.entity_grid[x][y] is None:
+    if ai_action_b.buy_tower_action and game_state.tile_grid[y][x] == "b" and not game_state.entity_grid[y][x] is None:
 
         # Need to further define the Tower and Tower subclasses to fully
         # set up the rest of this phase, mainly for detection of which
@@ -89,7 +89,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(house)
-                    game_state.entity_grid[x][y] == house # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] == house # Update the grid to represent the newly built tower at the correct position
                     game_state.money_b -= house.value
                     house.buildt(game_state.tile_grid)
 
@@ -101,7 +101,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(cannon)
-                    game_state.entity_grid[x][y] == cannon # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] == cannon # Update the grid to represent the newly built tower at the correct position
                     game_state.money_b -= cannon.value
                     cannon.buildt(game_state.tile_grid)
 
@@ -113,7 +113,7 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(mini)
-                    game_state.entity_grid[x][y] == mini # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] == mini # Update the grid to represent the newly built tower at the correct position
                     game_state.money_b -= mini.value
                     mini.buildt(game_state.tile_grid)
             case "crossbow":
@@ -124,6 +124,6 @@ def build_tower_phase(game_state: GameState, ai_action_r: AIAction, ai_action_b 
                     raise Exception("Not enough money!")
                 else:
                     game_state.towers.append(cross)
-                    game_state.entity_grid[x][y] == cross # Update the grid to represent the newly built tower at the correct position
+                    game_state.entity_grid[y][x] == cross # Update the grid to represent the newly built tower at the correct position
                     game_state.money_b -= cross.value
                     cross.buildt(game_state.tile_grid)

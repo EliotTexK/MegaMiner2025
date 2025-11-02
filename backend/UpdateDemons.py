@@ -32,8 +32,8 @@ def set_all_demon_states(game_state: GameState, demons: List[Demon],
     for demon in demons:
         next_tile1 = demon.get_adjacent_path_tile(game_state, 1)
         next_tile2 = demon.get_adjacent_path_tile(game_state, 2)
-        blocking_entity1 = game_state.entity_grid[next_tile1[0]][next_tile1[1]]
-        blocking_entity2 = game_state.entity_grid[next_tile2[0]][next_tile2[1]]
+        blocking_entity1 = game_state.entity_grid[next_tile1[1]][next_tile1[0]]
+        blocking_entity2 = game_state.entity_grid[next_tile2[1]][next_tile2[0]]
 
         # fighting if rival merc or demon or player base is within 1 space
         if (type(blocking_entity1) == type(Mercenary) or 
@@ -62,7 +62,7 @@ def set_all_demon_states(game_state: GameState, demons: List[Demon],
 def move_all_demons(game_state: GameState, demons: List[Demon]):
     # remove moving demons
     for demon in demons:
-        game_state.entity_grid[demon.x][demon.y] = None
+        game_state.entity_grid[demon.y][demon.x] = None
 
     # set new position
     for demon in demons:
@@ -72,13 +72,13 @@ def move_all_demons(game_state: GameState, demons: List[Demon]):
 
     # add moving demons back
     for demon in demons:
-        game_state.entity_grid[demon.x][demon.y] = demon
+        game_state.entity_grid[demon.y][demon.x] = demon
 
 def do_demon_combat_single(game_state: GameState, demon: Demon):
     next_tile1 = demon.get_adjacent_path_tile(game_state, 1)
     next_tile2 = demon.get_adjacent_path_tile(game_state, 2)
-    target1: Entity = game_state.entity_grid[next_tile1[0], next_tile1[1]]
-    target2: Entity = game_state.entity_grid[next_tile2[0], next_tile2[1]]
+    target1: Entity = game_state.entity_grid[next_tile1[1]][next_tile1[0]]
+    target2: Entity = game_state.entity_grid[next_tile2[1]][next_tile2[0]]
     
     # if tile 1 space in front is empty, we are contesting space with enemy 2 spaces in front 
     if (target1 != None):

@@ -5,7 +5,7 @@ from GameState import GameState
 def spawn_demons(game_state: GameState):
     for demon_spawner in game_state.demon_spawners:
         spawner : DemonSpawner = demon_spawner
-        targ_space = game_state.entity_grid[spawner.x][spawner.y]
+        targ_space = game_state.entity_grid[spawner.y][spawner.x]
         
         if spawner.reload_time_left > 0:
             spawner.reload_time_left -= 1
