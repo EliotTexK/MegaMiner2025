@@ -41,7 +41,7 @@ def _build_tower(game_state: GameState, action: AIAction, is_red_player: bool) -
     money = game_state.money_r if is_red_player else game_state.money_b
     
     # Validate placement
-    if game_state.tile_grid[y][x] != territory_marker:
+    if game_state.floor_tiles[y][x] != territory_marker:
         log_msg(f"{player_name} player tried to build outside their territory at ({x}, {y})")
         return
     
@@ -60,7 +60,7 @@ def _build_tower(game_state: GameState, action: AIAction, is_red_player: bool) -
     # Build the tower
     game_state.towers.append(tower)
     game_state.entity_grid[y][x] = tower
-    tower.buildt(game_state.tile_grid)
+    tower.buildt(game_state.floor_tiles)
     
     # Deduct money
     if is_red_player:
@@ -80,7 +80,7 @@ def _destroy_tower(game_state: GameState, action: AIAction, is_red_player: bool)
     player_name = "Red" if is_red_player else "Blue"
     
     # Validate destruction
-    if game_state.tile_grid[y][x] != territory_marker:
+    if game_state.floor_tiles[y][x] != territory_marker:
         log_msg(f"{player_name} player tried to destroy tower outside their territory at ({x}, {y})")
         return
     

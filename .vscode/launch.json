@@ -11,9 +11,9 @@
             "args": [
                 "${workspaceFolder}/maps/test_map.json",
                 "-a1",
-                "${workspaceFolder}/AI_Agents/ExampleAgent1.py",
+                "${workspaceFolder}/AI_Agents/ExampleAgent2.py",
                 "-a2",
-                "${workspaceFolder}/AI_Agents/ExampleAgent1.py"
+                "${workspaceFolder}/AI_Agents/ExampleAgent2.py"
             ]
         }
     ]

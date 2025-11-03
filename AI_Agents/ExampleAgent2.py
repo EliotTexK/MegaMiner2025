@@ -18,9 +18,15 @@ class AIAction:
     Phase 2 - Optional:
         - Buy mercenary: add merc_direction="N" (or "S", "E", "W")
     
+    Possible values of tower_name are:
+        - "crossbow"
+        - "cannon"
+        - "minigun"
+        - "house"
+    
     Examples:
-        AIAction("build", 5, 3, "Cannon")
-        AIAction("build", 5, 3, "Cannon", merc_direction="N")
+        AIAction("build", 5, 3, "cannon")
+        AIAction("build", 5, 3, "crossbow", merc_direction="N")
         AIAction("destroy", 2, 4)
         AIAction("nothing", 0, 0, merc_direction="S")
     """
@@ -79,13 +85,16 @@ def get_available_queue_directions(game_state: dict, team_color: str) -> list:
     
     return result
 
-def get_available_build_spaces(game_state: dict, team_color: str) -> list:
+# team_color should be 'r' or 'b'
+# Return a list of coordinates that are available for building
+def get_available_build_spaces(game_state: dict, team_color: str):
     result = []
-    
-    for y in game_state['FloorTiles']:
-        for x in y:
-            if x == team_color:
-                result.append((x,y))
+
+    for y, row in enumerate(game_state['FloorTiles']):
+        for x, chr_at_x in enumerate(row):
+            if chr_at_x == team_color:
+                if game_state['EntityGrid'][y][x] == '':
+                    result.append((x,y))
 
     return result
 
@@ -107,8 +116,24 @@ class Agent:
         # -- YOUR CODE BEGINS HERE --
         # Competitors: For your convenience, it's recommended that you use the helper functions given earlier in this file
         q_directions = get_available_queue_directions(game_state, self.team_color)
+        build_spaces = get_available_build_spaces(game_state, self.team_color)
 
-        return AIAction("nothing", 0, 0, merc_direction=random.choice(q_directions))
+        # Build a house on the first turn
+        turn = game_state["CurrentTurn"]
+
+        if turn == 0:
+            house_x, house_y = random.choice(build_spaces)
+            return AIAction("build", house_x, house_y, 'house')
+        else:
+            # This agent will have an increasing probability each turn to deploy a mercenary
+            # Otherwise, build a house
+            probability_merc = (turn + 50) / 100.0
+
+            if random.random() < probability_merc:
+                return AIAction("nothing", 0, 0, merc_direction=random.choice(q_directions))
+            else:
+                house_x, house_y = random.choice(build_spaces)
+                return AIAction("build", house_x, house_y, 'house')
         # -- YOUR CODE ENDS HERE --
 
 

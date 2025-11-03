@@ -85,13 +85,15 @@ def get_available_queue_directions(game_state: dict, team_color: str) -> list:
     
     return result
 
+# team_color should be 'r' or 'b'
+# Return a list of coordinates that are available for building
 def get_available_build_spaces(game_state: dict, team_color: str):
     result = []
 
     for y, row in enumerate(game_state['FloorTiles']):
         for x, chr_at_x in enumerate(row):
             if chr_at_x == team_color:
-                if game_state['EntityGrid'][y][x] == None:
+                if game_state['EntityGrid'][y][x] == '':
                     result.append((x,y))
 
     return result
@@ -114,6 +116,8 @@ class Agent:
         # -- YOUR CODE BEGINS HERE --
         # Competitors: For your convenience, it's recommended that you use the helper functions given earlier in this file
         q_directions = get_available_queue_directions(game_state, self.team_color)
+
+        build_spaces = get_available_build_spaces(game_state, self.team_color)
 
         # This example agent just tries to buy mercenaries every turn
         return AIAction("nothing", 0, 0, merc_direction=random.choice(q_directions))
