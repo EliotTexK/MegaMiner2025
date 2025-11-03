@@ -41,21 +41,23 @@ class Demon:
 
         # if we are at the end of path, return last tile 
         # otherwise, return next tiles
-        delta *= 1 if self.target_team == 'r' else -1
+        delta *= 1 if self.target_team == 'b' else -1
         return path[Utils.clamp(path_pos + delta, 0, len(path)-1)]
     
-    def set_behind_waiting(self, game_state: GameState):
+    def block_entity_behind(self, game_state: GameState):
         behind_pos = self.get_adjacent_path_tile(game_state, -1)
         behind_entity = game_state.entity_grid[behind_pos[1]][behind_pos[0]]
         # base case: we are in the first tile in our path, do not recurse
         if self.x == behind_pos[0] and self.y == behind_pos[1]:
             return
         # base case: entity in behind pos does not contain merc
-        elif type(behind_entity) != Demon:
+        elif behind_entity is None:
             return
         else:
-            behind_entity.state = 'waiting'
-            behind_entity.set_behind_waiting(game_state)
+            if isinstance(behind_entity, Demon) and behind_entity.target_team == self.target_team:
+                behind_entity.state = 'fighting'
+                behind_entity.block_entity_behind(game_state)
+            # No need to block mercenaries in this phase, since Demons and mercs don't move in tandem
 
     # If in range to attack a player base, return a reference to that player base,
     # Otherwise, return None
