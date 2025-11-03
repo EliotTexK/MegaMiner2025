@@ -4,10 +4,8 @@ from Demon import Demon
 from PlayerBase import PlayerBase
 from Mercenary import Mercenary
 from Entity import Entity
+from Utils import log_msg
 import Constants
-
-# NOTE: Function logic has been copy-pasted from UpdateMercenaries.py.
-# This makes the code messier but may be useful if demons & mercs need independant tweaking
 
 def update_demons(game_state: GameState):
     # Determine all demon states
@@ -30,22 +28,23 @@ def set_all_demon_states(game_state: GameState, demons: List[Demon],
                         fighting: List[Demon],
                         waiting: List[Demon]):
     for demon in demons:
+        if demon.state == 'dead': continue
+
         next_tile1 = demon.get_adjacent_path_tile(game_state, 1)
         next_tile2 = demon.get_adjacent_path_tile(game_state, 2)
-        blocking_entity1 = game_state.entity_grid[next_tile1[0]][next_tile1[1]]
-        blocking_entity2 = game_state.entity_grid[next_tile2[0]][next_tile2[1]]
+        blocking_entity1 = game_state.entity_grid[next_tile1[1]][next_tile1[0]]
+        blocking_entity2 = game_state.entity_grid[next_tile2[1]][next_tile2[0]]
 
         # fighting if rival merc or demon or player base is within 1 space
-        if (type(blocking_entity1) == type(Mercenary) or 
-            type(blocking_entity1) == type(PlayerBase) or
+        if (demon.get_attackable_player_base(game_state) != None or
+            type(blocking_entity1) == type(Mercenary) or 
             (type(blocking_entity1) == type(Demon) and blocking_entity1.target_team != demon.team)):
             demon.state = 'fighting'
             # set all demons behind us to waiting
             demon.set_behind_waiting(game_state)
         # fighting if enemy is within 2 spaces and merc within 1 space is not ally
         elif (type(blocking_entity1) == None and
-            type(blocking_entity2) == type(Demon) or 
-            type(blocking_entity2) == type(PlayerBase) or
+            type(blocking_entity2) == type(Demon) or
             (type(blocking_entity2) == type(Mercenary) and blocking_entity2.team != demon.team)):
             demon.state = 'fighting'
             # set all demons behind us to waiting
@@ -62,7 +61,7 @@ def set_all_demon_states(game_state: GameState, demons: List[Demon],
 def move_all_demons(game_state: GameState, demons: List[Demon]):
     # remove moving demons
     for demon in demons:
-        game_state.entity_grid[demon.x][demon.y] = None
+        game_state.entity_grid[demon.y][demon.x] = None
 
     # set new position
     for demon in demons:
@@ -72,16 +71,25 @@ def move_all_demons(game_state: GameState, demons: List[Demon]):
 
     # add moving demons back
     for demon in demons:
-        game_state.entity_grid[demon.x][demon.y] = demon
+        game_state.entity_grid[demon.y][demon.x] = demon
+        log_msg(f"Demon {demon.name} moved to ({merc.x},{merc.y})")
 
 def do_demon_combat_single(game_state: GameState, demon: Demon):
     next_tile1 = demon.get_adjacent_path_tile(game_state, 1)
     next_tile2 = demon.get_adjacent_path_tile(game_state, 2)
-    target1: Entity = game_state.entity_grid[next_tile1[0], next_tile1[1]]
-    target2: Entity = game_state.entity_grid[next_tile2[0], next_tile2[1]]
+    target1: Entity = game_state.entity_grid[next_tile1[1]][next_tile1[0]]
+    target2: Entity = game_state.entity_grid[next_tile2[1]][next_tile2[0]]
     
     # if tile 1 space in front is empty, we are contesting space with enemy 2 spaces in front 
-    if (target1 != None):
+    if target1 != None:
         target1.health -= Constants.DEMON_ATTACK_POWER
-    else:
+        log_msg(f'Demon {demon.name} attacked opponent {target1.name} at ({next_tile1[0]},{next_tile1[1]})')
+    elif target2 != None:
         target2.health -= Constants.DEMON_ATTACK_POWER
+        log_msg(f'Demon {demon.name} attacked opponent {target2.name} at ({next_tile2[0]},{next_tile2[1]})')
+    else:
+        # attack the player base if we have reached the end of the path, and there is nobody else to fight
+        attackable_base = demon.get_attackable_player_base(game_state)
+        if attackable_base != None:
+            attackable_base.health -= Constants.DEMON_ATTACK_POWER
+            log_msg(f'Demon {demon.name} attacked {attackable_base.name} at ({attackable_base.x},{attackable_base.y})')

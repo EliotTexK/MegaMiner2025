@@ -1,5 +1,5 @@
 {
-    "floor_tiles": [
+    "FloorTiles": [
         "bbbbbb     rrrrrr",
         "bbOOOOOOOOOOOOOrr",
         "bbObbb     rrrOrr",
@@ -8,25 +8,25 @@
         "bbOOOOOOOOOOOOOrr",
         "bbbbbb     rrrrrr"
     ],
-    "blue_base": {
-        "x": 2,
-        "y": 3
-    },
-    "red_base": {
+    "PlayerBaseR": {
         "x": 14,
         "y": 3
     },
-    "spawners": [
+    "PlayerBaseB": {
+        "x": 2,
+        "y": 3
+    },
+    "DemonSpawners": [
         {
             "x": 8,
             "y": 1,
-            "initial_target": "Red",
+            "initial_target": "r",
             "switch_target": true
         },
         {
             "x": 8,
             "y": 5,
-            "initial_target": "Blue",
+            "initial_target": "b",
             "switch_target": true
         }
     ]

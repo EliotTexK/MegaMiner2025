@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python Debugger: Test backend without visualizer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/main.py",
+            "console": "integratedTerminal",
+            "args": [
+                "${workspaceFolder}/maps/test_map_tiny.json",
+                "-a1",
+                "${workspaceFolder}/backend/AI_Agents/ExampleAgent1.py",
+                "-a2",
+                "${workspaceFolder}/backend/AI_Agents/ExampleAgent1.py"
+            ]
+        }
+    ]
+}
