@@ -33,13 +33,15 @@ def select_demon_name() -> str:
     index_d = (index_d + 1) % len(demon_name_table)
     return name
 
-def select_tower_name(tower_type: str) -> str:
+# tower char should be a short string indicating the type of tower
+def select_tower_name(tower_type: str, team_color: str) -> str:
     global index_tr, index_tb
+    
     if team_color == 'r':
-        name = merc_name_table_red[index_r]
-        index_r = (index_r + 1) % len(merc_name_table_red)
+        name = f'R_{tower_type}_{red_tower_name_table[index_tr]}'
+        index_tr = (index_tr + 1) % len(red_tower_name_table)
         return name
     elif team_color == 'b':
-        name = merc_name_table_blue[index_b]
-        index_b = (index_b + 1) % len(merc_name_table_blue)
+        name = f'B_{tower_type}_{blue_tower_name_table[index_tr]}'
+        index_tb = (index_tb + 1) % len(blue_tower_name_table)
         return name

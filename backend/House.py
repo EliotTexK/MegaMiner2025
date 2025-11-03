@@ -1,6 +1,7 @@
 import Constants
 from Tower import Tower
 from GameState import GameState
+from NameSelector import select_tower_name
 
 class House(Tower):
     def __init__(self, x: int, y: int, team_color: str):
@@ -8,6 +9,7 @@ class House(Tower):
 
         self.money_gain = Constants.HOUSE_MONEY_PRODUCED
         self.angle = 0
+        self.name = select_tower_name('H', self.team)
     
     def update(self, game_state):
         if self.current_cooldown > 0:

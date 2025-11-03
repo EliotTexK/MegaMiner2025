@@ -7,3 +7,5 @@ class Cannon(Tower):
 
         self.radius = 2 # Cannon shots have a splash radius, this variable shows that
                         # But looking in the rules txt, cannon doesn't have this ability, so remove this? Discuss later
+        
+        self.name = select_tower_name('CA', self.team)
