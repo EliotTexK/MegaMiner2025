@@ -5,8 +5,16 @@ from NameSelector import select_tower_name
 from Utils import log_msg
 
 class House(Tower):
-    def __init__(self, x: int, y: int, team_color: str):
-        super().__init__(x, y, team_color, Constants.HOUSE_MAX_COOLDOWN, Constants.HOUSE_RANGE, Constants.MINIGUN_DAMAGE, Constants.HOUSE_PRICE)
+    def __init__(self, x: int, y: int, team_color: str, game_state: GameState):
+        super().__init__(
+            x, y,
+            team_color,
+            Constants.HOUSE_MAX_COOLDOWN,
+            Constants.HOUSE_RANGE,
+            Constants.MINIGUN_DAMAGE, # "I would be dangerous, I just don't FEEL like it!"
+            Constants.HOUSE_PRICE,
+            game_state
+        )
 
         self.angle = 0
         self.name = select_tower_name('H', self.team)

@@ -127,6 +127,8 @@ class Game:
 
             "PlayerBaseR" : dict_player_base_r,
             "PlayerBaseB" : dict_player_base_b,
+            "RedTeamMoney" : self.game_state.money_r,
+            "BlueTeamMoney" : self.game_state.money_b,
 
             "FloorTiles" : self.game_state.floor_tiles,
             "EntityGrid" : list_entity_grid,

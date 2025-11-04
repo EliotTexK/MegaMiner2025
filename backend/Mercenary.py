@@ -12,6 +12,7 @@ class Mercenary:
         self.x = x
         self.y = y
         self.state = 'moving'
+        self.attack_pow = Constants.MERCENARY_ATTACK_POWER
 
         if team_color in ['r','b']:
             self.team = team_color
