@@ -134,7 +134,7 @@ def check_wincon(game_state: GameState):
                 b_mercs = 0
 
                 for merc in game_state.mercs:
-                    if merc.team_color == 'r':
+                    if merc.team == 'r':
                         r_mercs += 1
                     else:
                         b_mercs += 1
@@ -150,7 +150,7 @@ def check_wincon(game_state: GameState):
                     b_mercs_health = 0
 
                     for merc in game_state.mercs:
-                        if merc.team_color == 'r':
+                        if merc.team == 'r':
                             r_mercs_health += merc.health
                         else:
                             b_mercs_health += merc.health
