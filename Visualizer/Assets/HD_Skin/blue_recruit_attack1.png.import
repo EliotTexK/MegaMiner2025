@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cngtknvpoodu7"
-path="res://.godot/imported/crossbow.png-508148d216b4953eb7507c76b3d28c2f.ctex"
+uid="uid://byna5r0fsc8dk"
+path="res://.godot/imported/blue_recruit_attack1.png-609f3a238c7d02ddd6f5a165e3f841cd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HD_Skin/crossbow.png"
-dest_files=["res://.godot/imported/crossbow.png-508148d216b4953eb7507c76b3d28c2f.ctex"]
+source_file="res://Assets/HD_Skin/blue_recruit_attack1.png"
+dest_files=["res://.godot/imported/blue_recruit_attack1.png-609f3a238c7d02ddd6f5a165e3f841cd.ctex"]
 
 [params]
 
