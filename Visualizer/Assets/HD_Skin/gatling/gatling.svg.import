@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3iqngqxdecu6"
-path="res://.godot/imported/base.png-e668dc04bea7e33a2d19b17917612073.ctex"
+uid="uid://b07a02fywxygh"
+path="res://.godot/imported/gatling.svg-2da131d99b97b90ebbbd3c0b396434a2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HD_Skin/base.png"
-dest_files=["res://.godot/imported/base.png-e668dc04bea7e33a2d19b17917612073.ctex"]
+source_file="res://Assets/HD_Skin/gatling/gatling.svg"
+dest_files=["res://.godot/imported/gatling.svg-2da131d99b97b90ebbbd3c0b396434a2.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

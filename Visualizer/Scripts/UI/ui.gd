@@ -39,7 +39,7 @@ func _on_human_ai_select_go(is_ai: bool, is_ai2: bool) -> void:
 	human_ai_select.hide()
 	game_ui.show()
 	if !is_ai:
-		$"Game UI/RightSideStates/Human Control".active = true
+		$"Game UI/RightSideStates".active = true
 		$"Game UI/RightSideStates/Human Control".visible = true
 		
 

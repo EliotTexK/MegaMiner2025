@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6vrgg7audbl3"
-path="res://.godot/imported/stand.svg-e90047267f4f09e73fe7d4d85a9dfbcc.ctex"
+uid="uid://dd2tiq1m70exn"
+path="res://.godot/imported/blue_gatling_fire.png-8634d67cf970719078838c7e205c14e4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HD_Skin/cannon/stand.svg"
-dest_files=["res://.godot/imported/stand.svg-e90047267f4f09e73fe7d4d85a9dfbcc.ctex"]
+source_file="res://Assets/HD_Skin/gatling/blue_gatling_fire.png"
+dest_files=["res://.godot/imported/blue_gatling_fire.png-8634d67cf970719078838c7e205c14e4.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

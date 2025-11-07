@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ck6wsxxpqcmpa"
-path="res://.godot/imported/Blue_base.png-b7e9123a46f25dd8350985426acbee1e.ctex"
+uid="uid://2cfukvxbe1ah"
+path="res://.godot/imported/gatling.png-a7f0f982c93ec477e4d66d8fb76eefff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HD_Skin/Blue_base.png"
-dest_files=["res://.godot/imported/Blue_base.png-b7e9123a46f25dd8350985426acbee1e.ctex"]
+source_file="res://Assets/HD_Skin/gatling/gatling.png"
+dest_files=["res://.godot/imported/gatling.png-a7f0f982c93ec477e4d66d8fb76eefff.ctex"]
 
 [params]
 

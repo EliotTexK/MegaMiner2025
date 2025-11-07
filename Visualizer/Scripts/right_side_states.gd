@@ -1,7 +1,7 @@
 extends Control
 
 
-const CANNON = preload("uid://px2v73fj7qag")
+const CANNON : Texture = preload("uid://px2v73fj7qag")
 
 
 var current_build : Sprite2D
@@ -21,7 +21,7 @@ var current_mercenary_dir : String
 @export var minigun : Button
 @export var cross : Button
 
-@export var house_options : VBoxContainer
+@export var house_options : HBoxContainer
 
 var active : bool = false
 
@@ -32,23 +32,28 @@ signal action(player1 : bool, build : String, x : int, y : int, tower_to_build :
 func _ready() -> void:
 	build_button.pressed.connect(_on_build_pressed)
 	destroy_button.pressed.connect(_on_destroy_pressed)
+	cannon.pressed.connect(_on_cannon_pressed)
 	current_build = Sprite2D.new()
 	
 
 func _process(_delta: float) -> void:
 	
 	if GlobalPaths.tile_grid and active:
-		current_build.positon = GlobalPaths.tile_grid.get_local_mouse_position()
+		current_build.position = GlobalPaths.tile_grid.get_local_mouse_position().snapped(Vector2(32.0,32.0))
 		
-	if Input.is_action_just_pressed("click"):
-		action.emit()
+	if Input.is_action_just_pressed("click") and active and current_build.texture != null:
+		
+		action.emit(true, "build", current_build.position.x / 32, current_build.position.y / 32, current_build_name, "")
+		current_build_name = ""
+		current_build.texture = null
 
 func action_made():
 	action.emit("build", build_pos.x, build_pos.y, current_build_name ,current_mercenary_dir)
 
 func _on_build_pressed():
 	house_options.show()
-	GlobalPaths.tile_grid.add_child(current_build)
+	if current_build.get_parent() == null:
+		GlobalPaths.tile_grid.add_child(current_build)
 
 func _on_destroy_pressed():
 	house_options.hide()
@@ -59,6 +64,7 @@ func _on_house_pressed():
 
 func _on_cannon_pressed():
 	current_build.texture = CANNON
+	current_build.scale = Vector2(32 / CANNON.get_size().x, 32 / CANNON.get_size().y)
 	current_build_name = "cannon"
 
 func _on_cross_pressed():

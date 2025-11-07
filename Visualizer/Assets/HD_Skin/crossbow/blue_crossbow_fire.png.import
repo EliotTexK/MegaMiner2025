@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ck6wsxxpqcmpa"
-path="res://.godot/imported/Blue_base.png-b7e9123a46f25dd8350985426acbee1e.ctex"
+uid="uid://cdum80fld6fck"
+path="res://.godot/imported/blue_crossbow_fire.png-131ffc2dc913d968eef4d2ac5c6f91e3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HD_Skin/Blue_base.png"
-dest_files=["res://.godot/imported/Blue_base.png-b7e9123a46f25dd8350985426acbee1e.ctex"]
+source_file="res://Assets/HD_Skin/crossbow/blue_crossbow_fire.png"
+dest_files=["res://.godot/imported/blue_crossbow_fire.png-131ffc2dc913d968eef4d2ac5c6f91e3.ctex"]
 
 [params]
 

@@ -15,6 +15,9 @@ const ENEMY = preload("res://Assets/Topdown skin/enemy.png")
 
 const BASE = preload("res://Assets/Topdown skin/base.png")
 const CROSSBOW = preload("res://Assets/Topdown skin/crossbow.png")
+const CANNON = preload("uid://px2v73fj7qag")
+const GATLING = preload("uid://2cfukvxbe1ah")
+const HOUSE = preload("uid://bciq54f3p3yiw")
 
 const RED_CASTLE : Texture = preload("res://Assets/HD_Skin/base.svg")
 
@@ -67,6 +70,7 @@ func _on_ui_start_game(is_ai1, is_ai2):
 			true)
 		
 	elif not is_ai1 and is_ai2:
+		
 		process_info = OS.execute_with_pipe("python", 
 			[GlobalPaths.backendPath, GameSettings.default_map, "-h1" , "-a2",GlobalPaths.AI_agent2_file_path, "-v"], 
 			true)
@@ -82,6 +86,7 @@ func _on_ui_start_game(is_ai1, is_ai2):
 			true)
 	
 	
+	
 	processID = process_info["pid"]
 	stdio = process_info["stdio"]
 	stderr = process_info["stderr"]
@@ -92,13 +97,16 @@ func _on_ui_start_game(is_ai1, is_ai2):
 		print(stdio.get_line())
 		print(stdio.get_line())
 		print(stdio.get_line())
-		var first_turn = stdio.get_line() #First turn
+		var first_turn
+		if is_ai1 and is_ai2:
+			first_turn = stdio.get_line() #First turn
 	
 	
 		_draw_game_from_gamestate(content)
-		await get_tree().create_timer(2.0).timeout
-		_draw_game_from_gamestate(first_turn)
-		turn_interval = turn_interval_max
+		if is_ai1 and is_ai2:
+			await get_tree().create_timer(2.0).timeout
+			_draw_game_from_gamestate(first_turn)
+			turn_interval = turn_interval_max
 		backend_running = true
 
 
@@ -180,7 +188,7 @@ func _draw_grid(tile_grid : Array):
 
 # Draws the mercanaries
 func _draw_mercenaries(mercs : Array):
-	print(mercs)
+	#print(mercs)
 	var count = 0
 	for merc in mercs:
 		if mercenaries.get_child_count() - 1 < count:
@@ -211,21 +219,28 @@ func _draw_mercenaries(mercs : Array):
 		count += 1
 
 func _draw_towers(data_towers : Array):
-	
+	print(data_towers)
 	for tower in data_towers:
 		var base = Sprite2D.new()
-		var type = Sprite2D.new()
+		var current_tower = Sprite2D.new()
 		var pos = Vector2(tower["x"] * 32, tower["y"] * 32)
 		base.position = pos
 		base.texture = BASE
 		towers.add_child(base)
 		
-		var type_c = tower["Type"]
+		#var type_c = tower["Type"]
 		match tower["Type"]:
 			"Crossbow":
-				type.texture = CROSSBOW
-		base.add_child(type)
-		type.rotation_degrees = tower["AimAngle"]
+				current_tower.texture = CROSSBOW
+			"Cannon":
+				current_tower.texture = CANNON
+			"Minigun":
+				current_tower.texture = GATLING
+			"House":
+				current_tower.texture = HOUSE
+			
+		base.add_child(current_tower)
+		current_tower.rotation_degrees = tower["AimAngle"]
 
 func _draw_demons(dem_array : Array):
 	var count = 0
@@ -261,17 +276,21 @@ func _process(delta):
 				turn_interval = turn_interval_max
 		else:
 			if play1ready and play2ready:
-			
+				
 				if stdio.get_error() == OK:
 					var content = stdio.get_line()
-					previous_game_state = current_game_state
+					
 					if !content.begins_with("--WINNER"):
+						previous_game_state = current_game_state
 						_draw_game_from_gamestate(content)
 					else:
+						print(content)
 						backend_running = false
 					stdio.store_line("--NEXT TURN--")
 					stdio.flush() # Ensure data is written to the pipe
 				
+				play1ready = is_player1_ai
+				play2ready = is_player2_ai
 
 func AI_game_turn():
 	var content : String = ""
@@ -298,8 +317,9 @@ func _on_ui_action(is_player1 : bool, action : String , x: int, y: int, to_build
 		play2ready = true
 	
 	if stdio.get_error() == OK:
-		print("{\"action\": \"" + action + "\", \"x\": " + str(x) + ", \"y\": " + str(y) + ", \"tower_name\": \"" + to_build + "\", \"merc_direction\": \"" + merc + "\"}")
-		stdio.store_line("{\"action\": \"" + action + "\", \"x\": " + str(x) + ", \"y\": " + str(y) + ", \"tower_name\": \"" + to_build + "\", \"merc_direction\": \"" + merc + "\"}")
+		var player_action = "{\"action\": \"" + action + "\", \"x\": " + str(x) + ", \"y\": " + str(y) + ", \"tower_name\": \"" + to_build + "\", \"merc_direction\": \"" + merc + "\"}"
+		print(player_action)
+		stdio.store_line(player_action)
 		stdio.flush() # Ensure data is written to the pipe
 
 func _update_ui(gamestate):

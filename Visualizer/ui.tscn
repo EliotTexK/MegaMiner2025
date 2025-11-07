@@ -47,15 +47,16 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Turns Progressed"
 
-[node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "cannon")]
+[node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "cannon", "house_options")]
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
 offset_bottom = 7.776001
 script = ExtResource("4_nltto")
-build_button = NodePath("Human Control/HBoxContainer/Build")
-destroy_button = NodePath("Human Control/HBoxContainer/Destroy")
-cannon = NodePath("Human Control/HBoxContainer2/Cannon")
+build_button = NodePath("Human Control/build or destroy/Build")
+destroy_button = NodePath("Human Control/build or destroy/Destroy")
+cannon = NodePath("Human Control/Build OPtions/Cannon")
+house_options = NodePath("Human Control/Build OPtions")
 
 [node name="Panel2" type="Panel" parent="Game UI/RightSideStates"]
 layout_mode = 1
@@ -128,7 +129,7 @@ anchor_bottom = 1.0
 offset_top = 0.0799866
 offset_right = 0.175964
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
+[node name="build or destroy" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -138,15 +139,15 @@ offset_right = 92.5
 offset_bottom = 40.0
 grow_horizontal = 2
 
-[node name="Build" type="Button" parent="Game UI/RightSideStates/Human Control/HBoxContainer"]
+[node name="Build" type="Button" parent="Game UI/RightSideStates/Human Control/build or destroy"]
 layout_mode = 2
 text = "Build"
 
-[node name="Destroy" type="Button" parent="Game UI/RightSideStates/Human Control/HBoxContainer"]
+[node name="Destroy" type="Button" parent="Game UI/RightSideStates/Human Control/build or destroy"]
 layout_mode = 2
 text = "Destroy"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
+[node name="Build OPtions" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -160,19 +161,19 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="House" type="Button" parent="Game UI/RightSideStates/Human Control/HBoxContainer2"]
+[node name="House" type="Button" parent="Game UI/RightSideStates/Human Control/Build OPtions"]
 layout_mode = 2
 text = "House"
 
-[node name="Cannon" type="Button" parent="Game UI/RightSideStates/Human Control/HBoxContainer2"]
+[node name="Cannon" type="Button" parent="Game UI/RightSideStates/Human Control/Build OPtions"]
 layout_mode = 2
 text = "Cannon"
 
-[node name="Crossbow" type="Button" parent="Game UI/RightSideStates/Human Control/HBoxContainer2"]
+[node name="Crossbow" type="Button" parent="Game UI/RightSideStates/Human Control/Build OPtions"]
 layout_mode = 2
 text = "Crossbow"
 
-[node name="Minigun" type="Button" parent="Game UI/RightSideStates/Human Control/HBoxContainer2"]
+[node name="Minigun" type="Button" parent="Game UI/RightSideStates/Human Control/Build OPtions"]
 layout_mode = 2
 text = "Minigun"
 
