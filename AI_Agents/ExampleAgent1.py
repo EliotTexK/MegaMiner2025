@@ -11,14 +11,14 @@ class AIAction:
     Represents one turn of actions in the game.
     
     Phase 1 - Pick ONE:
-        - Build a tower: AIAction("build", x, y, tower_name)
+        - Build a tower: AIAction("build", x, y, tower_type)
         - Destroy a tower: AIAction("destroy", x, y)
         - Do nothing: AIAction("nothing", 0, 0)
     
     Phase 2 - Optional:
         - Buy mercenary: add merc_direction="N" (or "S", "E", "W")
     
-    Possible values of tower_name are:
+    Possible values of tower_type are:
         - "crossbow"
         - "cannon"
         - "minigun"
@@ -36,13 +36,13 @@ class AIAction:
         action: str,
         x: int,
         y: int,
-        tower_name: str = "",
+        tower_type: str = "",
         merc_direction: str = ""
     ):
         self.action = action.lower().strip()  # "build", "destroy", or "nothing"
         self.x = x
         self.y = y
-        self.tower_name = tower_name.strip()
+        self.tower_type = tower_type.strip()
         self.merc_direction = merc_direction.upper().strip()  # "N", "S", "E", "W", or ""
     
     def to_dict(self):
@@ -51,7 +51,7 @@ class AIAction:
             'action': self.action,
             'x': self.x,
             'y': self.y,
-            'tower_name': self.tower_name,
+            'tower_type': self.tower_type,
             'merc_direction': self.merc_direction
         }
     
@@ -85,13 +85,15 @@ def get_available_queue_directions(game_state: dict, team_color: str) -> list:
     
     return result
 
+# team_color should be 'r' or 'b'
+# Return a list of coordinates that are available for building
 def get_available_build_spaces(game_state: dict, team_color: str):
     result = []
 
     for y, row in enumerate(game_state['FloorTiles']):
         for x, chr_at_x in enumerate(row):
             if chr_at_x == team_color:
-                if game_state['EntityGrid'][y][x] == None:
+                if game_state['EntityGrid'][y][x] == '':
                     result.append((x,y))
 
     return result
@@ -114,6 +116,8 @@ class Agent:
         # -- YOUR CODE BEGINS HERE --
         # Competitors: For your convenience, it's recommended that you use the helper functions given earlier in this file
         q_directions = get_available_queue_directions(game_state, self.team_color)
+
+        build_spaces = get_available_build_spaces(game_state, self.team_color)
 
         # This example agent just tries to buy mercenaries every turn
         return AIAction("nothing", 0, 0, merc_direction=random.choice(q_directions))

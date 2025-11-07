@@ -42,6 +42,6 @@ def select_tower_name(tower_type: str, team_color: str) -> str:
         index_tr = (index_tr + 1) % len(red_tower_name_table)
         return name
     elif team_color == 'b':
-        name = f'B_{tower_type}_{blue_tower_name_table[index_tr]}'
+        name = f'B_{tower_type}_{blue_tower_name_table[index_tb]}'
         index_tb = (index_tb + 1) % len(blue_tower_name_table)
         return name

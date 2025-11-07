@@ -44,7 +44,7 @@ class Game:
         log_msg("")
 
 
-    # Converts the game state to a json string that'll be usable by the AI's (and the visualizer later...)
+    # Converts the game state to a json string that'll be usable by the AI's
     def game_state_to_json(self) -> str:
 
         dict_player_base_r : dict = {
@@ -105,7 +105,7 @@ class Game:
                 "y" : tow.y,
                 "AimAngle" : tow.angle * 57.2958 # Convert radians to degrees
             }
-            dict_towers.append(tow_dict)
+            list_towers.append(tow_dict)
 
         list_demons = []
         for dem in self.game_state.demons:
@@ -127,6 +127,8 @@ class Game:
 
             "PlayerBaseR" : dict_player_base_r,
             "PlayerBaseB" : dict_player_base_b,
+            "RedTeamMoney" : self.game_state.money_r,
+            "BlueTeamMoney" : self.game_state.money_b,
 
             "FloorTiles" : self.game_state.floor_tiles,
             "EntityGrid" : list_entity_grid,

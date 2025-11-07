@@ -14,6 +14,7 @@ class Demon:
         self.target_team = target_team
         self.state = 'moving'
         self.name = select_demon_name()
+        self.attack_pow = Constants.DEMON_ATTACK_POWER
 
         self.current_path = []
         possible_paths = [

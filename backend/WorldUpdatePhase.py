@@ -6,7 +6,6 @@ from UpdateMercenaries import update_mercenaries
 from UpdateDemons import update_demons
 from SpawnMercenaries import spawn_mercenaries
 from SpawnDemons import spawn_demons
-from UpdateTowers import update_towers
 from House import House
 from Cannon import Cannon
 from Minigun import Minigun
@@ -32,7 +31,9 @@ def world_update_phase(game_state: GameState):
     spawn_mercenaries(game_state)
     spawn_demons(game_state)
 
-    update_towers(game_state)
+    for tower in game_state.towers:
+        tower.update(game_state)
+    mortal_wound_check(game_state, game_state.mercs + game_state.demons)
 
 
 def mortal_wound_check(game_state: GameState, entities: List[Entity]):
@@ -133,7 +134,7 @@ def check_wincon(game_state: GameState):
                 b_mercs = 0
 
                 for merc in game_state.mercs:
-                    if merc.team_color == 'r':
+                    if merc.team == 'r':
                         r_mercs += 1
                     else:
                         b_mercs += 1
@@ -149,7 +150,7 @@ def check_wincon(game_state: GameState):
                     b_mercs_health = 0
 
                     for merc in game_state.mercs:
-                        if merc.team_color == 'r':
+                        if merc.team == 'r':
                             r_mercs_health += merc.health
                         else:
                             b_mercs_health += merc.health
