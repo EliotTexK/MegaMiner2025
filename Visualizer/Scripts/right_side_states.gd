@@ -11,6 +11,8 @@ var current_build : Sprite2D
 var current_build_name : String
 var current_mercenary_dir : String
 
+@export var is_player_1 : bool
+
 @export var build_button : Button
 @export var destroy_button : Button
 @export var queue_button : Button
@@ -37,8 +39,6 @@ var current_action : String = ""
 var action_active : bool = false
 
 signal action(player1 : bool, build : String, x : int, y : int, tower_to_build : String, merc_direction : String)
-
-var valid : bool = true
 
 func _ready() -> void:
 	build_button.pressed.connect(_on_build_pressed)
@@ -69,11 +69,13 @@ func _process(_delta: float) -> void:
 		
 	if Input.is_action_just_pressed("click") and current_action != "":
 		
-		action.emit(true, current_action, current_build.position.x / 32 , current_build.position.y / 32, current_build_name, "")
+		action.emit(is_player_1, current_action, current_build.position.x / 32 , current_build.position.y / 32, current_build_name, "")
 		current_mercenary_dir = ""
 		current_build_name = ""
 		current_build.texture = null
 		current_action = ""
+		house_options.hide()
+		mercenary_options.hide()
 
 func action_made():
 	action.emit("build", build_pos.x, build_pos.y, current_build_name ,current_mercenary_dir)

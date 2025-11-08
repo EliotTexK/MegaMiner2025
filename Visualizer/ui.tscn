@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://csts2io3jxnsy"]
+[gd_scene load_steps=6 format=3 uid="uid://csts2io3jxnsy"]
 
 [ext_resource type="Script" uid="uid://cqig607puff42" path="res://Scripts/UI/ui.gd" id="1_ibotj"]
 [ext_resource type="PackedScene" uid="uid://ce78d0fluy0rq" path="res://main_menu.tscn" id="2_ibotj"]
 [ext_resource type="PackedScene" uid="uid://brguepel0j1o4" path="res://human_ai_select.tscn" id="3_27fn8"]
 [ext_resource type="Script" uid="uid://uq0520028lh7" path="res://Scripts/right_side_states.gd" id="4_nltto"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ibotj"]
 
 [node name="UI" type="CanvasLayer"]
 script = ExtResource("1_ibotj")
@@ -23,7 +25,26 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Panel" type="Panel" parent="Game UI"]
+[node name="RedSide" type="Polygon2D" parent="Game UI"]
+material = SubResource("ShaderMaterial_ibotj")
+color = Color(0.44, 0.17599998, 0.18920003, 1)
+polygon = PackedVector2Array(504, 0, 488, 64, 128, 64, 0, 128, 0, 0)
+uv = PackedVector2Array(448, 0, 448, 64, 256, 104, 128, 64, 0, 128, 0, 0)
+
+[node name="RedSide3" type="Polygon2D" parent="Game UI/RedSide"]
+z_index = -1
+material = SubResource("ShaderMaterial_ibotj")
+color = Color(0.82, 0.32799998, 0.35260004, 1)
+polygon = PackedVector2Array(512, -8, 496, 72, 128, 72, 0, 136, -8, 136, -8, -8)
+uv = PackedVector2Array(448, 0, 448, 64, 256, 104, 128, 64, 0, 128, 0, 0)
+
+[node name="RedSide2" type="Polygon2D" parent="Game UI"]
+position = Vector2(0, 584)
+scale = Vector2(1.1612903, 1)
+color = Color(0.6, 0.23921569, 0.25490198, 1)
+polygon = PackedVector2Array(496.00003, -8, 496.00003, 64, 0, 64, 0, -72, 110.22223, -8)
+
+[node name="Turns" type="Panel" parent="Game UI"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -33,7 +54,7 @@ offset_right = 80.0
 offset_bottom = 64.0
 grow_horizontal = 2
 
-[node name="Turns Progressed" type="Label" parent="Game UI/Panel"]
+[node name="Turns Progressed" type="Label" parent="Game UI/Turns"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -51,19 +72,34 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="LeftSideStates" type="Control" parent="Game UI"]
+[node name="LeftSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "house_options", "mercenary_options")]
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
-offset_right = 8.0
-offset_bottom = 7.776
+offset_bottom = 7.776001
+script = ExtResource("4_nltto")
+is_player_1 = true
+build_button = NodePath("Human Control/build or destroy/Build")
+destroy_button = NodePath("Human Control/build or destroy/Destroy")
+queue_button = NodePath("Human Control/build or destroy/Queue")
+skip_turn = NodePath("Human Control/build or destroy/Skip")
+merc_up = NodePath("Human Control/Mercenary Directions/N")
+merc_down = NodePath("Human Control/Mercenary Directions/S")
+merc_left = NodePath("Human Control/Mercenary Directions/W")
+merc_right = NodePath("Human Control/Mercenary Directions/E")
+house = NodePath("Human Control/Build OPtions/House")
+cannon = NodePath("Human Control/Build OPtions/Cannon")
+minigun = NodePath("Human Control/Build OPtions/Minigun")
+cross = NodePath("Human Control/Build OPtions/Crossbow")
+house_options = NodePath("Human Control/Build OPtions")
+mercenary_options = NodePath("Human Control/Mercenary Directions")
 
-[node name="Panel2" type="Panel" parent="Game UI/LeftSideStates"]
+[node name="Money" type="Panel" parent="Game UI/LeftSideStates"]
 layout_mode = 1
 offset_right = 104.0
 offset_bottom = 64.0
 
-[node name="Money" type="Label" parent="Game UI/LeftSideStates/Panel2"]
+[node name="Money" type="Label" parent="Game UI/LeftSideStates/Money"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -78,13 +114,13 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Money"
 
-[node name="Panel3" type="Panel" parent="Game UI/LeftSideStates"]
+[node name="Health" type="Panel" parent="Game UI/LeftSideStates"]
 layout_mode = 1
-offset_left = 120.0
-offset_right = 224.0
+offset_left = 152.0
+offset_right = 256.0
 offset_bottom = 64.0
 
-[node name="Kills" type="Label" parent="Game UI/LeftSideStates/Panel3"]
+[node name="Health" type="Label" parent="Game UI/LeftSideStates/Health"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -97,15 +133,15 @@ offset_right = 21.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Kills"
+text = "Base Health"
 
-[node name="Panel4" type="Panel" parent="Game UI/LeftSideStates"]
+[node name="TeamName" type="Panel" parent="Game UI/LeftSideStates"]
 layout_mode = 1
-offset_left = 256.0
-offset_right = 360.0
+offset_left = 312.0
+offset_right = 416.0
 offset_bottom = 64.0
 
-[node name="Total Mercs" type="Label" parent="Game UI/LeftSideStates/Panel4"]
+[node name="Name" type="Label" parent="Game UI/LeftSideStates/TeamName"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -118,34 +154,9 @@ offset_right = 21.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "Total Mercs"
-
-[node name="Base Health" type="Panel" parent="Game UI/LeftSideStates"]
-layout_mode = 1
-offset_top = 88.0
-offset_right = 104.0
-offset_bottom = 152.0
-
-[node name="Health bar" type="Label" parent="Game UI/LeftSideStates/Base Health"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -52.0
-offset_top = -32.0
-offset_right = 52.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Base Health 70/70"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+text = "Team: "
 
 [node name="Human Control" type="Control" parent="Game UI/LeftSideStates"]
-visible = false
 layout_mode = 1
 anchor_top = 0.79
 anchor_right = 0.986
@@ -153,57 +164,101 @@ anchor_bottom = 1.0
 offset_top = 0.0799866
 offset_right = 0.175964
 
-[node name="Build" type="Button" parent="Game UI/LeftSideStates/Human Control"]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 96.0
-offset_right = 88.0
-offset_bottom = 127.0
+[node name="build or destroy" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -164.05597
+offset_top = 16.0
+offset_right = 183.94403
+offset_bottom = 56.0
+grow_horizontal = 2
+
+[node name="Build" type="Button" parent="Game UI/LeftSideStates/Human Control/build or destroy"]
+layout_mode = 2
 text = "Build"
 
-[node name="Destroy" type="Button" parent="Game UI/LeftSideStates/Human Control"]
-layout_mode = 0
-offset_left = 40.0
-offset_right = 88.0
-offset_bottom = 31.0
+[node name="Destroy" type="Button" parent="Game UI/LeftSideStates/Human Control/build or destroy"]
+layout_mode = 2
 text = "Destroy"
 
-[node name="Queue" type="Button" parent="Game UI/LeftSideStates/Human Control"]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 48.0
-offset_right = 88.0
-offset_bottom = 79.0
-text = "Queue"
+[node name="Skip" type="Button" parent="Game UI/LeftSideStates/Human Control/build or destroy"]
+layout_mode = 2
+text = "Skip Turn
+"
 
-[node name="Label" type="Label" parent="Game UI/LeftSideStates/Human Control"]
-layout_mode = 0
-offset_left = 176.0
-offset_top = 56.0
-offset_right = 231.0
-offset_bottom = 79.0
-text = "Coords"
+[node name="Queue" type="Button" parent="Game UI/LeftSideStates/Human Control/build or destroy"]
+layout_mode = 2
+text = "Buy Mercenaries"
 
-[node name="SpinBox" type="SpinBox" parent="Game UI/LeftSideStates/Human Control/Label"]
-layout_mode = 0
-offset_left = 72.0
-offset_right = 158.563
-offset_bottom = 31.0
-alignment = 1
+[node name="Build OPtions" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.05597
+offset_top = 12.0
+offset_right = 152.94403
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="SpinBox2" type="SpinBox" parent="Game UI/LeftSideStates/Human Control/Label"]
-layout_mode = 0
-offset_left = 176.0
-offset_right = 262.563
-offset_bottom = 31.0
-alignment = 1
+[node name="House" type="Button" parent="Game UI/LeftSideStates/Human Control/Build OPtions"]
+layout_mode = 2
+text = "House"
+
+[node name="Cannon" type="Button" parent="Game UI/LeftSideStates/Human Control/Build OPtions"]
+layout_mode = 2
+text = "Cannon"
+
+[node name="Crossbow" type="Button" parent="Game UI/LeftSideStates/Human Control/Build OPtions"]
+layout_mode = 2
+text = "Crossbow"
+
+[node name="Minigun" type="Button" parent="Game UI/LeftSideStates/Human Control/Build OPtions"]
+layout_mode = 2
+text = "Minigun"
+
+[node name="Mercenary Directions" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -97.55597
+offset_top = 12.0
+offset_right = 110.44403
+offset_bottom = 52.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="N" type="Button" parent="Game UI/LeftSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "North"
+
+[node name="S" type="Button" parent="Game UI/LeftSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "South"
+
+[node name="W" type="Button" parent="Game UI/LeftSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "West"
+
+[node name="E" type="Button" parent="Game UI/LeftSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "East"
 
 [node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "house_options", "mercenary_options")]
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
+offset_left = 576.0
+offset_right = 576.0
 offset_bottom = 7.776001
-mouse_filter = 2
 script = ExtResource("4_nltto")
 build_button = NodePath("Human Control/build or destroy/Build")
 destroy_button = NodePath("Human Control/build or destroy/Destroy")
@@ -222,8 +277,8 @@ mercenary_options = NodePath("Human Control/Mercenary Directions")
 
 [node name="Money" type="Panel" parent="Game UI/RightSideStates"]
 layout_mode = 1
-offset_left = 208.0
-offset_right = 312.0
+offset_left = 128.0
+offset_right = 232.0
 offset_bottom = 64.0
 
 [node name="Money" type="Label" parent="Game UI/RightSideStates/Money"]
@@ -243,11 +298,11 @@ text = "Money"
 
 [node name="Health" type="Panel" parent="Game UI/RightSideStates"]
 layout_mode = 1
-offset_left = 152.0
-offset_right = 256.0
+offset_left = 280.0
+offset_right = 384.0
 offset_bottom = 64.0
 
-[node name="Money" type="Label" parent="Game UI/RightSideStates/Health"]
+[node name="Health" type="Label" parent="Game UI/RightSideStates/Health"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -264,11 +319,11 @@ text = "Base Health"
 
 [node name="TeamName" type="Panel" parent="Game UI/RightSideStates"]
 layout_mode = 1
-offset_left = 312.0
-offset_right = 416.0
+offset_left = 440.0
+offset_right = 544.0
 offset_bottom = 64.0
 
-[node name="Money" type="Label" parent="Game UI/RightSideStates/TeamName"]
+[node name="Name" type="Label" parent="Game UI/RightSideStates/TeamName"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -284,6 +339,7 @@ grow_vertical = 2
 text = "Team: "
 
 [node name="Human Control" type="Control" parent="Game UI/RightSideStates"]
+visible = false
 layout_mode = 1
 anchor_top = 0.79
 anchor_right = 0.986
@@ -378,31 +434,8 @@ text = "West"
 layout_mode = 2
 text = "East"
 
-[node name="Base Health" type="Panel" parent="Game UI/RightSideStates"]
-layout_mode = 0
-offset_top = 88.0
-offset_right = 104.0
-offset_bottom = 152.0
-
-[node name="Health bar" type="Label" parent="Game UI/RightSideStates/Base Health"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -52.0
-offset_top = -32.0
-offset_right = 52.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Base Health 70/70"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
-
 [connection signal="PlayGame" from="Main Menu" to="." method="_on_main_menu_play_game"]
 [connection signal="Back" from="Human AI select" to="." method="_on_human_ai_select_back"]
 [connection signal="Go" from="Human AI select" to="." method="_on_human_ai_select_go"]
+[connection signal="action" from="Game UI/LeftSideStates" to="." method="_on_right_side_states_action"]
 [connection signal="action" from="Game UI/RightSideStates" to="." method="_on_right_side_states_action"]

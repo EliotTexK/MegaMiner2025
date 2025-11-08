@@ -196,7 +196,7 @@ func _draw_grid(tile_grid : Array):
 
 # Draws the mercanaries
 func _draw_mercenaries(mercs : Array):
-	#print(mercs)
+	print(mercs)
 	var count = 0
 	for merc in mercs:
 		if mercenaries.get_child_count() - 1 < count:
@@ -204,9 +204,10 @@ func _draw_mercenaries(mercs : Array):
 			var sprite : RedMerc
 			if merc["Team"] == "b":
 				sprite = BLUE_RECRUIT.instantiate()
+				sprite.flip_h = true
 			else:
 				sprite = RED_RECRUIT.instantiate()
-				sprite.flip_h = true
+				
 			
 			sprite.position = pos
 			mercenaries.add_child(sprite)
@@ -226,7 +227,7 @@ func _draw_mercenaries(mercs : Array):
 		count += 1
 
 func _draw_towers(data_towers : Array):
-	print(data_towers)
+	#print(data_towers)
 	for tower in data_towers:
 		var base = Sprite2D.new()
 		var current_tower = Sprite2D.new()
@@ -331,6 +332,9 @@ func _on_ui_action(is_player1 : bool, action : String , x: int, y: int, to_build
 
 func _update_ui(gamestate):
 	UI._update_turns_progressed(gamestate["TurnsRemaining"])
+	UI._update_money_values(gamestate["PlayerBaseR"]["Money"], gamestate["PlayerBaseB"]["Money"])
+	UI._update_base_health(true, gamestate["PlayerBaseR"]["Health"])
+	UI._update_base_health(false, gamestate["PlayerBaseB"]["Health"])
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
