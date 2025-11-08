@@ -25,8 +25,9 @@ def main_game_loop(ai_agent_1, ai_agent_2, game: Game):
             # "Human" input from visualizer or other parent process
             agent_1_action_string = input()
         
+        
         agent_1_action = AIAction.from_json(agent_1_action_string)
-
+# {"action": "build", "x": 4, "y": 4, "tower_type": "cannon", "merc_direction": ""}
         agent_2_action_string = ""
         if ai_agent_2:
             # Send game state to agent
@@ -68,13 +69,11 @@ def get_command_line_arguments() -> argparse.Namespace:
     parser.add_argument(
         '-a1',
         '--ai_agent_file_1',
-        default='backend/AI_Agents/AgentTemplate.py',
         help='Path to the AI agent 1 python file'
     )
     parser.add_argument(
         '-a2',
         '--ai_agent_file_2',
-        default='backend/AI_Agents/AgentTemplate.py',
         help='Path to the AI agent 2 python file'
     )
     parser.add_argument(

@@ -1,24 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://cvolmheciprl8"]
+[gd_scene load_steps=4 format=3 uid="uid://cvolmheciprl8"]
 
 [ext_resource type="Script" uid="uid://0p37fef6vxet" path="res://game_manager.gd" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://csts2io3jxnsy" path="res://ui.tscn" id="2_e2o6t"]
+[ext_resource type="Script" uid="uid://bcak1jloux3m6" path="res://world.gd" id="3_feb5d"]
 
 [node name="Game" type="Node2D" node_paths=PackedStringArray("UI")]
 script = ExtResource("1_e2o6t")
 UI = NodePath("UI")
 
-[node name="Tiles" type="Node2D" parent="."]
-position = Vector2(64, 64)
-
-[node name="Mercenaries" type="Node2D" parent="."]
-
-[node name="Towers" type="Node2D" parent="."]
-
-[node name="Demons" type="Node2D" parent="."]
-
-[node name="Misc Entities" type="Node2D" parent="."]
-
 [node name="UI" parent="." instance=ExtResource("2_e2o6t")]
 
-[connection signal="build" from="UI" to="." method="_on_ui_build"]
+[node name="World" type="Node2D" parent="."]
+script = ExtResource("3_feb5d")
+
+[node name="Tiles" type="Node2D" parent="World"]
+
+[node name="Mercenaries" type="Node2D" parent="World"]
+
+[node name="Towers" type="Node2D" parent="World"]
+
+[node name="Demons" type="Node2D" parent="World"]
+
+[node name="Misc Entities" type="Node2D" parent="World"]
+
 [connection signal="start_game" from="UI" to="." method="_on_ui_start_game"]

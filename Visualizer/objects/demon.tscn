@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwhs1lsrq1ure"]
+
+[ext_resource type="Script" uid="uid://b2xcpnt71oo4p" path="res://demon.gd" id="1_v40ab"]
+
+[node name="demon" type="AnimatedSprite2D"]
+script = ExtResource("1_v40ab")
