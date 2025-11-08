@@ -1,11 +1,18 @@
 extends Node2D
 
 
+
 const GRASS_RED_TEX = preload("res://Assets/HD_Skin/grass_red.png")
 const GRASS_BLUE_TEX = preload("res://Assets/HD_Skin/grass_blue.png")
 const PATH_TEX = preload("res://Assets/HD_Skin/path.png")
-const BLUE_RECRUIT = preload("res://Assets/Topdown skin/blue recruit.png")
 
+const ALT_GRASS = preload("res://Assets/Base_Skin/alt_grass.png")
+const ALT_PATH = preload("res://Assets/Base_Skin/alt_path.png")
+const GRASS = preload("res://Assets/Base_Skin/grass.png")
+const PATH = preload("res://Assets/Base_Skin/path.png")
+
+
+const BLUE_RECRUIT = preload("uid://drwant6008fgr")
 const RED_RECRUIT = preload("uid://can1bceehb1qy")
 
 const ENEMY = preload("res://Assets/Topdown skin/enemy.png")
@@ -126,9 +133,9 @@ func _draw_game_from_gamestate(game_state : String):
 		
 		var castle_b = Sprite2D.new()
 		
-		castle_b.texture = preload("uid://bh23hjmsxnw56")
-		castle_b.scale.x = 32 /  castle_b.texture.get_size().x
-		castle_b.scale.y = 32 / castle_b.texture.get_size().y
+		castle_b.texture = preload("uid://ck6wsxxpqcmpa")
+		castle_b.scale.x = 96 /  castle_b.texture.get_size().x
+		castle_b.scale.y = 96 / castle_b.texture.get_size().y
 		
 		castle_b.position = Vector2(game_state_json["PlayerBaseB"]["x"] * 32, game_state_json["PlayerBaseB"]["y"] * 32)
 		misc_entities.add_child(castle_b)
@@ -176,9 +183,11 @@ func _draw_grid(tile_grid : Array):
 		alt_y = !alt_y
 	
 	
+	world.offset.x = (get_viewport_rect().size.x - (tile_grid[0].length() * 32)) / 2
+	world.offset.y = (get_viewport_rect().size.y - (tile_grid.size() * 32)) / 2
 	
-	world.position.x = (get_viewport_rect().size.x - (tile_grid[0].length() * 32)) / 2
-	world.position.y = (get_viewport_rect().size.y - (tile_grid.size() * 32)) / 2
+	world.position = world.offset
+	
 	GlobalPaths.tile_grid = tiles
 
 #func _delete_mercs():
@@ -192,12 +201,12 @@ func _draw_mercenaries(mercs : Array):
 	for merc in mercs:
 		if mercenaries.get_child_count() - 1 < count:
 			var pos = Vector2(merc["x"] * 32, merc["y"] * 32)
-			var sprite = Sprite2D.new()
+			var sprite : RedMerc
 			if merc["Team"] == "b":
-				sprite.texture = BLUE_RECRUIT
-				sprite.flip_h = true
+				sprite = BLUE_RECRUIT.instantiate()
 			else:
 				sprite = RED_RECRUIT.instantiate()
+				sprite.flip_h = true
 			
 			sprite.position = pos
 			mercenaries.add_child(sprite)
@@ -208,8 +217,7 @@ func _draw_mercenaries(mercs : Array):
 				child.queue_free()
 				count -= 1
 			elif merc["State"] == "moving":
-				if merc["Team"] == "r":
-					child.move(position - Vector2(merc["x"] * 32, merc["y"] * 32))
+				child.move(position - Vector2(merc["x"] * 32, merc["y"] * 32))
 				tween.tween_property(child, "position", Vector2(merc["x"] * 32, merc["y"] * 32), turn_interval_max)
 			else:
 				if merc["Team"] == "r":
@@ -279,7 +287,6 @@ func _process(delta):
 				
 				if stdio.get_error() == OK:
 					var content = stdio.get_line()
-					
 					if !content.begins_with("--WINNER"):
 						previous_game_state = current_game_state
 						_draw_game_from_gamestate(content)

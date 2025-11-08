@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://can1bceehb1qy"]
+
+[ext_resource type="Texture2D" uid="uid://5mmb65nmr0do" path="res://Assets/HD_Skin/red_recruit.png" id="1_j4k6l"]
+[ext_resource type="Texture2D" uid="uid://c4r84kqb5tcjo" path="res://Assets/HD_Skin/red_recruit_attack1.png" id="2_pdytq"]
+[ext_resource type="Texture2D" uid="uid://c6ronmvklbw01" path="res://Assets/HD_Skin/red_recruit_attack2.png" id="3_l2s5v"]
+[ext_resource type="Texture2D" uid="uid://dkfkg704amuav" path="res://Assets/HD_Skin/red_recruit_walk.png" id="4_afwb0"]
+[ext_resource type="Script" uid="uid://bfrbgax5e2n1y" path="res://objects/redmerc.gd" id="5_wxhtm"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2fq0f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_j4k6l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_pdytq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_l2s5v")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_j4k6l")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_j4k6l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_afwb0")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 2.0
+}]
+
+[node name="RedMerc" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_2fq0f")
+autoplay = "default"
+script = ExtResource("5_wxhtm")
+
+[connection signal="frame_changed" from="." to="." method="_on_frame_changed"]

@@ -3,7 +3,6 @@ extends AnimatedSprite2D
 
 
 func _ready() -> void:
-	flip_h = true
 	scale = Vector2(32 / sprite_frames.get_frame_texture(animation,frame).get_size().x, 
 		32 / sprite_frames.get_frame_texture(animation,frame).get_size().y)
 	

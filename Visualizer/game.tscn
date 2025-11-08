@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cvolmheciprl8"]
+[gd_scene load_steps=4 format=3 uid="uid://cvolmheciprl8"]
 
 [ext_resource type="Script" uid="uid://0p37fef6vxet" path="res://game_manager.gd" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://csts2io3jxnsy" path="res://ui.tscn" id="2_e2o6t"]
+[ext_resource type="Script" uid="uid://bcak1jloux3m6" path="res://world.gd" id="3_feb5d"]
 
 [node name="Game" type="Node2D" node_paths=PackedStringArray("UI")]
 script = ExtResource("1_e2o6t")
@@ -10,6 +11,7 @@ UI = NodePath("UI")
 [node name="UI" parent="." instance=ExtResource("2_e2o6t")]
 
 [node name="World" type="Node2D" parent="."]
+script = ExtResource("3_feb5d")
 
 [node name="Tiles" type="Node2D" parent="World"]
 

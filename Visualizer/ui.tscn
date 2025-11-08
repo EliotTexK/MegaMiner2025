@@ -21,6 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="Panel" type="Panel" parent="Game UI"]
 layout_mode = 1
@@ -47,19 +48,27 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Turns Progressed"
 
-[node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "house", "cannon", "minigun", "cross", "house_options")]
+[node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "house_options", "mercenary_options")]
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
 offset_bottom = 7.776001
+mouse_filter = 2
 script = ExtResource("4_nltto")
 build_button = NodePath("Human Control/build or destroy/Build")
 destroy_button = NodePath("Human Control/build or destroy/Destroy")
+queue_button = NodePath("Human Control/build or destroy/Queue")
+skip_turn = NodePath("Human Control/build or destroy/Skip")
+merc_up = NodePath("Human Control/Mercenary Directions/N")
+merc_down = NodePath("Human Control/Mercenary Directions/S")
+merc_left = NodePath("Human Control/Mercenary Directions/W")
+merc_right = NodePath("Human Control/Mercenary Directions/E")
 house = NodePath("Human Control/Build OPtions/House")
 cannon = NodePath("Human Control/Build OPtions/Cannon")
 minigun = NodePath("Human Control/Build OPtions/Minigun")
 cross = NodePath("Human Control/Build OPtions/Crossbow")
 house_options = NodePath("Human Control/Build OPtions")
+mercenary_options = NodePath("Human Control/Mercenary Directions")
 
 [node name="Money" type="Panel" parent="Game UI/RightSideStates"]
 layout_mode = 1
@@ -154,6 +163,10 @@ layout_mode = 2
 text = "Skip Turn
 "
 
+[node name="Queue" type="Button" parent="Game UI/RightSideStates/Human Control/build or destroy"]
+layout_mode = 2
+text = "Buy Mercenaries"
+
 [node name="Build OPtions" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
 layout_mode = 1
 anchors_preset = 8
@@ -183,6 +196,36 @@ text = "Crossbow"
 [node name="Minigun" type="Button" parent="Game UI/RightSideStates/Human Control/Build OPtions"]
 layout_mode = 2
 text = "Minigun"
+
+[node name="Mercenary Directions" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -92.5
+offset_top = -20.0
+offset_right = 92.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="N" type="Button" parent="Game UI/RightSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "North"
+
+[node name="S" type="Button" parent="Game UI/RightSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "South"
+
+[node name="W" type="Button" parent="Game UI/RightSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "West"
+
+[node name="E" type="Button" parent="Game UI/RightSideStates/Human Control/Mercenary Directions"]
+layout_mode = 2
+text = "East"
 
 [connection signal="PlayGame" from="Main Menu" to="." method="_on_main_menu_play_game"]
 [connection signal="Back" from="Human AI select" to="." method="_on_human_ai_select_back"]
