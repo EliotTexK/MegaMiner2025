@@ -12,6 +12,9 @@ func move(direction : Vector2):
 func attack(direction : Vector2):
 	play("attack")
 
+func idle():
+	play("default")
+
 func _on_frame_changed() -> void:
 	scale = Vector2(32 / sprite_frames.get_frame_texture(animation,frame).get_size().x, 
 		32 / sprite_frames.get_frame_texture(animation,frame).get_size().y)

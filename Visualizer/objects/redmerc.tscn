@@ -44,6 +44,7 @@ animations = [{
 
 [node name="RedMerc" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_2fq0f")
+animation = &"attack"
 autoplay = "default"
 script = ExtResource("5_wxhtm")
 

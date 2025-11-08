@@ -88,8 +88,6 @@ func _on_ui_start_game(is_ai1, is_ai2):
 			[GlobalPaths.backendPath, GameSettings.default_map, "-h1", "-h2", "-v"], 
 			true)
 	
-	
-	
 	processID = process_info["pid"]
 	stdio = process_info["stdio"]
 	stderr = process_info["stderr"]
@@ -134,8 +132,8 @@ func _draw_game_from_gamestate(game_state : String):
 		var castle_b = Sprite2D.new()
 		
 		castle_b.texture = preload("uid://ck6wsxxpqcmpa")
-		castle_b.scale.x = 96 /  castle_b.texture.get_size().x
-		castle_b.scale.y = 96 / castle_b.texture.get_size().y
+		castle_b.scale.x = 32 /  castle_b.texture.get_size().x
+		castle_b.scale.y = 32 / castle_b.texture.get_size().y
 		
 		castle_b.position = Vector2(game_state_json["PlayerBaseB"]["x"] * 32, game_state_json["PlayerBaseB"]["y"] * 32)
 		misc_entities.add_child(castle_b)
@@ -212,14 +210,16 @@ func _draw_mercenaries(mercs : Array):
 			sprite.position = pos
 			mercenaries.add_child(sprite)
 		else:
-			var child = mercenaries.get_child(count)
-			var tween = get_tree().create_tween()
+			var child : RedMerc = mercenaries.get_child(count)
+			
 			if merc["State"] == "dead":
-				child.queue_free()
+				child.free()
 				count -= 1
 			elif merc["State"] == "moving":
+				var tween = get_tree().create_tween()
 				child.move(position - Vector2(merc["x"] * 32, merc["y"] * 32))
 				tween.tween_property(child, "position", Vector2(merc["x"] * 32, merc["y"] * 32), turn_interval_max)
+				tween.tween_callback(child.idle)
 			else:
 				if merc["Team"] == "r":
 					child.attack(Vector2(1,0))
@@ -266,11 +266,11 @@ func _draw_demons(dem_array : Array):
 			demons.add_child(sprite)
 		else:
 			var child : Sprite2D = demons.get_child(count)
-			var tween = get_tree().create_tween()
 			if dem["State"] == "dead":
-				child.queue_free()
+				child.free()
 				count -= 1
 			else:
+				var tween = get_tree().create_tween()
 				tween.tween_property(child, "position", Vector2(dem["x"] * 32, dem["y"] * 32), turn_interval_max)
 		count += 1
 

@@ -81,7 +81,9 @@ func action_made():
 	action.emit("build", build_pos.x, build_pos.y, current_build_name ,current_mercenary_dir)
 
 func skip():
-	action.emit(true, "Nothing", 0, 0, "", current_mercenary_dir)
+	action.emit(is_player_1, "Nothing", 0, 0, "", current_mercenary_dir)
+	mercenary_options.hide()
+	house_options.hide()
 	current_action = ""
 	current_mercenary_dir = ""
 

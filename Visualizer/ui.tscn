@@ -53,6 +53,7 @@ offset_left = -80.0
 offset_right = 80.0
 offset_bottom = 64.0
 grow_horizontal = 2
+mouse_filter = 2
 
 [node name="Turns Progressed" type="Label" parent="Game UI/Turns"]
 layout_mode = 1
@@ -77,6 +78,7 @@ layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
 offset_bottom = 7.776001
+mouse_filter = 2
 script = ExtResource("4_nltto")
 is_player_1 = true
 build_button = NodePath("Human Control/build or destroy/Build")
@@ -157,12 +159,14 @@ grow_vertical = 2
 text = "Team: "
 
 [node name="Human Control" type="Control" parent="Game UI/LeftSideStates"]
+visible = false
 layout_mode = 1
 anchor_top = 0.79
 anchor_right = 0.986
 anchor_bottom = 1.0
 offset_top = 0.0799866
 offset_right = 0.175964
+mouse_filter = 1
 
 [node name="build or destroy" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
 layout_mode = 1
@@ -259,6 +263,7 @@ anchor_bottom = 0.988
 offset_left = 576.0
 offset_right = 576.0
 offset_bottom = 7.776001
+mouse_filter = 2
 script = ExtResource("4_nltto")
 build_button = NodePath("Human Control/build or destroy/Build")
 destroy_button = NodePath("Human Control/build or destroy/Destroy")
@@ -346,6 +351,7 @@ anchor_right = 0.986
 anchor_bottom = 1.0
 offset_top = 0.0799866
 offset_right = 0.175964
+mouse_filter = 1
 
 [node name="build or destroy" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
 layout_mode = 1
