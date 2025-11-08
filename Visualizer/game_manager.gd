@@ -247,7 +247,6 @@ func _draw_towers(data_towers : Array):
 		
 		current_tower.scale = Vector2(32 / current_tower.texture.get_size().x, 32 / current_tower.texture.get_size().y)
 		base.add_child(current_tower)
-		current_tower.rotation_degrees = tower["AimAngle"]
 
 func _draw_demons(dem_array : Array):
 	var count = 0

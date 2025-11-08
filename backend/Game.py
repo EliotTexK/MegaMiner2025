@@ -105,7 +105,7 @@ class Game:
                 "Team" : tow.team,
                 "x" : tow.x,
                 "y" : tow.y,
-                "AimAngle" : tow.angle * 57.2958 # Convert radians to degrees
+                "LastHitTargets": tow.last_hit_targets
             }
             list_towers.append(tow_dict)
 
