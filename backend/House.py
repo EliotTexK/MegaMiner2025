@@ -32,3 +32,4 @@ class House(Tower):
         elif self.team == "b":
             game_state.money_b += Constants.HOUSE_MONEY_PRODUCED
             log_msg(f'House {self.name} produced ${Constants.HOUSE_MONEY_PRODUCED} for the Blue team. Total = ${game_state.money_b}')
+        self.current_cooldown = Constants.HOUSE_MAX_COOLDOWN
