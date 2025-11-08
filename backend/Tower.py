@@ -50,17 +50,26 @@ class Tower(Entity):
     def tower_activation(self, game_state: GameState):
         log_msg("Unimplemented tower_activation function!") # override in subclass
 
-    def get_adjacent_targets(self, target, game_state: GameState):
+    def damage_adjacent_targets(self, attack_pow, team, target, game_state: GameState):
         ahead_pos = target.get_adjacent_path_tile(game_state, +1)
         ahead_ent = game_state.entity_grid[ahead_pos[1]][ahead_pos[0]]
         
         behind_pos = target.get_adjacent_path_tile(game_state, -1)
         behind_ent = game_state.entity_grid[behind_pos[1]][behind_pos[0]]
 
-        if isinstance(ahead_ent, Mercenary) and ahead_ent.team != self.team:
-            ahead_ent.health -= self.attack_pow
-        elif isinstance(behind_ent, Mercenary) and behind_ent.team != self.team:
-            behind_ent.health -= self.attack_pow
+        if isinstance(ahead_ent, Mercenary) and ahead_ent.team != team:
+            ahead_ent.health -= attack_pow
+            log_msg("Hit an enemy merc that was ahead of me, with the cannon AOE")
+        if isinstance(behind_ent, Mercenary) and behind_ent.team != team:
+            behind_ent.health -= attack_pow
+            log_msg("Hit an enemy merc that was behind me, with the cannon AOE")
+
+        if isinstance(ahead_ent, Demon):
+            ahead_ent.health -= attack_pow
+            log_msg("Hit an enemy demon that was ahead of me, with the cannon AOE")
+        if isinstance(behind_ent, Demon):
+            behind_ent.health -= attack_pow
+            log_msg("Hit an enemy demon that was behind me, with the cannon AOE")
 
     def shoot_single_priority_target(self, game_state: GameState, do_splash_damage=False):
         potential_targets = []
@@ -95,14 +104,11 @@ class Tower(Entity):
         self.targets.append((target.x, target.y))
         # self.angle = math.atan2(path[1] - self.y, path[0] - self.x)
 
-<<<<<<< HEAD
         if do_splash_damage:
-            self.get_adjacent_targets(self, target, game_state)
+            self.damage_adjacent_targets(self.attack_pow, self.team, target, game_state)
             # Check for the surrounding tiles to see if enemy mercs are there, and damage them as well
 
-=======
         self.last_hit_targets = [(target.x, target.y)]
->>>>>>> 9acced6803b24f572aaacef1924f44334b95a1da
         log_msg(f'Tower {self.name} hit {target.name} for {self.attack_pow} damage')
 
 
