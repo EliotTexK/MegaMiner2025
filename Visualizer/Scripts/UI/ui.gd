@@ -30,9 +30,9 @@ func _update_turns_progressed(new_value):
 	$"Game UI/Turns/Turns Progressed".text = "Turns Left\n" + str(int(new_value))
 
 func _update_money_values(left_value, right_value):
-	$"Game UI/LeftSideStates/Money/Money".text = "$" + str(left_value)
+	$"Game UI/LeftSideStates/Money/Money".text = str(left_value)
 	
-	$"Game UI/RightSideStates/Money/Money".text = "$" + str(right_value)
+	$"Game UI/RightSideStates/Money/Money".text = str(right_value)
 
 
 func _update_base_health(is_left : bool, new_value):
