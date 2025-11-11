@@ -14,7 +14,7 @@ tracks/0/path = NodePath(".:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.099999994),
+"times": PackedFloat32Array(0, 0.05, 0.1),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [ExtResource("1_ekdeq"), ExtResource("3_go2n5"), ExtResource("1_ekdeq")]
@@ -67,7 +67,7 @@ _data = {
 }
 
 [node name="Crossbow" type="Sprite2D"]
-scale = Vector2(0.062499996, 0.06250001)
+scale = Vector2(0.0625, 0.0625)
 texture = ExtResource("1_ekdeq")
 script = ExtResource("1_4b6kr")
 

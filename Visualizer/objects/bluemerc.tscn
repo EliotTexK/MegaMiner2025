@@ -15,12 +15,15 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("2_8iwix")
 }, {
-"duration": 1.0,
+"duration": 2.5,
 "texture": ExtResource("3_88mlc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_giles")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -56,7 +59,7 @@ sprite_anim = NodePath("Sprite")
 position = Vector2(0, -7)
 scale = Vector2(0.125, 0.125)
 sprite_frames = SubResource("SpriteFrames_giles")
-animation = &"walk"
+animation = &"attack"
 
 [node name="MouseDetect" type="Area2D" parent="."]
 
@@ -67,9 +70,9 @@ shape = SubResource("RectangleShape2D_j4k6l")
 visible = false
 anchors_preset = -1
 anchor_left = 0.551
-anchor_top = 0.29500002
+anchor_top = 0.295
 anchor_right = 0.551
-anchor_bottom = 0.29500002
+anchor_bottom = 0.295
 offset_left = 16.0
 offset_top = -160.0
 offset_right = 176.0
