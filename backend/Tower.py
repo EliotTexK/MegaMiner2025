@@ -55,7 +55,7 @@ class Tower(Entity):
     def tower_activation(self, game_state: GameState):
         log_msg("Unimplemented tower_activation function!") # override in subclass
 
-    def buff_nearby_targets(self, dmg_buff, health_buff, game_state: GameState):
+    def buff_nearby_targets(self, game_state: GameState):
         buffed_targets = []
         health_buff = Constants.CHURCH_BUFF_HEALTH
         dmg_buff = Constants.CHURCH_BUFF_DAMAGE
