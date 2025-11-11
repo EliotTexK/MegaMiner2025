@@ -241,7 +241,9 @@ func _draw_towers(data_towers : Array):
 				#sprite = RED_RECRUIT.instantiate()
 			match tower["Type"]:
 				"Crossbow":
-					sprite = CROSSBOW.instantiate()
+					sprite = Sprite2D.new()
+					sprite.texture = CROSSBOW
+					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
 				"Cannon":
 					sprite = Sprite2D.new()
 					sprite.texture = CANNON
