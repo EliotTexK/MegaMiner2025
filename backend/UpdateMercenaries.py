@@ -112,7 +112,7 @@ def do_merc_combat_single(game_state: GameState, merc: Mercenary):
     elif target2 != None:
         b4_health = target2.health
         target2.health -= merc.attack_pow
-        log_msg(f'Mercenary {merc.name} attacked opponent {target2.name} at ({next_tile2[0]},{next_tile2[1]}). Target health went from {b4_health} to {target1.health}')
+        log_msg(f'Mercenary {merc.name} attacked opponent {target2.name} at ({next_tile2[0]},{next_tile2[1]}). Target health went from {b4_health} to {target2.health}')
     else:
         # attack the player base if we have reached the end of the path, and there is nobody else to fight
         attackable_base = merc.get_attackable_player_base(game_state)
