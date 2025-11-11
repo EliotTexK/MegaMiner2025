@@ -45,7 +45,8 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j4k6l"]
 size = Vector2(24, 24)
 
-[node name="RedMerc" type="Node2D" node_paths=PackedStringArray("panel", "mouse_detect", "sprite_anim")]
+[node name="BlueMerc" type="Node2D" node_paths=PackedStringArray("panel", "mouse_detect", "sprite_anim")]
+y_sort_enabled = true
 script = ExtResource("1_nmgfi")
 panel = NodePath("Panel")
 mouse_detect = NodePath("MouseDetect")

@@ -12,6 +12,7 @@ from Cannon import Cannon
 from Crossbow import Crossbow
 from Minigun import Minigun
 from House import House
+from Church import Church
 from DemonSpawner import DemonSpawner
 
 # AI Action and related imports
@@ -100,6 +101,8 @@ class Game:
                 tower_type = "Cannon"
             elif isinstance(tow, Minigun):
                 tower_type = "Minigun"
+            elif isinstance(tow, Church):
+                tower_type = "Church"
             
             target_list = []
 

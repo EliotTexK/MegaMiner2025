@@ -14,11 +14,12 @@ const ENEMY = preload("res://objects/demon.tscn")
 
 const CROSSBOW = preload("res://Assets/HD_Skin/crossbow/crossbow.png")
 const CANNON = preload("res://Assets/HD_Skin/cannon/cannon.png")
-
 const GATLING = preload("res://Assets/HD_Skin/gatling/gatling.png")
 const HOUSE = preload("res://Assets/HD_Skin/house/house.png")
+const CHURCH = preload("res://Assets/HD_Skin/church/church.png")
 
-const RED_CASTLE : Texture = preload("res://Assets/HD_Skin/base.svg")
+const RED_CASTLE : Texture = preload("res://Assets/HD_Skin/Red_base.png")
+const BLUE_CASTLE: Texture = preload("res://Assets/HD_Skin/Blue_base.png")
 
 @export var UI : GameUI
 
@@ -122,16 +123,18 @@ func _draw_game_from_gamestate(game_state : String):
 		castle.scale.x = 32 /  RED_CASTLE.get_size().x
 		castle.scale.y = 32 / RED_CASTLE.get_size().y
 		
-		castle.position = Vector2(game_state_json["PlayerBaseR"]["x"] * 32, game_state_json["PlayerBaseR"]["y"] * 32)
+		castle.position = Vector2(game_state_json["PlayerBaseR"]["x"] * 32, game_state_json["PlayerBaseR"]["y"] * 32) + Vector2(0,-5)
+		castle.y_sort_enabled = true
 		misc_entities.add_child(castle)
 		
 		var castle_b = Sprite2D.new()
 		
-		castle_b.texture = preload("uid://ck6wsxxpqcmpa")
+		castle_b.texture = BLUE_CASTLE
 		castle_b.scale.x = 32 /  castle_b.texture.get_size().x
 		castle_b.scale.y = 32 / castle_b.texture.get_size().y
 		
-		castle_b.position = Vector2(game_state_json["PlayerBaseB"]["x"] * 32, game_state_json["PlayerBaseB"]["y"] * 32)
+		castle_b.position = Vector2(game_state_json["PlayerBaseB"]["x"] * 32, game_state_json["PlayerBaseB"]["y"] * 32) + Vector2(0,-5)
+		castle_b.y_sort_enabled = true
 		misc_entities.add_child(castle_b)
 		
 		
@@ -244,22 +247,31 @@ func _draw_towers(data_towers : Array):
 					sprite = Sprite2D.new()
 					sprite.texture = CROSSBOW
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
+					sprite.y_sort_enabled = true
 				"Cannon":
 					sprite = Sprite2D.new()
 					sprite.texture = CANNON
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
+					sprite.y_sort_enabled = true
 				"Minigun":
 					sprite = Sprite2D.new()
 					sprite.texture = GATLING
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
+					sprite.y_sort_enabled = true
 				"House":
 					sprite = Sprite2D.new()
 					sprite.texture = HOUSE
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
+					sprite.y_sort_enabled = true
+				"Church":
+					sprite = Sprite2D.new()
+					sprite.texture = CHURCH
+					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
+					sprite.y_sort_enabled = true
 			
 			##sprite = CROSSBOW.instantiate()
 			sprite.name = tower["Name"]
-			sprite.position = pos
+			sprite.position = pos + Vector2(0,-5)
 			towers.add_child(sprite)
 		else:
 			var child = towers.get_child(count)
