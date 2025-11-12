@@ -111,6 +111,17 @@ def get_available_build_spaces(game_state: dict, team_color: str):
     return result
 
 # team_color should be 'r' or 'b'
+# Return a list of towers belonging to the selected team
+def get_my_towers(game_state: dict, team_color: str):
+    result = []
+
+    for tower in game_state['Towers']:
+        if tower["Team"] == team_color:
+            result.append(tower)
+
+    return result
+
+# team_color should be 'r' or 'b'
 def get_my_money_amount(game_state: dict, team_color: str) -> int:
     return game_state["RedTeamMoney"] if team_color == 'r' else game_state["BlueTeamMoney"]
 
@@ -139,8 +150,14 @@ class Agent:
         q_directions = get_available_queue_directions(game_state, self.team_color)
         build_spaces = get_available_build_spaces(game_state, self.team_color)
         my_money = get_my_money_amount(game_state, self.team_color)
+        my_towers = get_my_towers(game_state, self.team_color)
 
         turn = game_state["CurrentTurn"]
+
+        # The game is taking too long! Give up at turn 50
+        if turn >= 50 and len(my_towers) > 0:
+            to_destroy = random.choice(my_towers)
+            return AIAction("destroy", to_destroy["x"], to_destroy["y"])
 
         # If everybody uses this agent, there will be a nice reset on turn 38
         do_provoke = (turn == 30 and self.team_color == 'r') or (turn == 31 and self.team_color == 'b') or (turn == 38)

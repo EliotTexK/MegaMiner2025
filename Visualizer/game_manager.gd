@@ -26,6 +26,8 @@ const BLUE_GATLING = preload("res://Assets/HD_Skin/gatling/blue_gatling.png")
 const BLUE_HOUSE = preload("res://Assets/HD_Skin/house/blue_house.png")
 const BLUE_CHURCH = preload("res://Assets/HD_Skin/church/blue_church.png")
 
+const STRUTS = preload("res://Assets/HD_Skin/stand.png")
+
 const RED_CASTLE : Texture = preload("res://Assets/HD_Skin/Red_base.png")
 const BLUE_CASTLE: Texture = preload("res://Assets/HD_Skin/Blue_base.png")
 
@@ -265,10 +267,7 @@ func _draw_towers(data_towers : Array):
 		if towers.get_child_count() - 1 < count:
 			var pos = Vector2(tower["x"] * 32, tower["y"] * 32)
 			var sprite
-			#if tower["Team"] == "b":
-				#sprite = BLUE_RECRUIT.instantiate()
-			#else:
-				#sprite = RED_RECRUIT.instantiate()
+			
 			match tower["Type"]:
 				"Crossbow":
 					sprite = Sprite2D.new()
@@ -305,7 +304,14 @@ func _draw_towers(data_towers : Array):
 			
 			while (child.name != tower["Name"]):
 				child.free()
+				if count >= towers.get_child_count():
+					child = null
+					break
 				child = towers.get_child(count)
+			
+			if child == null:
+				continue
+			
 			if tower["Type"] != "Church":
 				var tween = get_tree().create_tween()
 				tween.set_trans(Tween.TRANS_QUAD)
