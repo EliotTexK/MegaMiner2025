@@ -5,6 +5,7 @@ const CANNON : Texture = preload("res://Assets/HD_Skin/cannon/cannon.png")
 const HOUSE = preload("res://Assets/HD_Skin/house/house.png")
 const CROSSBOW_FIRE = preload("res://Assets/HD_Skin/crossbow/crossbow.png")
 const GATLING = preload("res://Assets/HD_Skin/gatling/gatling.png")
+const CHURCH = preload("res://Assets/HD_Skin/church/church.png")
 
 const GHOST = preload("res://Assets/shaders/ghost.gdshader")
 
@@ -28,6 +29,7 @@ var current_mercenary_dir : String
 @export var cannon : Button
 @export var minigun : Button
 @export var cross : Button
+@export var church : Button
 
 @export var house_options : HBoxContainer
 @export var mercenary_options : HBoxContainer
@@ -51,6 +53,7 @@ func _ready() -> void:
 	house.pressed.connect(_on_house_pressed)
 	minigun.pressed.connect(_on_mini_pressed)
 	cross.pressed.connect(_on_cross_pressed)
+	church.pressed.connect(_on_church_pressed)
 	
 	merc_down.pressed.connect(south)
 	merc_up.pressed.connect(north)
@@ -145,6 +148,13 @@ func _on_mini_pressed():
 	current_build.texture = GATLING
 	current_build.scale = Vector2(32 / CANNON.get_size().x, 32 / CANNON.get_size().y)
 	current_build_name = "minigun"
+	current_action = "build"
+	
+func _on_church_pressed():
+	current_build.show()
+	current_build.texture = CHURCH
+	current_build.scale = Vector2(32 / CANNON.get_size().x, 32 / CANNON.get_size().y)
+	current_build_name = "church"
 	current_action = "build"
 
 func north():

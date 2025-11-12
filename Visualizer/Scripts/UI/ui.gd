@@ -43,7 +43,7 @@ func _update_base_health(is_left : bool, new_value):
 		tween.tween_property($"Game UI/RightSideStates/Health/TextureProgressBar", "value", (new_value / 200) * 100, 1.5)
 		
 func _update_building_prices(game_state):
-	for bldg: String in ["House", "Crossbow", "Minigun", "Cannon"]:
+	for bldg: String in ["House", "Crossbow", "Minigun", "Cannon", "Church"]:
 		get_node("Game UI/LeftSideStates/Human Control/Build OPtions/" + bldg).text = bldg + "\n$" + str(game_state["TowerPricesR"][bldg]).pad_decimals(0)
 		get_node("Game UI/RightSideStates/Human Control/Build OPtions/" + bldg).text = bldg + "\n$" + str(game_state["TowerPricesB"][bldg]).pad_decimals(0)
 
