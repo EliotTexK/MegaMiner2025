@@ -15,6 +15,13 @@
                 "-a2",
                 "${workspaceFolder}/AI_Agents/ExampleAgentRuleBased.py"
             ]
+        },
+        {
+            "name": "Python Debugger: Test backend with invalid args",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/main.py",
+            "console": "integratedTerminal"
         }
     ]
 }
