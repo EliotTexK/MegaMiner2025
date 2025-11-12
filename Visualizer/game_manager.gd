@@ -2,6 +2,7 @@ extends Node2D
 
 
 const BLOOD_SPLATTER_FX = preload("res://objects/big_blood_splatter.tscn")
+const HIT_SPARK_FX = preload("res://objects/sparks.tscn")
 
 const GRASS_RED_TEX = preload("res://Assets/HD_Skin/grass_red.png")
 const GRASS_BLUE_TEX = preload("res://Assets/HD_Skin/grass_blue.png")
@@ -163,8 +164,34 @@ func _draw_game_from_gamestate(game_state : String):
 			spawners.add_child(sprite)
 
 		initial = false
+		
+	# check if player bases damaged and spawn hitspark
+	if (game_state_json["PlayerBaseR"]["Health"] < previous_game_state["PlayerBaseR"]["Health"]):
+		var spark = HIT_SPARK_FX.instantiate()
+		var base : Sprite2D = misc_entities.get_child(0)
+		
+		base.modulate = Color.RED
+		var tween = get_tree().create_tween()
+		tween.set_trans(Tween.TRANS_QUAD)
+		tween.tween_property(base, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.15)
 	
-	
+		add_child(spark)
+		spark.global_position = base.global_position
+		(spark as GPUParticles2D).emitting = true
+		
+	if (game_state_json["PlayerBaseB"]["Health"] < previous_game_state["PlayerBaseB"]["Health"]):
+		var spark = HIT_SPARK_FX.instantiate()
+		var base : Sprite2D = misc_entities.get_child(1)
+		
+		base.modulate = Color.RED
+		var tween = get_tree().create_tween()
+		tween.set_trans(Tween.TRANS_QUAD)
+		tween.tween_property(base, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.15)
+		
+		add_child(spark)
+		spark.global_position = base.global_position
+		(spark as GPUParticles2D).emitting = true
+		
 	_draw_mercenaries(game_state_json["Mercenaries"], previous_game_state["Mercenaries"])
 	_draw_towers(game_state_json["Towers"])
 	_draw_demons(game_state_json["Demons"], previous_game_state["Demons"])
