@@ -3,17 +3,17 @@
 [ext_resource type="Script" uid="uid://cqig607puff42" path="res://Scripts/UI/ui.gd" id="1_ibotj"]
 [ext_resource type="PackedScene" uid="uid://ce78d0fluy0rq" path="res://main_menu.tscn" id="2_ibotj"]
 [ext_resource type="PackedScene" uid="uid://brguepel0j1o4" path="res://human_ai_select.tscn" id="3_27fn8"]
-[ext_resource type="Texture2D" uid="uid://d4bbo73qm11li" path="res://Assets/UI/timer_rays.png" id="4_7rqds"]
+[ext_resource type="Texture2D" uid="uid://61cmr7k078yx" path="res://Assets/UI/timer_rays.png" id="4_7rqds"]
 [ext_resource type="Script" uid="uid://uq0520028lh7" path="res://Scripts/right_side_states.gd" id="4_nltto"]
 [ext_resource type="FontFile" uid="uid://detd1i5on3er0" path="res://Assets/fonts/Deutsch.ttf" id="5_gs482"]
 [ext_resource type="Texture2D" uid="uid://1ha11mbduaej" path="res://Assets/UI/health_empty.png" id="5_irxef"]
 [ext_resource type="Texture2D" uid="uid://m22ia0wolt6" path="res://Assets/UI/money.png" id="5_n5rqp"]
-[ext_resource type="Script" uid="uid://cretchymjo67h" path="res://Scripts/UI/sun_spin.gd" id="5_nvb2n"]
+[ext_resource type="Script" path="res://Scripts/UI/sun_spin.gd" id="5_nvb2n"]
 [ext_resource type="Texture2D" uid="uid://db1jhrdqw64es" path="res://Assets/UI/button_build.png" id="5_waa4j"]
 [ext_resource type="Texture2D" uid="uid://bcylyd5jykq4a" path="res://Assets/UI/health_fill.png" id="6_e2l4f"]
 [ext_resource type="Texture2D" uid="uid://ca10le8pj4jjx" path="res://Assets/UI/button_destroy.png" id="6_ok7cu"]
-[ext_resource type="Texture2D" uid="uid://du7u65g41ygo2" path="res://Assets/UI/timer_bg.png" id="6_os5c7"]
-[ext_resource type="Texture2D" uid="uid://bu2mjp1eaeewo" path="res://Assets/UI/timer_base.png" id="7_b2p7n"]
+[ext_resource type="Texture2D" uid="uid://cckhrhfc83cog" path="res://Assets/UI/timer_bg.png" id="6_os5c7"]
+[ext_resource type="Texture2D" uid="uid://y5654nl4bsnr" path="res://Assets/UI/timer_base.png" id="7_b2p7n"]
 [ext_resource type="Texture2D" uid="uid://c1qt6xchirphw" path="res://Assets/UI/button_pass.png" id="7_irxef"]
 [ext_resource type="Texture2D" uid="uid://bqnsnmj8r6608" path="res://Assets/UI/button_hire_red.png" id="8_e2l4f"]
 
@@ -129,21 +129,21 @@ mouse_filter = 2
 
 [node name="RedSide" type="Polygon2D" parent="Game UI"]
 material = SubResource("ShaderMaterial_ibotj")
-color = Color(0.44, 0.17599998, 0.18920003, 1)
+color = Color(0.44, 0.176, 0.1892, 1)
 polygon = PackedVector2Array(504, 0, 488, 64, 128, 64, 0, 128, 0, 0)
 uv = PackedVector2Array(448, 0, 448, 64, 256, 104, 128, 64, 0, 128, 0, 0)
 
 [node name="RedSide3" type="Polygon2D" parent="Game UI/RedSide"]
 z_index = -1
 material = SubResource("ShaderMaterial_ibotj")
-color = Color(0.82, 0.32799998, 0.35260004, 1)
+color = Color(0.82, 0.328, 0.3526, 1)
 polygon = PackedVector2Array(512, -8, 496, 72, 128, 72, 0, 136, -8, 136, -8, -8)
 uv = PackedVector2Array(448, 0, 448, 64, 256, 104, 128, 64, 0, 128, 0, 0)
 
 [node name="BlueSide" type="Polygon2D" parent="Game UI"]
 material = SubResource("ShaderMaterial_ibotj")
 position = Vector2(648, 0)
-color = Color(0.14509805, 0.5882353, 0.74509805, 1)
+color = Color(0.145098, 0.588235, 0.745098, 1)
 polygon = PackedVector2Array(504, 0, 504, 128, 376, 64, 16, 64, 0, 0)
 uv = PackedVector2Array(448, 0, 448, 64, 256, 104, 128, 64, 0, 128, 0, 0)
 
@@ -233,7 +233,7 @@ texture_progress = ExtResource("7_b2p7n")
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
-offset_bottom = 7.776001
+offset_bottom = 7.776
 mouse_filter = 2
 script = ExtResource("4_nltto")
 is_player_1 = true
@@ -258,7 +258,7 @@ offset_right = 248.0
 offset_bottom = 64.0
 
 [node name="Money" type="Label" parent="Game UI/LeftSideStates/Money"]
-modulate = Color(0, 0.627451, 0.21176471, 1)
+modulate = Color(0, 0.627451, 0.211765, 1)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -300,7 +300,7 @@ scale = Vector2(0.25, 0.25)
 value = 100.0
 texture_under = ExtResource("5_irxef")
 texture_progress = ExtResource("6_e2l4f")
-tint_progress = Color(1, 0.003921569, 0, 1)
+tint_progress = Color(1, 0.00392157, 0, 1)
 
 [node name="TeamName" type="Panel" parent="Game UI/LeftSideStates"]
 layout_mode = 1
@@ -337,9 +337,9 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -76.05597
+offset_left = -76.056
 offset_top = 16.0
-offset_right = 99.94409
+offset_right = 99.9441
 offset_bottom = 56.0
 grow_horizontal = 2
 theme_override_constants/separation = 8
@@ -377,9 +377,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -140.05597
+offset_left = -140.056
 offset_top = 12.0
-offset_right = 152.94403
+offset_right = 152.944
 offset_bottom = 52.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -412,9 +412,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -97.55597
+offset_left = -97.556
 offset_top = 12.0
-offset_right = 110.44403
+offset_right = 110.444
 offset_bottom = 52.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -442,7 +442,7 @@ anchor_right = 0.5
 anchor_bottom = 0.988
 offset_left = 576.0
 offset_right = 576.0
-offset_bottom = 7.776001
+offset_bottom = 7.776
 mouse_filter = 2
 script = ExtResource("4_nltto")
 build_button = NodePath("Human Control/build or destroy/Build")

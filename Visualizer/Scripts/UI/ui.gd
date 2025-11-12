@@ -30,10 +30,9 @@ func _update_turns_progressed(new_value):
 	$"Game UI/Turns/Turns Progressed".text = "Turns Left\n" + str(int(new_value))
 
 func _update_money_values(left_value, right_value):
-	$"Game UI/LeftSideStates/Money/Money".text = str(left_value)
+	$"Game UI/LeftSideStates/Money/Money".text = str(int(left_value))
 	
-	$"Game UI/RightSideStates/Money/Money".text = str(right_value)
-
+	$"Game UI/RightSideStates/Money/Money".text = str(int(right_value))
 
 func _update_base_health(is_left : bool, new_value):
 	if is_left:
@@ -41,11 +40,15 @@ func _update_base_health(is_left : bool, new_value):
 		tween.tween_property($"Game UI/LeftSideStates/Health/TextureProgressBar", "value", (new_value / 300) * 100, 1.5)
 	else:
 		$"Game UI/RightSideStates/Health/Health".text = "Base Health\n" + str(new_value) + "/200"
+		
+func _update_building_prices(game_state):
+	for bldg: String in ["House", "Crossbow", "Minigun", "Cannon"]:
+		get_node("Game UI/LeftSideStates/Human Control/Build OPtions/" + bldg).text = bldg + "\n$" + str(game_state["TowerPricesR"][bldg]).pad_decimals(0)
+		get_node("Game UI/RightSideStates/Human Control/Build OPtions/" + bldg).text = bldg + "\n$" + str(game_state["TowerPricesB"][bldg]).pad_decimals(0)
 
 func _on_main_menu_play_game() -> void:
 	human_ai_select.visible = true
 	main_menu.visible = false
-
 
 func _on_human_ai_select_go(is_ai: bool, is_ai2: bool) -> void:
 	ai1 = is_ai
@@ -96,7 +99,7 @@ func _on_right_side_states_action(is_player1: bool, build: String, x: int, y: in
 				$"Game UI/AnimationPlayer".play("blue side glow")
 				print("blue players turn!")
 
-func on_next_turn():
+func on_next_turn():	
 	$"Game UI/LeftSideStates"._on_next_turn()
 	$"Game UI/RightSideStates"._on_next_turn()
 	

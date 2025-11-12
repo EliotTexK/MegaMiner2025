@@ -66,6 +66,20 @@ class Game:
             "y" : self.game_state.player_base_b.y
         }
 
+        dict_tower_prices_r: dict = {
+            "House" : self.game_state.house_price_r,
+            "Crossbow" : self.game_state.crossbow_price_r,
+            "Cannon" : self.game_state.cannon_price_r,
+            "Minigun" : self.game_state.minigun_price_r
+        }
+
+        dict_tower_prices_b: dict = {
+            "House" : self.game_state.house_price_b,
+            "Crossbow" : self.game_state.crossbow_price_b,
+            "Cannon" : self.game_state.cannon_price_b,
+            "Minigun" : self.game_state.minigun_price_b
+        }
+
         # Changing the entity grid to a bunch of strings
         list_entity_grid = []
         for y in self.game_state.entity_grid:
@@ -160,7 +174,10 @@ class Game:
             "Towers" : list_towers,
             "Mercenaries" : list_mercenary,
             "Demons" : list_demons,
-            "DemonSpawners" : list_spawners
+            "DemonSpawners" : list_spawners,
+
+            "TowerPricesR" : dict_tower_prices_r,
+            "TowerPricesB" : dict_tower_prices_b
         } 
 
         json_string : str = json.dumps(data)

@@ -308,9 +308,11 @@ func _draw_towers(data_towers : Array):
 				child = towers.get_child(count)
 			if tower["Type"] != "Church":
 				var tween = get_tree().create_tween()
+				tween.set_trans(Tween.TRANS_QUAD)
 				for target in tower["Targets"]:
+					var theta = atan2((target[1] - tower["y"]), (target[0] - tower["x"])) + (PI * 0.5)
 					tween.tween_property(child, "rotation", 
-					Vector2(tower["x"],tower["y"]).angle_to(Vector2(target[0],target[1])) + deg_to_rad(90), turn_interval_max / 2.0
+					theta, turn_interval_max / 2.0
 					)
 					if child is Crossbow:
 						tween.tween_callback(child.shoot.bind(turn_interval_max / 2))
@@ -408,6 +410,7 @@ func _update_ui(gamestate):
 	UI._update_money_values(gamestate["PlayerBaseR"]["Money"], gamestate["PlayerBaseB"]["Money"])
 	UI._update_base_health(true, gamestate["PlayerBaseR"]["Health"])
 	UI._update_base_health(false, gamestate["PlayerBaseB"]["Health"])
+	UI._update_building_prices(gamestate)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
