@@ -1,7 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://ce78d0fluy0rq"]
+[gd_scene load_steps=6 format=3 uid="uid://ce78d0fluy0rq"]
 
 [ext_resource type="Theme" uid="uid://b2cu144l1almb" path="res://Button_Theem.tres" id="1_06t4h"]
 [ext_resource type="Script" uid="uid://beyo8py2phky5" path="res://main_menu.gd" id="1_7vrkn"]
+[ext_resource type="Texture2D" uid="uid://bivtx0yee5fet" path="res://Assets/UI/logo.png" id="3_fu7sn"]
+
+[sub_resource type="Gradient" id="Gradient_fu7sn"]
+offsets = PackedFloat32Array(0, 0.383117, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.501961, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fu7sn"]
+gradient = SubResource("Gradient_fu7sn")
 
 [node name="Main Menu" type="Control"]
 layout_mode = 3
@@ -126,6 +134,19 @@ ok_button_text = "Open"
 file_mode = 0
 access = 2
 use_native_dialog = true
+
+[node name="Logo" type="Sprite2D" parent="."]
+position = Vector2(256, 64)
+texture = ExtResource("3_fu7sn")
+centered = false
+
+[node name="LogoBG" type="Sprite2D" parent="Logo"]
+z_index = -1
+position = Vector2(905.984, -61)
+rotation = 1.5708
+scale = Vector2(2.50218, 1164.69)
+texture = SubResource("GradientTexture1D_fu7sn")
+centered = false
 
 [connection signal="pressed" from="HBoxContainer/Play Game" to="." method="_on_play_game_pressed"]
 [connection signal="pressed" from="HBoxContainer/Quit" to="." method="_on_quit_pressed"]

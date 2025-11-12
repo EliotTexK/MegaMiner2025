@@ -46,7 +46,7 @@ var initial : bool  = true
 
 var backend_running : bool = false
 
-var turn_interval_max : float = 1.0 
+var turn_interval_max : float = 0.6 
 var turn_interval : float = 0
 var path_to_game_state
 
