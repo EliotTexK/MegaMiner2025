@@ -18,5 +18,10 @@ When it comes to running MegaMiner 2025, whether you are testing your AI, or hos
 Go to the Visualizer folder/directory where you put the executable. Then, double-click it, or run it using the command-line. Click Play Game
 
 ## How To Run The Backend ( No Visualizer )
-Change directories to the backendRun it with the following command:
-`python3 main.py`
+Change directories to `backend`. Run the following command:
+
+`python3 main.py ../maps/your_map.json -a1 ../AI_Agents/your_red_player_ai.py -a2 ../AI_Agents/your_blue_player_ai.py`
+
+But substitute the map and AI agents you want. For example:
+
+`python3 main.py ../maps/map2.json -a1 ../AI_Agents/ExampleAgentRuleBased.py -a2 ../AI_Agents/ExampleAgentRuleBased.py`

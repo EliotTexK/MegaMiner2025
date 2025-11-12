@@ -135,10 +135,15 @@ if __name__ == '__main__':
     # redirect stderr to logfile
     sys.stderr = open('log.txt', 'w')
 
-    cmd_line_args = get_command_line_arguments()
+    try:
+        cmd_line_args = get_command_line_arguments()
+    except:
+        print("Your command-line arguments are wrong! Check log.txt")
+        exit(1)
+
     err = validate_command_line_arguments(cmd_line_args)
     if err != "":
-        print(f"INVALID COMMAND LINE ARGUMENTS: {err}", file=sys.stderr)
+        print(err)
         exit(1)
 
     # Create AI agents
