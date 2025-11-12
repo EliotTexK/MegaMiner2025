@@ -7,6 +7,7 @@ from House import House
 from Minigun import Minigun
 from Church import Church
 from Utils import log_msg
+import Constants
 
 # Phase 1: Build or Destroy Towers
 
@@ -105,7 +106,18 @@ def _destroy_tower(game_state: GameState, action: AIAction, is_red_player: bool)
         return
     
     # Destroy the tower
-    refund = tower.get_price(game_state, current_team) // 2
+    refund = 0
+    if isinstance(tower, Cannon):
+        refund = Constants.CANNON_BASE_PRICE
+    elif isinstance(tower, Crossbow):
+        refund = Constants.CROSSBOW_BASE_PRICE
+    elif isinstance(tower, Minigun):
+        refund = Constants.MINIGUN_BASE_PRICE
+    elif isinstance(tower, House):
+        refund = Constants.HOUSE_BASE_PRICE
+    elif isinstance(tower, Church):
+        refund = Constants.CHURCH_BASE_PRICE
+
     game_state.towers.remove(tower)
     game_state.entity_grid[y][x] = None
     
@@ -115,7 +127,7 @@ def _destroy_tower(game_state: GameState, action: AIAction, is_red_player: bool)
     else:
         game_state.money_b += refund
     
-    log_msg(f"{player_name} destroyed a tower at ({x},{y})")
+    log_msg(f"{player_name} destroyed a tower at ({x},{y}) and was refunded ${refund}")
 
 
 def _create_tower(tower_type: str, x: int, y: int, team_color: str, game_state: GameState) -> Tower:
