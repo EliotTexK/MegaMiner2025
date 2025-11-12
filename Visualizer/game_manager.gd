@@ -401,6 +401,7 @@ func _update_ui(gamestate):
 	UI._update_money_values(gamestate["PlayerBaseR"]["Money"], gamestate["PlayerBaseB"]["Money"])
 	UI._update_base_health(true, gamestate["PlayerBaseR"]["Health"])
 	UI._update_base_health(false, gamestate["PlayerBaseB"]["Health"])
+	UI._update_building_prices(gamestate)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
