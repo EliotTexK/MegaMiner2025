@@ -230,7 +230,7 @@ fill_mode = 5
 texture_under = ExtResource("6_os5c7")
 texture_progress = ExtResource("7_b2p7n")
 
-[node name="LeftSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "house_options", "mercenary_options")]
+[node name="LeftSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "church", "house_options", "mercenary_options")]
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
@@ -250,6 +250,7 @@ house = NodePath("Human Control/Build OPtions/House")
 cannon = NodePath("Human Control/Build OPtions/Cannon")
 minigun = NodePath("Human Control/Build OPtions/Minigun")
 cross = NodePath("Human Control/Build OPtions/Crossbow")
+church = NodePath("Human Control/Build OPtions/Church")
 house_options = NodePath("Human Control/Build OPtions")
 mercenary_options = NodePath("Human Control/Mercenary Directions")
 
@@ -403,6 +404,11 @@ layout_mode = 2
 text = "Minigun
 $25"
 
+[node name="Church" type="Button" parent="Game UI/LeftSideStates/Human Control/Build OPtions"]
+layout_mode = 2
+text = "Church
+$20"
+
 [node name="Mercenary Directions" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
 visible = false
 layout_mode = 1
@@ -434,7 +440,7 @@ text = "West/Left"
 layout_mode = 2
 text = "East/Right"
 
-[node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "house_options", "mercenary_options")]
+[node name="RightSideStates" type="Control" parent="Game UI" node_paths=PackedStringArray("build_button", "destroy_button", "queue_button", "skip_turn", "merc_up", "merc_down", "merc_left", "merc_right", "house", "cannon", "minigun", "cross", "church", "house_options", "mercenary_options")]
 layout_mode = 1
 anchor_right = 0.5
 anchor_bottom = 0.988
@@ -455,6 +461,7 @@ house = NodePath("Human Control/Build OPtions/House")
 cannon = NodePath("Human Control/Build OPtions/Cannon")
 minigun = NodePath("Human Control/Build OPtions/Minigun")
 cross = NodePath("Human Control/Build OPtions/Crossbow")
+church = NodePath("../LeftSideStates/Human Control/Build OPtions/Church")
 house_options = NodePath("Human Control/Build OPtions")
 mercenary_options = NodePath("Human Control/Mercenary Directions")
 
@@ -606,6 +613,11 @@ $8"
 layout_mode = 2
 text = "Minigun
 $25"
+
+[node name="Church" type="Button" parent="Game UI/RightSideStates/Human Control/Build OPtions"]
+layout_mode = 2
+text = "Church
+$20"
 
 [node name="Mercenary Directions" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
 visible = false
