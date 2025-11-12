@@ -70,14 +70,16 @@ class Game:
             "House" : self.game_state.house_price_r,
             "Crossbow" : self.game_state.crossbow_price_r,
             "Cannon" : self.game_state.cannon_price_r,
-            "Minigun" : self.game_state.minigun_price_r
+            "Minigun" : self.game_state.minigun_price_r,
+            "Church" : self.game_state.church_price_r,
         }
 
         dict_tower_prices_b: dict = {
             "House" : self.game_state.house_price_b,
             "Crossbow" : self.game_state.crossbow_price_b,
             "Cannon" : self.game_state.cannon_price_b,
-            "Minigun" : self.game_state.minigun_price_b
+            "Minigun" : self.game_state.minigun_price_b,
+            "Church" : self.game_state.church_price_b
         }
 
         # Changing the entity grid to a bunch of strings
