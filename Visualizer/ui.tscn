@@ -3,22 +3,22 @@
 [ext_resource type="Script" uid="uid://cqig607puff42" path="res://Scripts/UI/ui.gd" id="1_ibotj"]
 [ext_resource type="PackedScene" uid="uid://ce78d0fluy0rq" path="res://main_menu.tscn" id="2_ibotj"]
 [ext_resource type="PackedScene" uid="uid://brguepel0j1o4" path="res://human_ai_select.tscn" id="3_27fn8"]
-[ext_resource type="Texture2D" uid="uid://61cmr7k078yx" path="res://Assets/UI/timer_rays.png" id="4_7rqds"]
+[ext_resource type="Texture2D" uid="uid://d4bbo73qm11li" path="res://Assets/UI/timer_rays.png" id="4_7rqds"]
 [ext_resource type="Script" uid="uid://uq0520028lh7" path="res://Scripts/right_side_states.gd" id="4_nltto"]
 [ext_resource type="FontFile" uid="uid://detd1i5on3er0" path="res://Assets/fonts/Deutsch.ttf" id="5_gs482"]
 [ext_resource type="Texture2D" uid="uid://1ha11mbduaej" path="res://Assets/UI/health_empty.png" id="5_irxef"]
 [ext_resource type="Texture2D" uid="uid://m22ia0wolt6" path="res://Assets/UI/money.png" id="5_n5rqp"]
-[ext_resource type="Script" path="res://Scripts/UI/sun_spin.gd" id="5_nvb2n"]
+[ext_resource type="Script" uid="uid://cretchymjo67h" path="res://Scripts/UI/sun_spin.gd" id="5_nvb2n"]
 [ext_resource type="Texture2D" uid="uid://db1jhrdqw64es" path="res://Assets/UI/button_build.png" id="5_waa4j"]
 [ext_resource type="Texture2D" uid="uid://bcylyd5jykq4a" path="res://Assets/UI/health_fill.png" id="6_e2l4f"]
 [ext_resource type="Texture2D" uid="uid://ca10le8pj4jjx" path="res://Assets/UI/button_destroy.png" id="6_ok7cu"]
-[ext_resource type="Texture2D" uid="uid://cckhrhfc83cog" path="res://Assets/UI/timer_bg.png" id="6_os5c7"]
-[ext_resource type="Texture2D" uid="uid://y5654nl4bsnr" path="res://Assets/UI/timer_base.png" id="7_b2p7n"]
+[ext_resource type="Texture2D" uid="uid://du7u65g41ygo2" path="res://Assets/UI/timer_bg.png" id="6_os5c7"]
+[ext_resource type="Texture2D" uid="uid://bu2mjp1eaeewo" path="res://Assets/UI/timer_base.png" id="7_b2p7n"]
 [ext_resource type="Texture2D" uid="uid://c1qt6xchirphw" path="res://Assets/UI/button_pass.png" id="7_irxef"]
 [ext_resource type="LabelSettings" uid="uid://ic0e31p6p2jl" path="res://Assets/UI/timerlabelsettings.tres" id="8_b2p7n"]
 [ext_resource type="Texture2D" uid="uid://bqnsnmj8r6608" path="res://Assets/UI/button_hire_red.png" id="8_e2l4f"]
 [ext_resource type="Texture2D" uid="uid://dj77bl6upquwm" path="res://Assets/UI/button_hire_blue.png" id="17_nvb2n"]
-[ext_resource type="Texture2D" uid="uid://cdhuagmf177m0" path="res://Assets/UI/scroll.png" id="18_os5c7"]
+[ext_resource type="Texture2D" uid="uid://qwemirxf3d40" path="res://Assets/UI/scroll.png" id="18_os5c7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ibotj"]
 
@@ -360,6 +360,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Human Control" type="Control" parent="Game UI/LeftSideStates"]
+visible = false
 layout_mode = 1
 anchor_top = 0.79
 anchor_right = 0.986
@@ -444,7 +445,6 @@ text = "Church
 $20"
 
 [node name="Mercenary Directions" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -580,6 +580,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Human Control" type="Control" parent="Game UI/RightSideStates"]
+visible = false
 layout_mode = 1
 anchor_top = 0.79
 anchor_right = 0.986
@@ -662,17 +663,16 @@ text = "Church
 $20"
 
 [node name="Mercenary Directions" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -92.5
-offset_top = -20.0
-offset_right = 92.5
-offset_bottom = 20.0
+offset_left = -180.05597
+offset_top = 12.0
+offset_right = 188.94403
+offset_bottom = 52.0
 grow_horizontal = 2
 grow_vertical = 2
 

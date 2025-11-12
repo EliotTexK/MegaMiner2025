@@ -47,7 +47,7 @@ func _ready() -> void:
 	build_button.pressed.connect(_on_build_pressed)
 	destroy_button.pressed.connect(_on_destroy_pressed)
 	queue_button.pressed.connect(_on_queue_pressed)
-	skip_turn.pressed.connect(skip)
+	skip_turn.pressed.connect(pass_turn)
 	
 	cannon.pressed.connect(_on_cannon_pressed)
 	house.pressed.connect(_on_house_pressed)
@@ -73,7 +73,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and current_action != "":
 			active = false
 		
-			action.emit(is_player_1, current_action, current_build.position.x / 32 , current_build.position.y / 32, current_build_name, "")
+			action.emit(is_player_1, current_action, current_build.position.x / 32 , current_build.position.y / 32, current_build_name, current_mercenary_dir)
 			current_mercenary_dir = ""
 			current_build_name = ""
 			
@@ -85,15 +85,16 @@ func _process(_delta: float) -> void:
 	if GlobalPaths.tile_grid and active:
 		current_build.position = GlobalPaths.tile_grid.get_local_mouse_position().snapped(Vector2(32.0,32.0))
 		
-	#if Input.is_action_just_pressed("click") and current_action != "":
-		#
+	if Input.is_action_just_pressed("skip") and active:
+		action.emit(is_player_1, "Nothing", 0,0, "skip", "")
+		
 
 func _on_next_turn():
 	active = true
 	current_build.texture = null
 	current_build.hide()
 
-func skip():
+func pass_turn():
 	if active:
 		action.emit(is_player_1, "Nothing", 0, 0, "", current_mercenary_dir)
 		mercenary_options.hide()

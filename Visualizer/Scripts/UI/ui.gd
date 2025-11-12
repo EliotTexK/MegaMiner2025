@@ -95,12 +95,14 @@ func _on_human_ai_select_go(is_ai: bool, is_ai2: bool) -> void:
 	main_menu.hide()
 	human_ai_select.hide()
 	game_ui.show()
+	
 	if !is_ai:
 		$"Game UI/LeftSideStates".active = true
-		$"Game UI/LeftSideStates/Human Control".visible = true
+		$"Game UI/LeftSideStates/Human Control".show()
 	if !is_ai2:
 		$"Game UI/RightSideStates".active = true
-		$"Game UI/RightSideStates/Human Control".visible = true
+		if is_ai:
+			$"Game UI/RightSideStates/Human Control".show()
 
 func _on_human_ai_select_back() -> void:
 	main_menu.visible = true
@@ -108,20 +110,27 @@ func _on_human_ai_select_back() -> void:
 
 
 func _on_right_side_states_action(is_player1: bool, build: String, x: int, y: int, tower_to_build: String, merc_direction: String) -> void:
-	if is_player1 == red_turn:
+	if tower_to_build == "skip":
+		action.emit(true, build, x, y, tower_to_build, merc_direction)
+		action.emit(false, build, x, y, tower_to_build, merc_direction)
+	elif is_player1 == red_turn:
 		action.emit(is_player1, build, x, y, tower_to_build, merc_direction)
-		if ai1 == ai2:
+		
+		if ai1 == ai2: #and tower_to_build != "skip":
 			red_turn = !red_turn
-			
 			$"Game UI/Turns/Player Turn".modulate = Color(255,255,255)
 			if red_turn:
 				$"Game UI/Turns/Player Turn".text = "Red Player's Turn\n<---"
+				$"Game UI/LeftSideStates/Human Control".show()
+				$"Game UI/RightSideStates/Human Control".hide()
 				var tween = get_tree().create_tween()
 				tween.tween_property($"Game UI/Turns/Player Turn", "modulate", Color(255,255,255,0), 5.0)
 				$"Game UI/AnimationPlayer".play("red Side glow")
 				print("Red players turn!")
 			else:
 				$"Game UI/Turns/Player Turn".text = "Blue Player's Turn\n--->"
+				$"Game UI/LeftSideStates/Human Control".hide()
+				$"Game UI/RightSideStates/Human Control".show()
 				var tween = get_tree().create_tween()
 				tween.tween_property($"Game UI/Turns/Player Turn", "modulate", Color(255,255,255,0), 5.0)
 				$"Game UI/AnimationPlayer".play("blue side glow")
