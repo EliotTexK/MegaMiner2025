@@ -132,6 +132,8 @@ func _draw_game_from_gamestate(game_state : String):
 		previous_game_state = current_game_state
 		_draw_grid(game_state_json["FloorTiles"])
 		
+		UI._update_team_names(current_game_state["TeamNameR"], current_game_state["TeamNameB"])
+		
 		## Setting up castles
 		var castle = Sprite2D.new()
 		
