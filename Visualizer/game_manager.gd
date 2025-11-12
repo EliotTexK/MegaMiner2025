@@ -251,12 +251,8 @@ func _draw_mercenaries(mercs : Array, prev_mercs: Array):
 				child._update_values(merc["Name"], merc["Health"])
 			
 			if merc["State"] == "dead":
-				var blood_splatter_effect = BLOOD_SPLATTER_FX.instantiate()
-				blood_splatter_effect.position = child.global_position
-				#await get_tree().create_timer(0.35).timeout # wait for attack anims to play
-				add_child(blood_splatter_effect)
-				(blood_splatter_effect as GPUParticles2D).emitting = true
-				child.free()
+				child.reparent(world)
+				child.die(turn_interval_max, BLOOD_SPLATTER_FX)
 				count -= 1
 			elif merc["State"] == "moving":
 				var tween = get_tree().create_tween()
@@ -360,13 +356,9 @@ func _draw_demons(dem_array : Array, prev_array : Array):
 					
 			var child : RedMerc = demons.get_child(count)
 			if dem["State"] == "dead":
-				var blood_splatter_effect = BLOOD_SPLATTER_FX.instantiate()
-				blood_splatter_effect.position = child.global_position
-				#await get_tree().create_timer(0.25).timeout # wait for attack anims to play
-				add_child(blood_splatter_effect)
-				(blood_splatter_effect as GPUParticles2D).emitting = true
-				child.free()
-				count -= 1
+				child.reparent(world)
+				child.die(turn_interval_max, BLOOD_SPLATTER_FX)
+				count -= 1		
 			elif dem["State"] == "moving":
 				var tween = get_tree().create_tween()
 				child.move(child.position - Vector2(dem["x"] * 32, dem["y"] * 32))

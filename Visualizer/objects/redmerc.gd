@@ -46,3 +46,12 @@ func hurt():
 
 func idle():
 	sprite_anim.play("default")
+	
+func die(time : float, particle):
+	var blood_splatter_effect = particle.instantiate()
+	await get_tree().create_timer(time).timeout # wait for attack anims to play
+	self.get_parent().add_child(blood_splatter_effect)
+	blood_splatter_effect.global_position = self.global_position
+	(blood_splatter_effect as GPUParticles2D).emitting = true
+	self.free()
+	
