@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://csd3guhrunci6"]
+
+[sub_resource type="Gradient" id="Gradient_242vi"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.093023255, 0.46976745, 0.7116279, 0.9953488)
+colors = PackedColorArray(0.44892877, 0.35627252, 0.21004096, 1, 0.26255235, 0.20633155, 0.21141836, 1.070116, 0.24323358, 0.19078948, 0.21156114, 0.9082606, 0.21568628, 0.16862746, 0.21176471, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kfl7u"]
+gradient = SubResource("Gradient_242vi")
+
+[node name="UnderneathTile" type="Sprite2D"]
+z_index = -1
+rotation = 1.5707964
+scale = Vector2(1.7215331, 0.5)
+texture = SubResource("GradientTexture2D_kfl7u")

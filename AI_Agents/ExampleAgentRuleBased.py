@@ -152,7 +152,7 @@ class Agent:
             return AIAction("build", house_x, house_y, 'house', provoke_demons=do_provoke)
         else:
             # Build house or mercenary in the early-game
-            if turn < 10:
+            if turn < 30:
                 probability_merc = (turn + 50) / 100.0
 
                 if random.random() < probability_merc:

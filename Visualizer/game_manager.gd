@@ -29,6 +29,8 @@ const BLUE_CHURCH = preload("res://Assets/HD_Skin/church/blue_church.png")
 const RED_CASTLE : Texture = preload("res://Assets/HD_Skin/Red_base.png")
 const BLUE_CASTLE: Texture = preload("res://Assets/HD_Skin/Blue_base.png")
 
+const UNDERNEATH_TILE = preload("res://objects/underneath_tile.tscn")
+
 @export var UI : GameUI
 
 var previous_game_state : Dictionary 
@@ -185,12 +187,19 @@ func _draw_grid(tile_grid : Array):
 			if alt_x == alt_y:
 				sprite.self_modulate = Color8(255, 255, 255)
 			else:
-				sprite.self_modulate = Color8(200, 200, 200)
+				sprite.self_modulate = Color8(220, 220, 220)
 			
 			sprite.scale = Vector2(0.125,0.125)
 			sprite.position = Vector2(character_x * 32, layer_y * 32)
 			tiles.add_child(sprite)
 			character_x += 1
+			
+			# add "underneath" tile area
+			if character in ['b', 'O', 'r']:
+				var underneath = UNDERNEATH_TILE.instantiate()
+				underneath.position = sprite.position + Vector2(0,48)
+				tiles.add_child(underneath)
+				
 			
 			alt_x = !alt_x
 			

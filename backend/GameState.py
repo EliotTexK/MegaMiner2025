@@ -29,9 +29,6 @@ class GameState:
         self.house_price_r = Constants.HOUSE_BASE_PRICE
         self.minigun_price_r = Constants.MINIGUN_BASE_PRICE
         self.church_price_r = Constants.CHURCH_BASE_PRICE
-
-        # use this to increase demon health per spawn
-        self.demon_spawner_activation_count = 0
         
         # Initialization which depends on the map JSON
         self.floor_tiles = map_json_data['FloorTiles']
