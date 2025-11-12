@@ -300,7 +300,7 @@ func _draw_towers(data_towers : Array):
 	
 	var count = 0
 	for tower in data_towers:
-		if towers.get_child_count() - 1 != count:
+		if towers.get_child_count() - 1 < count:
 			var pos = Vector2(tower["x"] * 32, tower["y"] * 32)
 			var sprite : Sprite2D
 			var makeStruts : bool = false
