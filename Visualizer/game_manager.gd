@@ -376,6 +376,12 @@ func _draw_towers(data_towers : Array):
 					#tween.tween_property(child.get_child(0), "rotation", -theta, turn_interval_max / 2.0)
 					if child is Crossbow:
 						tween.tween_callback(child.shoot.bind(turn_interval_max / 2))
+			
+			# darken tower based on cooldown
+			var c : float = 1 - tower["Cooldown"] * 0.1
+			child.modulate = Color(c, c, c, 1.0)
+			child.modulate.a = 1
+			
 		count += 1
 
 
