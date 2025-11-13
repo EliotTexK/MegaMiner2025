@@ -356,6 +356,7 @@ func _draw_towers(data_towers : Array):
 				strut1.global_position = sprite.global_position
 		else:
 			var child = towers.get_child(count)
+			var prev_tower = previous_game_state["Towers"][count]
 			
 			while (child.name != tower["Name"]):
 				child.free()
@@ -383,13 +384,12 @@ func _draw_towers(data_towers : Array):
 			child.modulate.a = 1
 			
 			# animate towers being "activated" based on cooldown
-			if (tower["Cooldown"] == tower["MaxCooldown"]):
+			if (prev_tower["Cooldown"] == 0):
 				var sprite = child.get_child(0)
 				var tween = get_tree().create_tween()
 				tween.set_trans(Tween.TRANS_BOUNCE)
 				tween.tween_property(sprite, "scale", sprite.scale, turn_interval_max / 2.0)
 				sprite.scale *= 1.1
-				
 			
 		count += 1
 
