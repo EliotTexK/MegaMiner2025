@@ -3,13 +3,13 @@
 [ext_resource type="FontFile" uid="uid://detd1i5on3er0" path="res://Assets/fonts/Deutsch.ttf" id="1_ppsnp"]
 
 [resource]
-Button/colors/font_color = Color(0.9411765, 0.8784314, 0.6117647, 1)
-Button/colors/font_hover_color = Color(0.8980392, 0.88235295, 0.7411765, 1)
-Button/colors/font_outline_color = Color(0.5176471, 0.3529412, 0.1254902, 1)
+Button/colors/font_color = Color(0.941176, 0.878431, 0.611765, 1)
+Button/colors/font_hover_color = Color(0.898039, 0.882353, 0.741176, 1)
+Button/colors/font_outline_color = Color(0.517647, 0.352941, 0.12549, 1)
 Button/font_sizes/font_size = 50
 Button/fonts/font = ExtResource("1_ppsnp")
-Label/colors/font_color = Color(0.9411765, 0.8784314, 0.6117647, 1)
-Label/colors/font_outline_color = Color(0.5176471, 0.3529412, 0.1254902, 1)
+Label/colors/font_color = Color(0.941176, 0.878431, 0.611765, 1)
+Label/colors/font_outline_color = Color(0.517647, 0.352941, 0.12549, 1)
 Label/constants/outline_size = 14
 Label/font_sizes/font_size = 32
 Label/fonts/font = ExtResource("1_ppsnp")
