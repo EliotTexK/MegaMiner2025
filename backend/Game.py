@@ -135,8 +135,8 @@ class Game:
                 "x" : tow.x,
                 "y" : tow.y,
                 "Targets" : target_list,
-                "Cooldown" : tow.current_cooldown
-                # "AimAngle" : tow.angle * 57.2958 # Convert radians to degrees
+                "Cooldown" : tow.current_cooldown,
+                "MaxCooldown" : tow.cooldown_max
             }
             list_towers.append(tow_dict)
 

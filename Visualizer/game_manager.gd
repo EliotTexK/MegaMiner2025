@@ -378,9 +378,18 @@ func _draw_towers(data_towers : Array):
 						tween.tween_callback(child.shoot.bind(turn_interval_max / 2))
 			
 			# darken tower based on cooldown
-			var c : float = 1 - tower["Cooldown"] * 0.1
+			var c : float = max (2.718 ** (-tower["Cooldown"] * 0.3), 0.4)
 			child.modulate = Color(c, c, c, 1.0)
 			child.modulate.a = 1
+			
+			# animate towers being "activated" based on cooldown
+			if (tower["Cooldown"] == tower["MaxCooldown"]):
+				var sprite = child.get_child(0)
+				var tween = get_tree().create_tween()
+				tween.set_trans(Tween.TRANS_BOUNCE)
+				tween.tween_property(sprite, "scale", sprite.scale, turn_interval_max / 2.0)
+				sprite.scale *= 1.1
+				
 			
 		count += 1
 
