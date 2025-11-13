@@ -13,7 +13,7 @@ When it comes to running MegaMiner 2025, whether you are testing your AI, or hos
 - The two AI Agents - these are Python files written by competitors. These are meant to be run by the Backend as sub-processes. Each turn, they receive game state from the backend and send back controls ( AI Actions ) for that turn.
 
 ## How To Run The Visualizer
-Go to the Visualizer folder/directory where you put the executable. Then, double-click it, or run it using the command-line. Click the "Play Game" button. From there, select a map and your AI agents. The Visualizer also allows the game to be playable by humans, and you can select that option. When you're ready to start, press "Go".
+Go to the Visualizer folder/directory where you put the executable. Then, double-click it, or run it using the command-line. Click the "Play Game" button. From there, select a map and your AI agents. The Visualizer also allows the game to be playable by humans, and you can select that option. When you're ready to start, click the "Fight" button.
 
 ## How To Run The Backend ( No Visualizer )
 Change directories to `backend`. Run the following command:
@@ -33,6 +33,12 @@ If you want your agent to import libraries or custom python files, or have acces
 ## Game State Format
 The functions you will be writing for your `Agent` will recieve the state of the game as a big python dictionary. If you *really want to* understand the technical details of how this is created, you can read the driver code at the bottom of `AgentTemplate.py`, and then read through `backend/Game.py` and `backend/GameState.py`. However, knowing these technical details is not necessary.
 
-1. **Victory Condition** - `game_state["Victory"]` - Will be the string `'r'` if the Red player has won, `'b'` if the Blue player has won, `'tie'` if the result of the game is a tie, or the empty string `''` if the game is not over yet.
+1. **Team Names** - `game_state[""]`
+
+2. **Victory Condition** - `game_state["Victory"]` - Will be the string `'r'` if the Red player has won, `'b'` if the Blue player has won, `'tie'` if the result of the game is a tie, or the empty string `''` if the game is not over yet.
+
+3. ****
 
 ## AIAction Format
+
+## How to Play as a Human
