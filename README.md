@@ -33,11 +33,21 @@ If you want your agent to import libraries or custom python files, or have acces
 ## Game State Format
 The functions you will be writing for your `Agent` will recieve the state of the game as a big python dictionary. If you *really want to* understand the technical details of how this is created, you can read the driver code at the bottom of `AgentTemplate.py`, and then read through `backend/Game.py` and `backend/GameState.py`. However, knowing these technical details is not necessary.
 
-1. **Team Names** - `game_state[""]`
+1. **Team Names** - `game_state["TeamNameR"]` and `game_state["TeamNameB"]`
 
 2. **Victory Condition** - `game_state["Victory"]` - Will be the string `'r'` if the Red player has won, `'b'` if the Blue player has won, `'tie'` if the result of the game is a tie, or the empty string `''` if the game is not over yet.
 
-3. ****
+3. **Remaining Turns and Current Turn** - `game_state["TurnsRemaining"]` and `game_state["CurrentTurn"]`
+
+4. **Player Bases**
+    - `game_state["PlayerBaseR"]["Health"]`, `game_state["PlayerBaseB"]["Health"]`
+    - `game_state["PlayerBaseR"]["Money"]`, `game_state["PlayerBaseB"]["Money"]`
+    - `game_state["PlayerBaseR"]["x"]`, `game_state["PlayerBaseB"]["x"]`
+    - `game_state["PlayerBaseR"]["y"]`, `game_state["PlayerBaseB"]["y"]`
+
+5. **Money** - `game_state["RedTeamMoney"]` and `game_state["BlueTeamMoney"]`
+
+6. ****
 
 ## AIAction Format
 
