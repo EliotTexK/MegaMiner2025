@@ -105,7 +105,7 @@ def check_wincon(game_state: GameState):
             r_total_cost = 0
             b_total_cost = 0
 
-            for tower in r_towers:
+            for tower in towers:
                 current_team = tower.team
 
                 if isinstance(tower, House):
