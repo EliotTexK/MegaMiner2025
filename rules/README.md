@@ -1,19 +1,25 @@
 # Rules
 
 ## The Basics
-
 ApocaWarlords is a 2-player tile-based turn-based competitive tower defense game. Think of it as a mix between Clash Royale and Bloons TD Battles. Each player has a Base, which looks like a castle. The objective of the game is for your Base to survive longer than your opponent's ( or equivalently, to DESTROY your opponent's Base ).
 
 "How do I survive?" you're probably asking. Well, as this is a tower defense game, you'll be building Towers to defend your Base. "Defend against what?", you ask? Well, that would be the hired *goons* of your enemy, the Mercenaries. ( Don't worry: you can hire *goons* yourself! ) Oh, and you will also be defending against the endless horde of Demons which are constantly spawning and becoming progressively stronger, until they completely outscale your available space to place defenses! Look on the bright side though, Demons will also be outscaling your enemy.
 
-Defenses and Mercenaries don't come cheap, though. You will need to make money by placing a special type of Tower, the House. If you've ever played Plants vs. Zombies, these are kind of like sunflowers in that game. Be careful not to build too many Houses, though. **With each Tower you build, towers of that type will become 25% more expensive**.
+Defenses and Mercenaries don't come cheap, though. You will need to make money by placing a special type of Tower, the House. If you've ever played Plants vs. Zombies, these are kind of like sunflowers in that game. Be careful not to build too many Houses, though. **With each Tower you build, towers of that type will become 25% more expensive ( rounded down )**.
 
 ## Main Game Loop
-
 ApocaWarlords uses *simultaneous turns*. This means that each turn, both players select their actions at the same time, without communication. After both players select their actions, the game world is updated. This repeats until the game ends.
 
-## Player Action
+## Players
 
+There are two players, the Red player, and the Blue player. Each player has corresponding:
+- Towers
+- Mercenaries
+- Player Base
+- Territory Tiles
+- Money
+
+## Player Action
 Every turn, each player can decide to do any combination of the following, assuming the decision is valid (more on validity below):
 1. Buy a Mercenary
 2. Build *or* Destroy a Tower, but not both!
@@ -26,7 +32,7 @@ When either player buys a Mercenary, they must decide which direction the Mercen
 
 Depending on the map, different directions will be available. For all maps, there will be at least 2 Mercenary starting directions available per player, and at most 4. Maps are symmetric as to make them fair, so both players will always have the same amount of directions to choose from.
 
-A purchase is valid if the following two conditions are true:
+A purchase is valid if the following two conditions hold:
 1. There is a Path Tile 1 unit away from the purchasing player's base in the direction which was selected. ( Mercenaries can only walk on path tiles )
 2. The purchasing player has $20.
 
@@ -34,7 +40,51 @@ A valid Mercenary purchase will cause $20 to be subtracted from the purchasing p
 
 ### Building/Destroying Towers
 
-When either player builds a Tower, they must decide what type of tower to build and where to build it. Available spaces 
+When either player builds a Tower, they must decide what type of tower to build and where to build it. Each Tower type has a base price, and **the price of each type of Tower increases by 25% for each one purchased, rounded down, per player**. So, for example, the first House purchased by the Red player will cost $10, then the second will cost $12. This price increase from $10 to $12 would only effect the Red player, since it was Red who did the buying.
 
+Players must build towers on Territory Tiles corresponding to their own team. The layout of Territory Tiles will be different per map. The layout of Territory Tiles is symmetric as to make the game fair. However, there is no restriction as to where on the map these tiles need to be ( expect some crazy maps ).
+
+A Tower build action is valid if the following three conditions hold:
+1. The selected bulid location is a Territory Tile belonging to the player building the tower
+2. The player has enough money to build the tower
+3. There is no Tower already bulit at the selected location
+
+A valid Tower build action will cause the price of the tower to be subtracted from the building player's total money and cause a Tower to spawn immediately. Towers must wait their full cooldown duration after being first built before they can activate. Building Towers happens after Mercenary purchases, but before the chance to provoke the Demons.
+
+When either player destroys a Tower, they must specify where the tower they want to destroy is. **the base price of the Tower will be refunded**. Destroying a tower does not decrease its price.
 
 ### Provoking the Demons
+
+## Towers
+
+### House
+- Cooldown: 5 turns
+- Base Price: $10
+- Money Produced Per Activation: $12
+
+### Cannon
+- Cooldown: 5 turns
+- Base Price: $10
+- Range (Circular): 3
+- Damage: 5
+
+Special: On hit, does 5 splash damage to Mercenaries/Demons adjacent.
+
+### Crossbow
+- Cooldown: 4 turns
+- Base Price: $8
+- Range (Circular): 5
+- Damage: 4
+
+### Minigun
+- Cooldown: No Cooldown!
+- Base Price: $20
+- Range (Circular): 3
+- Damage: 2
+
+### Church
+- Cooldown: 10 turns
+- Base Price: $15
+- Range (Circular): 3
+
+Buffs Mercenaries on activation. Buffed Mercs get an extra 10 health and deal an extra 10 damage. Buffs stack.

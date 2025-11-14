@@ -70,8 +70,8 @@ def _process_mercenary_purchase(game_state: GameState, action: AIAction, is_red_
         base.mercenary_queued_right += 1
     
     if is_red_player:
-        game_state.money_r -= 20
+        game_state.money_r -= Constants.MERCENARY_PRICE
     else:
-        game_state.money_b -= 20
+        game_state.money_b -= Constants.MERCENARY_PRICE
     
     log_msg(f"{player_name} queued a mercenary in direction {action.merc_direction}")
