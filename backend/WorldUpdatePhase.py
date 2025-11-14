@@ -25,7 +25,7 @@ def world_update_phase(game_state: GameState, provoke_demons: bool):
     if game_state.victory != None: return
 
     update_demons(game_state)
-    mortal_wound_check(game_state, game_state.mercs)
+    mortal_wound_check(game_state, game_state.mercs + game_state.demons)
     game_state.victory = check_wincon(game_state)
     if game_state.victory != None: return
     
