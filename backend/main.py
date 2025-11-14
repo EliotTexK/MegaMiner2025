@@ -15,13 +15,25 @@ def main_game_loop(ai_agent_1, ai_agent_2, game: Game):
         # Get agents' actions
         agent_1_action_string = ""
         if ai_agent_1:
-            # Send game state to agent
-            if game.game_state.turns_remaining < Constants.MAX_TURNS: # avoid sending initial game state twice
-                ai_agent_1.stdin.write(game.game_state_to_json() + "\n--END OF TURN--\n")
-                ai_agent_1.stdin.flush()
-            
-            # Read action from agent
-            agent_1_action_string = ai_agent_1.stdout.readline().strip()
+            try:
+                # Send game state to agent
+                if game.game_state.turns_remaining < Constants.MAX_TURNS:
+                    ai_agent_1.stdin.write(game.game_state_to_json() + "\n--END OF TURN--\n")
+                    ai_agent_1.stdin.flush()
+                
+                # Read action from agent
+                agent_1_action_string = ai_agent_1.stdout.readline().strip()
+                
+                # Check if agent died (readline returns empty string if process ended)
+                if not agent_1_action_string:
+                    log_msg('Agent 1 process died or produced no output!')
+                    # Read stderr to see what went wrong
+                    stderr_output = ai_agent_1.stderr.read()
+                    if stderr_output:
+                        log_msg(f'Agent 1 stderr: {stderr_output}')
+            except Exception as e:
+                log_msg(f'Error reading from Agent 1: {e}')
+                agent_1_action_string = ""
         else:
             # "Human" input from visualizer or other parent process
             agent_1_action_string = input()
@@ -29,18 +41,29 @@ def main_game_loop(ai_agent_1, ai_agent_2, game: Game):
         agent_1_action = AIAction('nothing',0,0)
         try:
             agent_1_action = AIAction.from_json(agent_1_action_string)
-        except:
-            log_msg('Agent 1 produced invalid JSON! Agent 1 forfeits their turn!')
+        except Exception as e:
+            log_msg(f'Agent 1 produced invalid JSON! Agent 1 forfeits their turn! Error: {e}')
 
         agent_2_action_string = ""
         if ai_agent_2:
-            # Send game state to agent
-            if game.game_state.turns_remaining < Constants.MAX_TURNS: # avoid sending initial game state twice
-                ai_agent_2.stdin.write(game.game_state_to_json() + "\n--END OF TURN--\n")
-                ai_agent_2.stdin.flush()
-            
-            # Read action from agent
-            agent_2_action_string = ai_agent_2.stdout.readline().strip()
+            try:
+                # Send game state to agent
+                if game.game_state.turns_remaining < Constants.MAX_TURNS:
+                    ai_agent_2.stdin.write(game.game_state_to_json() + "\n--END OF TURN--\n")
+                    ai_agent_2.stdin.flush()
+                
+                # Read action from agent
+                agent_2_action_string = ai_agent_2.stdout.readline().strip()
+                
+                # Check if agent died
+                if not agent_2_action_string:
+                    log_msg('Agent 2 process died or produced no output!')
+                    stderr_output = ai_agent_2.stderr.read()
+                    if stderr_output:
+                        log_msg(f'Agent 2 stderr: {stderr_output}')
+            except Exception as e:
+                log_msg(f'Error reading from Agent 2: {e}')
+                agent_2_action_string = ""
         else:
             # "Human" input from visualizer or other parent process
             agent_2_action_string = input()
@@ -48,8 +71,8 @@ def main_game_loop(ai_agent_1, ai_agent_2, game: Game):
         agent_2_action = AIAction('nothing',0,0)
         try:
             agent_2_action = AIAction.from_json(agent_2_action_string)
-        except:
-            log_msg('Agent 2 produced invalid JSON! Agent 2 forfeits their turn!')
+        except Exception as e:
+            log_msg(f'Agent 2 produced invalid JSON! Agent 2 forfeits their turn! Error: {e}')
 
         # Run the next turn
         game.run_turn(agent_1_action, agent_2_action)
@@ -149,24 +172,33 @@ if __name__ == '__main__':
     # Create AI agents
     ai_agent_1 = None
     if not cmd_line_args.agent_1_is_human:
-        ai_agent_1 = subprocess.Popen(
-            [sys.executable, cmd_line_args.ai_agent_file_1],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            bufsize=1
-        )
+        try:
+            ai_agent_1 = subprocess.Popen(
+                [sys.executable, cmd_line_args.ai_agent_file_1],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1
+            )
+        except Exception as e:
+            print(f"Failed to start Agent 1: {e}")
+            exit(1)
+            
     ai_agent_2 = None
     if not cmd_line_args.agent_2_is_human:
-        ai_agent_2 = subprocess.Popen(
-            [sys.executable, cmd_line_args.ai_agent_file_2],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            bufsize=1
-        )
+        try:
+            ai_agent_2 = subprocess.Popen(
+                [sys.executable, cmd_line_args.ai_agent_file_2],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                bufsize=1
+            )
+        except Exception as e:
+            print(f"Failed to start Agent 2: {e}")
+            exit(1)
 
     # Initialize the game
     game = Game(map_json_file_path = cmd_line_args.map_json_file)
@@ -174,17 +206,39 @@ if __name__ == '__main__':
     # Send initial game state to agents, then get team names
     team_name_r = ""
     if ai_agent_1:
-        ai_agent_1.stdin.write("--YOU ARE RED--\n")
-        ai_agent_1.stdin.write(game.game_state_to_json() + "\n--END INITIAL GAME STATE--\n")
-        team_name_r = ai_agent_1.stdout.readline().strip()
+        try:
+            ai_agent_1.stdin.write("--YOU ARE RED--\n")
+            ai_agent_1.stdin.write(game.game_state_to_json() + "\n--END INITIAL GAME STATE--\n")
+            ai_agent_1.stdin.flush()
+            team_name_r = ai_agent_1.stdout.readline().strip()
+            if not team_name_r:
+                log_msg('Agent 1 failed to provide team name!')
+                stderr_output = ai_agent_1.stderr.read()
+                if stderr_output:
+                    log_msg(f'Agent 1 stderr: {stderr_output}')
+                team_name_r = "Agent 1 (Red) - ERROR"
+        except Exception as e:
+            log_msg(f'Error initializing Agent 1: {e}')
+            team_name_r = "Agent 1 (Red) - ERROR"
     else:
         team_name_r = "Human Player (Red)"
     
     team_name_b = ""
     if ai_agent_2:
-        ai_agent_2.stdin.write("--YOU ARE BLUE--\n")
-        ai_agent_2.stdin.write(game.game_state_to_json() + "\n--END INITIAL GAME STATE--\n")
-        team_name_b = ai_agent_2.stdout.readline().strip()
+        try:
+            ai_agent_2.stdin.write("--YOU ARE BLUE--\n")
+            ai_agent_2.stdin.write(game.game_state_to_json() + "\n--END INITIAL GAME STATE--\n")
+            ai_agent_2.stdin.flush()
+            team_name_b = ai_agent_2.stdout.readline().strip()
+            if not team_name_b:
+                log_msg('Agent 2 failed to provide team name!')
+                stderr_output = ai_agent_2.stderr.read()
+                if stderr_output:
+                    log_msg(f'Agent 2 stderr: {stderr_output}')
+                team_name_b = "Agent 2 (Blue) - ERROR"
+        except Exception as e:
+            log_msg(f'Error initializing Agent 2: {e}')
+            team_name_b = "Agent 2 (Blue) - ERROR"
     else:
         team_name_b = "Human Player (Blue)"
 
