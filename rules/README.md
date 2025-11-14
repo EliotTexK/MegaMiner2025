@@ -108,7 +108,7 @@ Buffs all Mercenaries in range on activation. Buffed Mercs get an extra 10 healt
 
 
 ## Win Conditions
-The most standard way to win the game is by one players dealing 200 damage to the rival players's base, thereby destroying it. However, if both players's bases are still standing by turn 300, ends via timeout and the winner is determined by the following series of checks, in order of priority:
+The most standard way to win the game is by one players dealing 200 damage to the rival players's base, thereby destroying it. However, if both players's bases are still standing by turn 300, the game ends via timeout and the winner is determined by the following series of checks, in order of priority:
 
 1. If no base has been destroyed, the player with the most money wins.
 2. If both players have the same amount of money, the player with the most towers wins.
