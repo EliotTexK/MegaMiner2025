@@ -109,7 +109,6 @@ func _on_human_ai_select_back() -> void:
 	main_menu.visible = true
 	human_ai_select.visible = false
 
-
 func _on_right_side_states_action(is_player1: bool, build: String, x: int, y: int, tower_to_build: String, merc_direction: String) -> void:
 	if tower_to_build == "skip" and is_player1:
 		action.emit(is_player1, build, x, y, tower_to_build, merc_direction)
@@ -142,3 +141,9 @@ func on_next_turn():
 	$"Game UI/LeftSideStates"._on_next_turn()
 	$"Game UI/RightSideStates"._on_next_turn()
 	
+
+# postgame back button
+func _on_back_button_pressed():
+	#game_ui.visible = false
+	#human_ai_select.visible = true
+	get_tree().change_scene_to_file("res://game.tscn")
