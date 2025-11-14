@@ -51,11 +51,11 @@ A Tower build action is valid if the following three conditions hold:
 
 A valid Tower build action will cause the price of the tower to be subtracted from the building player's total money and cause a Tower to spawn immediately. Towers must wait their full cooldown duration after being first built before they can activate. Building Towers happens after Mercenary purchases, but before the chance to provoke the Demons.
 
-When either player destroys a Tower, they must specify where the tower they want to destroy is. **the base price of the Tower will be refunded**.
+When either player destroys a Tower, they must specify where the tower they want to destroy is. **the base price of the Tower will be refunded**. Destroying a tower does not decrease its price.
 
 ### Provoking the Demons
 
-## Tower Stats
+## Towers
 
 ### House
 - Cooldown: 5 turns
@@ -68,7 +68,23 @@ When either player destroys a Tower, they must specify where the tower they want
 - Range (Circular): 3
 - Damage: 5
 
+Special: On hit, does 5 splash damage to Mercenaries/Demons adjacent.
+
+### Crossbow
+- Cooldown: 4 turns
+- Base Price: $8
+- Range (Circular): 5
+- Damage: 4
+
 ### Minigun
 - Cooldown: No Cooldown!
 - Base Price: $20
 - Range (Circular): 3
+- Damage: 2
+
+### Church
+- Cooldown: 10 turns
+- Base Price: $15
+- Range (Circular): 3
+
+Buffs Mercenaries on activation. Buffed Mercs get an extra 10 health and deal an extra 10 damage. Buffs stack.
