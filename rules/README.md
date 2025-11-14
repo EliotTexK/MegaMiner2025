@@ -68,7 +68,7 @@ If a mercenary's path is blocked by a friendly mercenary, it will choose to wait
 
 After all merceneraries have acted, all mercenaries and demons on the board with 0 or less Health will be removed from the game.
 
-By default, mercenaries deal 20 damage and have 25 health.
+By default, mercenaries deal 15 damage and have 20 health.
 
 ### Demon Turn
 After the Mercenary Turn, all demons on the board will choose to either move forward or attack. A demon chooses to move forward if the two path tiles in front of it are empty. If a mercenary, player base, or another demon block the path, the demon will deal damage to them.
