@@ -406,7 +406,7 @@ icon = ExtResource("7_irxef")
 layout_mode = 2
 tooltip_text = "Queue up a Mercenary to be sent next turn!"
 theme_override_constants/icon_max_width = 64
-text = "$20"
+text = "$10"
 icon = ExtResource("8_e2l4f")
 
 [node name="Build OPtions" type="HBoxContainer" parent="Game UI/LeftSideStates/Human Control"]
@@ -643,7 +643,7 @@ icon = ExtResource("7_irxef")
 layout_mode = 2
 tooltip_text = "Queue up a Mercenary to be sent next turn!"
 theme_override_constants/icon_max_width = 64
-text = "$20"
+text = "$10"
 icon = ExtResource("17_nvb2n")
 
 [node name="Build OPtions" type="HBoxContainer" parent="Game UI/RightSideStates/Human Control"]
