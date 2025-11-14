@@ -354,7 +354,7 @@ func _draw_towers(data_towers : Array):
 			cooldownLabel.text = str(int(tower["Cooldown"]))
 			cooldownLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			cooldownLabel.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			#cooldownLabel.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
+			cooldownLabel.scale *= 0.8
 			parentNode.add_child(cooldownLabel)
 			cooldownLabel.global_position = parentNode.global_position
 						
@@ -388,7 +388,7 @@ func _draw_towers(data_towers : Array):
 				tween.set_trans(Tween.TRANS_QUAD)
 				for target in tower["Targets"]:
 					var theta = atan2((target[1] - tower["y"]), (target[0] - tower["x"])) + (PI * 0.5)
-					tween.tween_property(child.get_child(1), "rotation", theta, turn_interval_max / 2.0)
+					tween.tween_property(child.get_child(0), "rotation", theta, turn_interval_max / 2.0)
 					#tween.tween_property(child.get_child(0), "rotation", -theta, turn_interval_max / 2.0)
 					if child is Crossbow:
 						tween.tween_callback(child.shoot.bind(turn_interval_max / 2))

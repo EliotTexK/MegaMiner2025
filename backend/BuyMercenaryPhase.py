@@ -1,6 +1,7 @@
 from GameState import GameState
 from AIAction import AIAction
 from Utils import log_msg
+import Constants
 
 # Phase 2: Buy Mercenaries
 
