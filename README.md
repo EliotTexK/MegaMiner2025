@@ -108,3 +108,8 @@ See the `AIAction` class at the top of `ExampleAgentRuleBased.py`.
 
 ## How to Play as a Human
 
+The visualizer provides a UI which allows the user to manually play the game as a human. In order to use this feature, select the button labeled "Human" on the AI selection screen and enter a name.
+
+During the game, all buttons in the UI have tooltips which can be seen by hovering over them with the mouse. It is recommended to view all these tooltips to understand what UI buttons correspond to which game action.
+
+*NOTE: While playing as a human, the `S` key acts as a hotkey for the Pass Turn button. If both players are humans, this will pass both player's turns.*
