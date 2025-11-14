@@ -87,4 +87,4 @@ Special: On hit, does 5 splash damage to Mercenaries/Demons adjacent.
 - Base Price: $15
 - Range (Circular): 3
 
-Buffs Mercenaries on activation. Buffed Mercs get an extra 10 health and deal an extra 10 damage. Buffs stack.
+Buffs all Mercenaries in range on activation. Buffed Mercs get an extra 10 health and deal an extra 10 damage. Buffs stack.
