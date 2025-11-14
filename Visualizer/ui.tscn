@@ -725,8 +725,26 @@ label_settings = SubResource("LabelSettings_sosvr")
 horizontal_alignment = 1
 autowrap_mode = 2
 
+[node name="BackButton" type="Button" parent="Game UI/Scroll"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -592.0
+offset_top = -320.0
+offset_right = -432.0
+offset_bottom = -256.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.827451, 0.768627, 0.603922, 1)
+theme_override_fonts/font = ExtResource("5_gs482")
+theme_override_font_sizes/font_size = 52
+text = "Back"
+
 [connection signal="PlayGame" from="Main Menu" to="." method="_on_main_menu_play_game"]
 [connection signal="Back" from="Human AI select" to="." method="_on_human_ai_select_back"]
 [connection signal="Go" from="Human AI select" to="." method="_on_human_ai_select_go"]
 [connection signal="action" from="Game UI/LeftSideStates" to="." method="_on_right_side_states_action"]
 [connection signal="action" from="Game UI/RightSideStates" to="." method="_on_right_side_states_action"]
+[connection signal="pressed" from="Game UI/Scroll/BackButton" to="." method="_on_back_button_pressed"]

@@ -70,6 +70,10 @@ var stderr : FileAccess
 signal next_turn
 
 func _ready():
+	#for p: Node2D in [tiles, mercenaries, towers, demons, misc_entities, spawners]:
+		#for n in p.get_children():
+			#p.remove_child(n)
+			#n.queue_free() 
 	UI.action.connect(_on_ui_action)
 	next_turn.connect(UI.on_next_turn)
 
