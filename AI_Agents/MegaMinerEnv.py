@@ -160,10 +160,10 @@ class raw_env(AECEnv):
         my_base = base_r if is_red_agent else base_b
         opp_base = base_b if is_red_agent else base_r
         map_view[my_base.y, my_base.x, 1] = 4
-        map_view[my_base.y, my_base.x, 2] = my_base.health / Constants.PLAYER_BASE_INITIAL_health if Constants.PLAYER_BASE_INITIAL_health > 0 else 0
+        map_view[my_base.y, my_base.x, 2] = my_base.health / Constants.PLAYER_BASE_INITIAL_HEALTH if Constants.PLAYER_BASE_INITIAL_HEALTH > 0 else 0
         map_view[my_base.y, my_base.x, 3] = 1
         map_view[opp_base.y, opp_base.x, 1] = 4
-        map_view[opp_base.y, opp_base.x, 2] = opp_base.health / Constants.PLAYER_BASE_INITIAL_health if Constants.PLAYER_BASE_INITIAL_health > 0 else 0
+        map_view[opp_base.y, opp_base.x, 2] = opp_base.health / Constants.PLAYER_BASE_INITIAL_HEALTH if Constants.PLAYER_BASE_INITIAL_HEALTH > 0 else 0
         map_view[opp_base.y, opp_base.x, 3] = -1
 
         # --- Vector Features ---
@@ -179,9 +179,9 @@ class raw_env(AECEnv):
 
         # Normalize vector features
         vector_features[0] /= 1000
-        vector_features[1] /= Constants.PLAYER_BASE_INITIAL_health if Constants.PLAYER_BASE_INITIAL_health > 0 else 1
+        vector_features[1] /= Constants.PLAYER_BASE_INITIAL_HEALTH if Constants.PLAYER_BASE_INITIAL_HEALTH > 0 else 1
         vector_features[2] /= 1000
-        vector_features[3] /= Constants.PLAYER_BASE_INITIAL_health if Constants.PLAYER_BASE_INITIAL_health > 0 else 1
+        vector_features[3] /= Constants.PLAYER_BASE_INITIAL_HEALTH if Constants.PLAYER_BASE_INITIAL_HEALTH > 0 else 1
         vector_features[4] /= Constants.MAX_TURNS if Constants.MAX_TURNS > 0 else 1
         
         # --- Flatten and Concatenate ---
