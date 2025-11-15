@@ -34,8 +34,8 @@ def _process_mercenary_purchase(game_state: GameState, action: AIAction, is_red_
         return
 
     # Check if player has enough money
-    if money < 20:
-        log_msg(f"{player_name} tried to buy a merc, but had no money")
+    if money < Constants.MERCENARY_PRICE:
+        log_msg(f"{player_name} tried to buy a merc, but had not enough money")
         return
     
     # Direction offsets: (dy, dx) since coordinates are (y, x) in tile_grid
