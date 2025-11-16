@@ -29,6 +29,7 @@ def provoke_demons_phase(game_state: GameState, ai_action_r: AIAction, ai_action
         log_msg('Both teams provoked the demons at the same time. All demons are wiped from the map!!!')
         for demon in game_state.demons:
             demon.state = 'dead'
+            game_state.entity_grid[demon.y][demon.x] = None
         return False
     
     if provoked_b:
