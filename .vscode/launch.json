@@ -11,9 +11,9 @@
             "args": [
                 "${workspaceFolder}/maps/map2.json",
                 "-a1",
-                "${workspaceFolder}/AI_Agents/teamAlpha.py",
+                "${workspaceFolder}/AI_Agents/AidenButerAgent.py",
                 "-a2",
-                "${workspaceFolder}/AI_Agents/teamAlpha.py"
+                "${workspaceFolder}/AI_Agents/AidenButerAgent.py"
             ]
         },
         {
