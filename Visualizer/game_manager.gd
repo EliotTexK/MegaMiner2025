@@ -413,6 +413,24 @@ func _draw_towers(data_towers : Array):
 
 func _draw_demons(dem_array : Array, prev_array : Array):
 	var count = 0
+	# check if demons that existed last state don't exist this state and kill them
+	for dem in prev_array:
+		var next_dem = null
+		for _dem in dem_array:
+			if (_dem["Name"] == dem["Name"]):
+				next_dem = _dem
+				break
+		# find node associated with nonexistent demon and kill it
+		if (next_dem == null):
+			var child = null
+			for n: RedMerc in demons.get_children():
+				if (n.str_name == dem["Name"]):
+					child = n
+					break
+			if (child != null):
+				child.reparent(world)
+				child.die(turn_interval_max, BLOOD_SPLATTER_FX)
+			
 	for dem in dem_array:
 		# find previous state of this dem
 		var prev_dem = null
