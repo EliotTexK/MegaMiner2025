@@ -1,6 +1,5 @@
 extends Node2D
 
-
 const BLOOD_SPLATTER_FX = preload("res://objects/big_blood_splatter.tscn")
 const HIT_SPARK_FX = preload("res://objects/sparks.tscn")
 
@@ -13,7 +12,6 @@ const RED_RECRUIT = preload("res://objects/redmerc.tscn")
 
 const ENEMY = preload("res://objects/demon.tscn")
 const ENEMY_SPAWNER = preload("res://Assets/HD_Skin/enemy_spawner.png")
-
 
 const CROSSBOW = preload("res://Assets/HD_Skin/crossbow/crossbow.png")
 const CANNON = preload("res://Assets/HD_Skin/cannon/cannon.png")
@@ -46,13 +44,18 @@ var is_player2_ai : bool
 var play1ready : bool = false
 var play2ready : bool = false
 
-var initial : bool  = true
+var initial : bool = true
 
 var backend_running : bool = false
 
 var turn_interval_max : float = 0.6 
 var turn_interval : float = 0
 var path_to_game_state
+
+# UID tracking dictionaries - map entity Name (UID) to scene node
+var mercenary_nodes : Dictionary = {}  # {uid: Node}
+var tower_nodes : Dictionary = {}      # {uid: Node}
+var demon_nodes : Dictionary = {}      # {uid: Node}
 
 @onready var world: Node2D = $World
 @onready var tiles = $World/Tiles
@@ -70,10 +73,6 @@ var stderr : FileAccess
 signal next_turn
 
 func _ready():
-	#for p: Node2D in [tiles, mercenaries, towers, demons, misc_entities, spawners]:
-		#for n in p.get_children():
-			#p.remove_child(n)
-			#n.queue_free() 
 	UI.action.connect(_on_ui_action)
 	next_turn.connect(UI.on_next_turn)
 
@@ -118,7 +117,6 @@ func _on_ui_start_game(is_ai1, is_ai2):
 		if is_ai1 and is_ai2:
 			first_turn = stdio.get_line() #First turn
 	
-	
 		_draw_game_from_gamestate(content)
 		if is_ai1 and is_ai2:
 			await get_tree().create_timer(2.0).timeout
@@ -132,6 +130,7 @@ func _draw_game_from_gamestate(game_state : String):
 	var game_state_json = JSON.parse_string(game_state)
 	current_game_state = game_state_json
 	next_turn.emit()
+	
 	if initial:
 		previous_game_state = current_game_state
 		_draw_grid(game_state_json["FloorTiles"])
@@ -140,21 +139,17 @@ func _draw_game_from_gamestate(game_state : String):
 		
 		## Setting up castles
 		var castle = Sprite2D.new()
-		
 		castle.texture = RED_CASTLE
-		castle.scale.x = 32 /  RED_CASTLE.get_size().x
+		castle.scale.x = 32 / RED_CASTLE.get_size().x
 		castle.scale.y = 32 / RED_CASTLE.get_size().y
-		
 		castle.position = Vector2(game_state_json["PlayerBaseR"]["x"] * 32, game_state_json["PlayerBaseR"]["y"] * 32) + Vector2(0,-5)
 		castle.y_sort_enabled = true
 		misc_entities.add_child(castle)
 		
 		var castle_b = Sprite2D.new()
-		
 		castle_b.texture = BLUE_CASTLE
-		castle_b.scale.x = 32 /  castle_b.texture.get_size().x
+		castle_b.scale.x = 32 / castle_b.texture.get_size().x
 		castle_b.scale.y = 32 / castle_b.texture.get_size().y
-		
 		castle_b.position = Vector2(game_state_json["PlayerBaseB"]["x"] * 32, game_state_json["PlayerBaseB"]["y"] * 32) + Vector2(0,-5)
 		castle_b.y_sort_enabled = true
 		misc_entities.add_child(castle_b)
@@ -163,7 +158,7 @@ func _draw_game_from_gamestate(game_state : String):
 		for spawner in game_state_json["DemonSpawners"]:
 			var sprite = Sprite2D.new() 
 			sprite.texture = ENEMY_SPAWNER
-			sprite.scale.x = 32 /  ENEMY_SPAWNER.get_size().x
+			sprite.scale.x = 32 / ENEMY_SPAWNER.get_size().x
 			sprite.scale.y = 32 / ENEMY_SPAWNER.get_size().y
 			sprite.position = Vector2(spawner.x * 32, spawner.y * 32)
 			sprite.z_index = 1
@@ -199,7 +194,7 @@ func _draw_game_from_gamestate(game_state : String):
 		(spark as GPUParticles2D).emitting = true
 		
 	_draw_mercenaries(game_state_json["Mercenaries"], previous_game_state["Mercenaries"])
-	_draw_towers(game_state_json["Towers"])
+	_draw_towers(game_state_json["Towers"], previous_game_state.get("Towers", []))
 	_draw_demons(game_state_json["Demons"], previous_game_state["Demons"])
 	_update_ui(game_state_json)
 
@@ -236,13 +231,11 @@ func _draw_grid(tile_grid : Array):
 				var underneath = UNDERNEATH_TILE.instantiate()
 				underneath.position = sprite.position + Vector2(0,48)
 				tiles.add_child(underneath)
-				
 			
 			alt_x = !alt_x
 			
 		layer_y += 1
 		alt_y = !alt_y
-	
 	
 	world.offset.x = (get_viewport_rect().size.x - (tile_grid[0].length() * 32)) / 2
 	world.offset.y = (get_viewport_rect().size.y - (tile_grid.size() * 32)) / 2
@@ -251,65 +244,93 @@ func _draw_grid(tile_grid : Array):
 	
 	GlobalPaths.tile_grid = tiles
 
-#func _delete_mercs():
-	#for i in mercenaries.get_children():
-		#i.queue_free()
 
-# Draws the mercanaries
-func _draw_mercenaries(mercs : Array, prev_mercs: Array):
-	#print(mercs)
-	var count = 0
+# Helper function to find entity data by UID
+func _find_entity_by_uid(entities: Array, uid: String) -> Dictionary:
+	for entity in entities:
+		if entity["Name"] == uid:
+			return entity
+	return {}
+
+
+# Draws the mercenaries using UID tracking
+func _draw_mercenaries(mercs: Array, prev_mercs: Array):
+	var current_uids = {}
+	
 	for merc in mercs:
-		# find previous state of this merc
-		var prev_merc = null
-		for _merc in prev_mercs:
-			if (_merc["Name"] == merc["Name"]):
-				prev_merc = _merc
-				break
-				
-		if mercenaries.get_child_count() - 1 < count:
+		var uid = merc["Name"]
+		current_uids[uid] = true
+		var prev_merc = _find_entity_by_uid(prev_mercs, uid)
+		
+		# Create new mercenary if doesn't exist
+		if not mercenary_nodes.has(uid):
 			var pos = Vector2(merc["x"] * 32, merc["y"] * 32)
-			var sprite : RedMerc
+			var sprite: RedMerc
+			
 			if merc["Team"] == "b":
 				sprite = BLUE_RECRUIT.instantiate()
-				
 			else:
 				sprite = RED_RECRUIT.instantiate()
 				
 			sprite.position = pos
+			sprite.str_name = uid
 			mercenaries.add_child(sprite)
-		else:
-			var child : RedMerc = mercenaries.get_child(count)
-			
-			if merc["Team"] == 'r':
-				child._update_values(merc["Name"], merc["Health"])
-			
-			if merc["State"] == "dead":
-				child.reparent(world)
-				child.die(turn_interval_max, BLOOD_SPLATTER_FX)
-				count -= 1
-			elif merc["State"] == "moving":
-				var tween = get_tree().create_tween()
-				child.move(child.position - Vector2(merc["x"] * 32, merc["y"] * 32))
-				tween.tween_property(child, "position", Vector2(merc["x"] * 32, merc["y"] * 32), turn_interval_max)
-				tween.tween_callback(child.idle)
-			else:
-					child.attack(Vector2(1,0))
-					
-			if (prev_merc && merc["Health"] < prev_merc["Health"] && is_instance_valid(child)):
-				child.hurt()
+			mercenary_nodes[uid] = sprite
 		
-		count += 1
-
-func _draw_towers(data_towers : Array):
-	print(data_towers)
+		# Update existing mercenary
+		var node: RedMerc = mercenary_nodes[uid]
+		
+		if not is_instance_valid(node):
+			mercenary_nodes.erase(uid)
+			continue
+			
+		if merc["Team"] == 'r':
+			node._update_values(merc["Name"], merc["Health"])
+		
+		# Handle death
+		if merc["State"] == "dead":
+			node.reparent(world)
+			node.die(turn_interval_max, BLOOD_SPLATTER_FX)
+			mercenary_nodes.erase(uid)
+			
+		# Handle movement
+		elif merc["State"] == "moving":
+			var tween = get_tree().create_tween()
+			node.move(node.position - Vector2(merc["x"] * 32, merc["y"] * 32))
+			tween.tween_property(node, "position", Vector2(merc["x"] * 32, merc["y"] * 32), turn_interval_max)
+			tween.tween_callback(node.idle)
+			
+		# Handle attack
+		else:
+			node.attack(Vector2(1, 0))
+		
+		# Handle damage
+		if prev_merc and merc["Health"] < prev_merc["Health"]:
+			node.hurt()
 	
-	var count = 0
+	# Remove mercenaries that no longer exist
+	for uid in mercenary_nodes.keys():
+		if not current_uids.has(uid):
+			var node = mercenary_nodes[uid]
+			if is_instance_valid(node):
+				node.reparent(world)
+				node.die(turn_interval_max, BLOOD_SPLATTER_FX)
+			mercenary_nodes.erase(uid)
+
+
+func _draw_towers(data_towers: Array, prev_towers: Array):
+	var current_uids = {}
+	
 	for tower in data_towers:
-		if towers.get_child_count() - 1 < count:
+		var uid = tower["Name"]
+		current_uids[uid] = true
+		var prev_tower = _find_entity_by_uid(prev_towers, uid)
+		
+		# Create new tower if doesn't exist
+		if not tower_nodes.has(uid):
 			var pos = Vector2(tower["x"] * 32, tower["y"] * 32)
-			var sprite : Sprite2D
-			var makeStruts : bool = false
+			var sprite: Sprite2D
+			var makeStruts: bool = false
 			
 			match tower["Type"]:
 				"Crossbow":
@@ -317,19 +338,19 @@ func _draw_towers(data_towers : Array):
 					sprite.texture = CROSSBOW if tower["Team"] == "r" else BLUE_CROSSBOW
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
 					sprite.y_sort_enabled = true
-					makeStruts = true;
+					makeStruts = true
 				"Cannon":
 					sprite = Sprite2D.new()
 					sprite.texture = CANNON if tower["Team"] == "r" else BLUE_CANNON
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
 					sprite.y_sort_enabled = true
-					makeStruts = true;
+					makeStruts = true
 				"Minigun":
 					sprite = Sprite2D.new()
 					sprite.texture = GATLING if tower["Team"] == "r" else BLUE_GATLING
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
 					sprite.y_sort_enabled = true
-					makeStruts = true;
+					makeStruts = true
 				"House":
 					sprite = Sprite2D.new()
 					sprite.texture = HOUSE if tower["Team"] == "r" else BLUE_HOUSE
@@ -341,138 +362,162 @@ func _draw_towers(data_towers : Array):
 					sprite.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
 					sprite.y_sort_enabled = true
 			
-			##sprite = CROSSBOW.instantiate()
-			var parentNode: Node2D = Node2D.new();
-			parentNode.name = tower["Name"]
+			var parentNode: Node2D = Node2D.new()
+			parentNode.name = uid
 			parentNode.position = pos + Vector2(0, -5)
-			sprite.name = tower["Name"] + "Sprite"
-			#sprite.position = pos + Vector2(0,-5)
+			sprite.name = "Sprite"
 			parentNode.add_child(sprite)
 			towers.add_child(parentNode)
 			
 			var cooldownLabel: Label = Label.new()
+			cooldownLabel.name = "CooldownLabel"
 			cooldownLabel.text = str(int(tower["Cooldown"]))
 			cooldownLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			cooldownLabel.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			cooldownLabel.scale *= 0.8
 			parentNode.add_child(cooldownLabel)
 			cooldownLabel.global_position = parentNode.global_position
-						
-			if (makeStruts):
+			
+			if makeStruts:
 				var strut1 = Sprite2D.new()
+				strut1.name = "Struts"
 				strut1.scale = Vector2(32 / sprite.texture.get_size().x, 32 / sprite.texture.get_size().y)
 				strut1.texture = STRUTS if tower["Team"] == "r" else BLUE_STRUTS
 				parentNode.add_child(strut1)
-				#strut1.reparent(towerStands)
 				strut1.z_index = -1
 				strut1.global_position = sprite.global_position
-		else:
-			var child = towers.get_child(count)
-			var prev_tower = null
-			if len(previous_game_state["Towers"]) > 0:
-				prev_tower = previous_game_state["Towers"][count]
 			
-			while (child.name != tower["Name"]):
-				child.free()
-				if count >= towers.get_child_count():
-					child = null
-					break
-				child = towers.get_child(count)
-			
-			if child == null:
-				continue
-			
-			(child.get_child(1) as Label).text = str(int(tower["Cooldown"]))
-			if tower["Type"] != "Church":
-				var tween = get_tree().create_tween()
-				tween.set_trans(Tween.TRANS_QUAD)
-				for target in tower["Targets"]:
-					var theta = atan2((target[1] - tower["y"]), (target[0] - tower["x"])) + (PI * 0.5)
-					tween.tween_property(child.get_child(0), "rotation", theta, turn_interval_max / 2.0)
-					#tween.tween_property(child.get_child(0), "rotation", -theta, turn_interval_max / 2.0)
-					if child is Crossbow:
-						tween.tween_callback(child.shoot.bind(turn_interval_max / 2))
-						
-			
-			
-			# darken tower based on cooldown
-			var c : float = max (2.718 ** (-tower["Cooldown"] * 0.3), 0.4)
-			child.get_child(0).self_modulate = Color(c, c, c, 1.0)
-			child.get_child(0).self_modulate.a = 1
-			
-			# animate towers being "activated" based on cooldown
-			if (prev_tower && prev_tower["Cooldown"] == 0 && tower["Cooldown"] != 0):
-				var sprite = child.get_child(0)
-				var tween = get_tree().create_tween()
-				tween.set_trans(Tween.TRANS_BOUNCE)
-				tween.tween_property(sprite, "scale", sprite.scale, turn_interval_max / 2.0)
-				sprite.scale *= 1.1
-			
-		count += 1
+			tower_nodes[uid] = parentNode
+		
+		# Update existing tower
+		var node: Node2D = tower_nodes[uid]
+		
+		if not is_instance_valid(node):
+			tower_nodes.erase(uid)
+			continue
+		
+		var sprite_node = node.get_node("Sprite")
+		var label_node = node.get_node("CooldownLabel") as Label
+		
+		# Update cooldown label
+		label_node.text = str(int(tower["Cooldown"]))
+		
+		# Handle targeting and rotation
+		if tower["Type"] != "Church" and tower["Targets"].size() > 0:
+			var tween = get_tree().create_tween()
+			tween.set_trans(Tween.TRANS_QUAD)
+			for target in tower["Targets"]:
+				var theta = atan2((target[1] - tower["y"]), (target[0] - tower["x"])) + (PI * 0.5)
+				tween.tween_property(sprite_node, "rotation", theta, turn_interval_max / 2.0)
+				if node is Crossbow:
+					tween.tween_callback(node.shoot.bind(turn_interval_max / 2))
+		
+		# Darken tower based on cooldown
+		var c: float = max(2.718 ** (-tower["Cooldown"] * 0.3), 0.4)
+		sprite_node.self_modulate = Color(c, c, c, 1.0)
+		
+		# Animate towers being "activated" based on cooldown
+		if prev_tower and prev_tower["Cooldown"] == 0 and tower["Cooldown"] != 0:
+			var tween = get_tree().create_tween()
+			tween.set_trans(Tween.TRANS_BOUNCE)
+			tween.tween_property(sprite_node, "scale", sprite_node.scale, turn_interval_max / 2.0)
+			sprite_node.scale *= 1.1
+	
+	# Remove towers that no longer exist
+	for uid in tower_nodes.keys():
+		if not current_uids.has(uid):
+			var node = tower_nodes[uid]
+			if is_instance_valid(node):
+				node.queue_free()
+			tower_nodes.erase(uid)
 
 
-func _draw_demons(dem_array : Array, prev_array : Array):
-	var count = 0
-	# check if demons that existed last state don't exist this state and kill them
-	for dem in prev_array:
-		var next_dem = null
-		for _dem in dem_array:
-			if (_dem["Name"] == dem["Name"]):
-				next_dem = _dem
-				break
-		# find node associated with nonexistent demon and kill it
-		if (next_dem == null):
-			var child = null
-			for n: RedMerc in demons.get_children():
-				if (n.str_name == dem["Name"]):
-					child = n
-					break
-			if (child != null):
-				child.reparent(world)
-				child.die(turn_interval_max, BLOOD_SPLATTER_FX)
-			
+func _draw_demons(dem_array: Array, prev_array: Array):
+	# Build a set of current UIDs for quick lookup
+	var current_uids = {}
 	for dem in dem_array:
-		# find previous state of this dem
-		var prev_dem = null
-		for _dem in prev_array:
-			if (_dem["Name"] == dem["Name"]):
-				prev_dem = _dem
-				break
-				
-		if prev_dem == null:
+		current_uids[dem["Name"]] = true
+	
+	# Clean up demons that no longer exist in the current state
+	var uids_to_remove = []
+	for uid in demon_nodes.keys():
+		if not current_uids.has(uid):
+			uids_to_remove.append(uid)
+	
+	for uid in uids_to_remove:
+		var node = demon_nodes[uid]
+		if is_instance_valid(node):
+			node.queue_free()  # Immediately free instead of reparenting
+		demon_nodes.erase(uid)
+	
+	# Process each demon in current state
+	for dem in dem_array:
+		var uid = dem["Name"]
+		var prev_dem = _find_entity_by_uid(prev_array, uid)
+		
+		# Check if this demon just died
+		var just_died = false
+		if prev_dem:
+			# Demon died if it wasn't dead before but is dead now, OR if it no longer exists next turn
+			just_died = (prev_dem.get("State", "") != "dead" and dem["State"] == "dead")
+		
+		# If demon just died, play death animation and remove
+		if just_died:
+			if demon_nodes.has(uid):
+				var node = demon_nodes[uid]
+				if is_instance_valid(node):
+					node.reparent(world)
+					node.die(turn_interval_max, BLOOD_SPLATTER_FX)
+				demon_nodes.erase(uid)
+			continue
+		
+		# Skip demons that are already dead (shouldn't create visuals for them)
+		if dem["State"] == "dead":
+			if demon_nodes.has(uid):
+				var node = demon_nodes[uid]
+				if is_instance_valid(node):
+					node.queue_free()
+				demon_nodes.erase(uid)
+			continue
+		
+		# Create new demon if it doesn't exist and isn't dead
+		if not demon_nodes.has(uid):
 			var pos = Vector2(dem["x"] * 32, dem["y"] * 32)
-			var demon_obj : RedMerc = ENEMY.instantiate()
+			var demon_obj: RedMerc = ENEMY.instantiate()
+			
 			if dem["Team"] == "b":
 				demon_obj.sprite_anim.flip_h = false
 			else:
 				demon_obj.sprite_anim.flip_h = true
 			
 			demon_obj.position = pos
-			demon_obj.str_name = dem["Name"]
+			demon_obj.str_name = uid
 			demons.add_child(demon_obj)
-		else:
-					
-			var child = null
-			for n: RedMerc in demons.get_children():
-				if (n.str_name == dem["Name"]):
-					child = n
-					break
-			if dem["State"] == "dead" || prev_dem["State"] == "dead":
-				child.reparent(world)
-				child.die(turn_interval_max, BLOOD_SPLATTER_FX)
-				count -= 1		
-			elif dem["State"] == "moving":
-				var tween = get_tree().create_tween()
-				child.move(child.position - Vector2(dem["x"] * 32, dem["y"] * 32))
-				tween.tween_property(child, "position", Vector2(dem["x"] * 32, dem["y"] * 32), turn_interval_max)
-				tween.tween_callback(child.idle)
-			else:
-				child.attack(Vector2(1,0))
-				
-			if (prev_dem && dem["Health"] < prev_dem["Health"] && is_instance_valid(child)):
-				child.hurt()
-				
-		count += 1
+			demon_nodes[uid] = demon_obj
+			continue  # Skip updates on first frame
+		
+		# Update existing demon
+		var node: RedMerc = demon_nodes.get(uid)
+		
+		if not is_instance_valid(node):
+			demon_nodes.erase(uid)
+			continue
+		
+		# Handle movement
+		if dem["State"] == "moving":
+			var tween = get_tree().create_tween()
+			node.move(node.position - Vector2(dem["x"] * 32, dem["y"] * 32))
+			tween.tween_property(node, "position", Vector2(dem["x"] * 32, dem["y"] * 32), turn_interval_max)
+			tween.tween_callback(node.idle)
+			
+		# Handle attack
+		elif dem["State"] == "attacking" or dem["State"] == "idle":
+			node.attack(Vector2(1, 0))
+		
+		# Handle damage (visual feedback)
+		if prev_dem and dem.get("Health", 0) < prev_dem.get("Health", 0):
+			node.hurt()
+
 
 func _process(delta):
 	if backend_running:
@@ -483,7 +528,6 @@ func _process(delta):
 				turn_interval = turn_interval_max
 		else:
 			if play1ready and play2ready:
-				
 				if stdio.get_error() == OK:
 					var content = stdio.get_line()
 					if !content.begins_with("--WINNER"):
@@ -493,16 +537,17 @@ func _process(delta):
 						print(content)
 						backend_running = false
 					stdio.store_line("--NEXT TURN--")
-					stdio.flush() # Ensure data is written to the pipe
+					stdio.flush()
 				
 				play1ready = is_player1_ai
 				play2ready = is_player2_ai
 
+
 func AI_game_turn():
-	var content : String = ""
+	var content: String = ""
 	if stdio.get_error() == OK:
 		stdio.store_line("--NEXT TURN--")
-		stdio.flush() # Ensure data is written to the pipe
+		stdio.flush()
 		content = stdio.get_line()
 	else:
 		printerr("Open file error: ", stdio.get_error())
@@ -510,13 +555,17 @@ func AI_game_turn():
 	
 	previous_game_state = current_game_state
 	
-	if !content.begins_with("--WINNER"):
-		_draw_game_from_gamestate(content)
-	else:
+	if content.begins_with("--RAN OUT OF TURNS--"):
 		backend_running = false
+		_update_ui(current_game_state)
+	else:
+		if !content.begins_with("--WINNER"):
+			_draw_game_from_gamestate(content)
+		else:
+			backend_running = false
 
 
-func _on_ui_action(is_player1 : bool, action : String , x: int, y: int, to_build : String ,merc : String) -> void:
+func _on_ui_action(is_player1: bool, action: String, x: int, y: int, to_build: String, merc: String) -> void:
 	if is_player1:
 		play1ready = true
 	else:
@@ -524,9 +573,9 @@ func _on_ui_action(is_player1 : bool, action : String , x: int, y: int, to_build
 	
 	if stdio.get_error() == OK:
 		var player_action = "{\"action\": \"" + action + "\", \"x\": " + str(x) + ", \"y\": " + str(y) + ", \"tower_type\": \"" + to_build + "\", \"merc_direction\": \"" + merc + "\"}"
-		#print(player_action)
 		stdio.store_line(player_action)
-		stdio.flush() # Ensure data is written to the pipe
+		stdio.flush()
+
 
 func _update_ui(gamestate):
 	UI._update_turns_progressed(gamestate["TurnsRemaining"])
@@ -536,11 +585,13 @@ func _update_ui(gamestate):
 	UI._update_building_prices(gamestate)
 	UI._update_postgame_popup(gamestate["Victory"], gamestate["VictoryReason"])
 
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		if processID != null:
-			OS.kill(processID) ##Terminates the process
+			OS.kill(processID)
 			get_tree().quit()
+
 
 func _close_backend():
 	stdio.close()

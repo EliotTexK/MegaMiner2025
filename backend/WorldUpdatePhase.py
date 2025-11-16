@@ -45,7 +45,7 @@ def mortal_wound_check(game_state: GameState, entities: List[Entity]):
             log_msg(f"{ent.name} has suffered mortal wounds")
 
 
-def check_wincon(game_state: GameState):
+def check_wincon(game_state: GameState, break_tie=False):
     # Determines which player wins the game, if there is an current winner
     team_b_health = game_state.player_base_b.health
     team_r_health = game_state.player_base_r.health
@@ -69,7 +69,8 @@ def check_wincon(game_state: GameState):
                 return 'b'
     else:
         # If no base has been destroyed, nobody has won yet
-        return None
+        if not break_tie:
+            return None
         
     # If both players' bases are Destroyed, break the tie based on who has the most Money.
     if team_b_money != team_r_money:

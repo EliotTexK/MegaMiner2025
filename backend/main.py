@@ -6,6 +6,7 @@ import os
 import argparse
 import subprocess
 import sys
+from WorldUpdatePhase import check_wincon
 
 
 # Main game loop
@@ -254,12 +255,14 @@ if __name__ == '__main__':
     # Main game loop
     main_game_loop(ai_agent_1, ai_agent_2, game)
 
+    if game.game_state.victory not in ['r','b','tie']:
+        game.game_state.victory = check_wincon(game.game_state,break_tie=True)
+
     # Print game result
     match game.game_state.victory:
         case 'r':   print(f"--WINNER: {team_name_r} (RED)--")
         case 'b':   print(f"--WINNER: {team_name_b} (BLUE)--")
         case 'tie': print(f"--WINNER: TIE--")
-        case _:     print("--RAN OUT OF TURNS--")
 
     # Clean up subprocesses
     if ai_agent_1:
